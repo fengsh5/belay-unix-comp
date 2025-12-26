@@ -1,0 +1,79 @@
+/**
+ * BlSpace 组件样式
+ * 参考 Ant Design Space 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-space {
+	display: inline-flex;
+	box-sizing: border-box;
+}
+
+/* ==================== 方向 ==================== */
+
+/* 水平方向 */
+.bl-space--horizontal {
+	flex-direction: row;
+}
+
+/* 垂直方向 */
+.bl-space--vertical {
+	flex-direction: column;
+}
+
+/* ==================== 对齐方式 ==================== */
+
+.bl-space--align-start {
+	align-items: flex-start;
+}
+
+.bl-space--align-end {
+	align-items: flex-end;
+}
+
+.bl-space--align-center {
+	align-items: center;
+}
+
+.bl-space--align-baseline {
+	align-items: baseline;
+}
+
+/* ==================== 换行 ==================== */
+.bl-space--wrap {
+	flex-wrap: wrap;
+}
+
+/* ==================== 子元素间距 ==================== */
+/* 使用 gap 属性（如果支持）或通过子元素选择器 */
+.bl-space--horizontal > view:not(:last-child),
+.bl-space--horizontal > text:not(:last-child),
+.bl-space--horizontal > button:not(:last-child),
+.bl-space--horizontal > image:not(:last-child) {
+	margin-right: var(--bl-space-size, 16rpx);
+}
+
+.bl-space--vertical > view:not(:last-child),
+.bl-space--vertical > text:not(:last-child),
+.bl-space--vertical > button:not(:last-child),
+.bl-space--vertical > image:not(:last-child) {
+	margin-bottom: var(--bl-space-size, 16rpx);
+}
+
+/* ==================== 尺寸变量 ==================== */
+.bl-space--small {
+	--bl-space-size: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-space--middle {
+	--bl-space-size: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-space--large {
+	--bl-space-size: var(--bl-spacing-lg, $spacing-lg);
+}
+

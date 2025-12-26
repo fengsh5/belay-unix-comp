@@ -1,0 +1,148 @@
+/**
+ * BlTimeline 组件样式
+ * 参考 Ant Design Timeline 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-timeline {
+	display: flex;
+	flex-direction: column;
+	padding: var(--bl-spacing-md, $spacing-md) 0;
+	position: relative;
+}
+
+.bl-timeline__item {
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	padding-bottom: var(--bl-spacing-lg, $spacing-lg);
+	
+	&:last-child {
+		padding-bottom: 0;
+		
+		.bl-timeline__tail {
+			display: none;
+		}
+	}
+}
+
+.bl-timeline__item--pending {
+	.bl-timeline__tail {
+		display: block;
+	}
+}
+
+.bl-timeline__head {
+	flex-shrink: 0;
+	position: relative;
+	width: 32rpx;
+	height: 32rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bl-background-color, $background-color);
+	border: 4rpx solid var(--bl-primary-color, $primary-color);
+	border-radius: 50%;
+	z-index: 1;
+}
+
+.bl-timeline__head--custom {
+	border: none;
+	background-color: transparent;
+}
+
+.bl-timeline__dot {
+	width: 16rpx;
+	height: 16rpx;
+	background-color: var(--bl-primary-color, $primary-color);
+	border-radius: 50%;
+}
+
+.bl-timeline__tail {
+	position: absolute;
+	left: 16rpx;
+	top: 32rpx;
+	bottom: 0;
+	width: 2rpx;
+	background-color: var(--bl-border-color, $border-color);
+}
+
+.bl-timeline__content {
+	flex: 1;
+	margin-left: var(--bl-spacing-md, $spacing-md);
+	padding-bottom: var(--bl-spacing-xs, $spacing-xs);
+}
+
+/* ==================== 模式样式 ==================== */
+
+/* 左侧模式 */
+.bl-timeline--left {
+	.bl-timeline__item {
+		flex-direction: row;
+	}
+	
+	.bl-timeline__head {
+		left: 0;
+	}
+	
+	.bl-timeline__content {
+		margin-left: var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+/* 右侧模式 */
+.bl-timeline--right {
+	.bl-timeline__item {
+		flex-direction: row-reverse;
+	}
+	
+	.bl-timeline__head {
+		right: 0;
+	}
+	
+	.bl-timeline__content {
+		margin-right: var(--bl-spacing-md, $spacing-md);
+		margin-left: 0;
+		text-align: right;
+	}
+	
+	.bl-timeline__tail {
+		left: auto;
+		right: 16rpx;
+	}
+}
+
+/* 交替模式 */
+.bl-timeline--alternate {
+	.bl-timeline__item {
+		&:nth-child(odd) {
+			flex-direction: row;
+			
+			.bl-timeline__content {
+				margin-left: var(--bl-spacing-md, $spacing-md);
+				margin-right: 0;
+				text-align: left;
+			}
+		}
+		
+		&:nth-child(even) {
+			flex-direction: row-reverse;
+			
+			.bl-timeline__content {
+				margin-right: var(--bl-spacing-md, $spacing-md);
+				margin-left: 0;
+				text-align: right;
+			}
+			
+			.bl-timeline__tail {
+				left: auto;
+				right: 16rpx;
+			}
+		}
+	}
+}
+

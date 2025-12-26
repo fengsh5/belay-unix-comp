@@ -1,0 +1,67 @@
+/**
+ * BlIcon 组件样式
+ * 参考 Ant Design Icon 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+/* ==================== 图标尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-icon--large {
+	width: 48rpx;
+	height: 48rpx;
+	font-size: 48rpx;
+}
+
+/* 默认尺寸 */
+.bl-icon--default {
+	width: 40rpx;
+	height: 40rpx;
+	font-size: 40rpx;
+}
+
+/* 小尺寸 */
+.bl-icon--small {
+	width: 32rpx;
+	height: 32rpx;
+	font-size: 32rpx;
+}
+
+/* ==================== 图标类型 ==================== */
+
+/* 旋转图标 */
+.bl-icon--spin {
+	animation: bl-icon-spin 1s linear infinite;
+}
+
+@keyframes bl-icon-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-icon--default {
+		width: 36rpx;
+		height: 36rpx;
+		font-size: 36rpx;
+	}
+}
+

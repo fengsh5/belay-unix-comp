@@ -1,0 +1,86 @@
+/**
+ * BlCardLayout 组件样式
+ * 参考 Ant Design Card 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-cardlayout {
+	box-sizing: border-box;
+	background-color: var(--bl-background-color, $background-color);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&--border {
+		border: 2rpx solid var(--bl-border-color, $border-color);
+	}
+	
+	&--round {
+		border-radius: var(--bl-border-radius, $border-radius);
+		overflow: hidden;
+	}
+}
+
+/* ==================== 卡片类型 ==================== */
+
+/* 带阴影的卡片 */
+.bl-cardlayout--shadow {
+	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.09);
+	
+	&:hover {
+		box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+	}
+}
+
+/* 带边框的卡片（默认） */
+.bl-cardlayout--bordered {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+/* 无边框卡片 */
+.bl-cardlayout--borderless {
+	border: none;
+}
+
+/* ==================== 卡片尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-cardlayout--large {
+	padding: var(--bl-spacing-lg, $spacing-lg);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+}
+
+/* 默认尺寸 */
+.bl-cardlayout--default {
+	padding: var(--bl-spacing-md, $spacing-md);
+	border-radius: var(--bl-border-radius, $border-radius);
+}
+
+/* 小尺寸 */
+.bl-cardlayout--small {
+	padding: var(--bl-spacing-sm, $spacing-sm);
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+}
+
+/* ==================== 卡片状态 ==================== */
+
+/* 可点击的卡片 */
+.bl-cardlayout--clickable {
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&:active {
+		transform: scale(0.98);
+		box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.06);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-cardlayout {
+		padding: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

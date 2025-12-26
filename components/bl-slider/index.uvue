@@ -1,0 +1,134 @@
+<template>
+	<slider
+		:class="sliderClass"
+		:style="sliderStyle"
+		:value="value"
+		:min="min"
+		:max="max"
+		:step="step"
+		:disabled="disabled"
+		:activeColor="activeColorValue"
+		:backgroundColor="backgroundColor"
+		:block-size="blockSize"
+		:block-color="blockColor"
+		:show-value="showValue"
+		@change="handleChange"
+		@changing="handleChanging"
+	></slider>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlSlider',
+		props: {
+			/**
+			 * 当前值
+			 */
+			value: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 最小值
+			 */
+			min: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 最大值
+			 */
+			max: {
+				type: Number,
+				default: 100
+			},
+			/**
+			 * 步长
+			 */
+			step: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 滑块颜色
+			 */
+			activeColor: {
+				type: String,
+				default: '#09BB07'
+			},
+			/**
+			 * 滑块背景色
+			 */
+			backgroundColor: {
+				type: String,
+				default: '#EBEBEB'
+			},
+			/**
+			 * 滑块大小
+			 */
+			blockSize: {
+				type: Number,
+				default: 15
+			},
+			/**
+			 * 滑块颜色
+			 */
+			blockColor: {
+				type: String,
+				default: '#ffffff'
+			},
+			/**
+			 * 是否显示当前值
+			 */
+			showValue: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'changing'],
+		computed: {
+			sliderClass(): string {
+				return 'bl-slider'
+			},
+			sliderStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			activeColorValue(): string {
+				return this.activeColor != null && this.activeColor != '' ? this.activeColor : '#09BB07'
+			}
+		},
+		methods: {
+			handleChange(evt: any): void {
+				const value = evt.detail?.value || evt.detail || 0
+				this.$emit('change', value)
+			},
+			handleChanging(evt: any): void {
+				const value = evt.detail?.value || evt.detail || 0
+				this.$emit('changing', value)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

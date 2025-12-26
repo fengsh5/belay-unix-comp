@@ -1,0 +1,239 @@
+<template>
+	<view :class="stepClass" :style="stepStyle">
+		<text :class="descClass" @click="handleClick">
+			<slot></slot>
+		</text>
+		<view v-if="!isLast" :class="lineClass" :style="lineStyle"></view>
+		<view :class="iconBoxClass">
+			<view v-if="stepIconType === 'circle'" :class="circleFlagClass" :style="circleFlagStyle"></view>
+			<bl-icon v-else-if="stepIconType === 'icon'" :icon="stepIcon" color="var(--bl-white-color)" :style="iconFlagStyle"></bl-icon>
+			<text v-else :class="otherFlagClass" :style="otherFlagStyle">{{ stepIcon }}</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlStep',
+		inject: {
+			steps: {
+				type: Object,
+				default: null
+			}
+		},
+		props: {
+			/**
+			 * 步骤显示内容
+			 */
+			// children 通过 slot 传递
+			/**
+			 * 自定义激活状态图标
+			 */
+			activeIcon: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 自定义未激活状态图标
+			 */
+			inactiveIcon: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 自定义已完成步骤对应的底部图标
+			 */
+			finishIcon: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 步骤索引（由父组件自动设置）
+			 */
+			stepIndex: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否为最后一个（由父组件自动设置）
+			 */
+			isLast: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			direction(): string {
+				return this.steps != null ? this.steps.direction : 'horizontal'
+			},
+			activeStep(): number {
+				return this.steps != null ? this.steps.active : 0
+			},
+			finishStep(): number | null {
+				return this.steps != null ? this.steps.finish : null
+			},
+			activeColor(): string {
+				return this.steps != null && this.steps.activeColor != null && this.steps.activeColor != '' 
+					? this.steps.activeColor 
+					: 'var(--bl-primary-color)'
+			},
+			inactiveColor(): string {
+				return this.steps != null && this.steps.inactiveColor != null && this.steps.inactiveColor != '' 
+					? this.steps.inactiveColor 
+					: 'var(--bl-text-color-tertiary)'
+			},
+			isActiveStep(): boolean {
+				return this.stepIndex === this.activeStep
+			},
+			isFinish(): boolean {
+				return this.stepIndex < this.activeStep
+			},
+			isFirst(): boolean {
+				return this.stepIndex === 0
+			},
+			stepClass(): string {
+				const classes: string[] = ['bl-step']
+				classes.push(`bl-step--${this.direction}`)
+				if (this.isLast) {
+					classes.push(`bl-step--${this.direction}--last`)
+				}
+				return classes.join(' ')
+			},
+			stepStyle(): string {
+				const styles: string[] = []
+				const isActive: boolean = this.isActiveStep
+				const activeColorValue: string = this.activeColor
+				const color: string = isActive ? activeColorValue : 'var(--bl-text-color)'
+				styles.push(`color: ${color}`)
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			descClass(): string {
+				const classes: string[] = ['bl-step__desc']
+				const directionValue: string = this.direction
+				classes.push(`bl-step__desc--${directionValue}`)
+				const isFirstValue: boolean = this.isFirst
+				const isLastValue: boolean = this.isLast
+				if (!isFirstValue && !isLastValue) {
+					classes.push(`bl-step__desc--${directionValue}--other`)
+				}
+				if (isFirstValue) {
+					classes.push(`bl-step__desc--${directionValue}--first`)
+				}
+				const isActiveStepValue: boolean = this.isActiveStep
+				if (directionValue === 'vertical' && !isActiveStepValue) {
+					classes.push('bl-step__desc--vertical--inactive')
+				}
+				return classes.join(' ')
+			},
+			lineClass(): string {
+				const classes: string[] = ['bl-step__line']
+				const directionValue: string = this.direction
+				classes.push(`bl-step__line--${directionValue}`)
+				const isFirstValue: boolean = this.isFirst
+				if (isFirstValue) {
+					classes.push(`bl-step__line--${directionValue}--first`)
+				}
+				return classes.join(' ')
+			},
+			lineStyle(): string {
+				const styles: string[] = []
+				// 如果当前步骤已完成，线条使用激活颜色
+				const isFinishValue: boolean = this.isFinish
+				const finishStepValue: number | null = this.finishStep
+				if (isFinishValue || this.stepIndex === finishStepValue) {
+					const activeColorValue: string = this.activeColor
+					styles.push(`background-color: ${activeColorValue}`)
+				} else {
+					const inactiveColorValue: string = this.inactiveColor
+					styles.push(`background-color: ${inactiveColorValue}`)
+				}
+				return styles.join('; ')
+			},
+			iconBoxClass(): string {
+				const classes: string[] = ['bl-step__icon-box']
+				const directionValue: string = this.direction
+				classes.push(`bl-step__icon-box--${directionValue}`)
+				const isFirstValue: boolean = this.isFirst
+				const isLastValue: boolean = this.isLast
+				if (!isFirstValue && !isLastValue) {
+					classes.push(`bl-step__icon-box--${directionValue}--other`)
+				}
+				if (isFirstValue) {
+					classes.push(`bl-step__icon-box--${directionValue}--first`)
+				}
+				if (isLastValue) {
+					classes.push(`bl-step__icon-box--${directionValue}--last`)
+				}
+				return classes.join(' ')
+			},
+			stepIcon(): string | null {
+				const isActiveStepValue: boolean = this.isActiveStep
+				if (isActiveStepValue) {
+					return this.activeIcon != null ? this.activeIcon : (this.steps != null ? this.steps.activeIcon : 'check')
+				}
+				const isFinishValue: boolean = this.isFinish
+				if (isFinishValue) {
+					return this.finishIcon != null ? this.finishIcon : (this.steps != null ? this.steps.finishIcon : null)
+				}
+				return this.inactiveIcon != null ? this.inactiveIcon : (this.steps != null ? this.steps.inactiveIcon : null)
+			},
+			stepIconType(): string {
+				if (this.stepIcon == null) {
+					return 'circle'
+				}
+				// 判断是图标名称还是其他内容
+				// 这里简化处理，实际使用时需要判断是否是有效的图标名称
+				return 'icon'
+			},
+			stepIconColor(): string {
+				const isActiveStepValue: boolean = this.isActiveStep
+				const isFinishValue: boolean = this.isFinish
+				if (isActiveStepValue || isFinishValue) {
+					return this.activeColor
+				}
+				return this.inactiveColor
+			},
+			circleFlagClass(): string {
+				return 'bl-step__circle-flag'
+			},
+			circleFlagStyle(): string {
+				const color: string = this.stepIconColor
+				return `background-color: ${color}`
+			},
+			iconFlagStyle(): string {
+				const color: string = this.stepIconColor
+				return `background-color: ${color}`
+			},
+			otherFlagClass(): string {
+				return 'bl-step__other-flag'
+			},
+			otherFlagStyle(): string {
+				const color: string = this.stepIconColor
+				return `background-color: ${color}`
+			}
+		},
+		methods: {
+			handleClick(): void {
+				if (this.steps != null && this.steps.onClick != null) {
+					this.steps.onClick(this.stepIndex)
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

@@ -1,0 +1,50 @@
+/**
+ * BlRadioPopup 组件样式
+ * 参考 Ant Design Popover 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-radiopopup__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--bl-spacing-md, $spacing-md);
+	border-bottom: 2rpx solid var(--bl-border-color-split, $border-color-split);
+}
+
+.bl-radiopopup__title {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-radiopopup__close {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	cursor: pointer;
+	transition: color 0.3s;
+	
+	&:active {
+		color: var(--bl-text-color, $text-color);
+	}
+}
+
+.bl-radiopopup__content {
+	max-height: 800rpx;
+	overflow-y: auto;
+}
+
+.bl-radiopopup__item {
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	border-bottom: 2rpx solid var(--bl-border-color-split, $border-color-split);
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+

@@ -1,0 +1,61 @@
+<template>
+	<view :class="themeRootClass" :style="themeRootStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+/**
+ * BlThemeRoot 主题根组件
+ * 支持 Vue 2 和 Vue 3
+ */
+export default {
+	name: 'BlThemeRoot',
+	props: {
+		/**
+		 * 主题名称
+		 */
+		theme: {
+			type: String,
+			default: 'light' // light | dark
+		},
+		/**
+		 * 自定义样式
+		 */
+		customStyle: {
+			type: String,
+			default: ''
+		},
+		/**
+		 * 自定义类名
+		 */
+		customClass: {
+			type: String,
+			default: ''
+		}
+	},
+	computed: {
+		themeRootClass() {
+			const classes = ['bl-themeroot']
+			classes.push(`bl-themeroot--${this.theme}`)
+			if (this.customClass) {
+				classes.push(this.customClass)
+			}
+			return classes.join(' ')
+		},
+		themeRootStyle() {
+			const styles = []
+			if (this.customStyle) {
+				styles.push(this.customStyle)
+			}
+			return styles.join('; ')
+		}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

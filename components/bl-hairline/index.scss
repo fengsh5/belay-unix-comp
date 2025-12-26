@@ -1,0 +1,76 @@
+/**
+ * BlHairline 组件样式
+ * 2rpx 边框组件
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-hairline {
+	position: relative;
+	box-sizing: border-box;
+}
+
+/* ==================== 边框位置 ==================== */
+
+/* 顶部边框 */
+.bl-hairline--top::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2rpx;
+	background-color: var(--bl-border-color, $border-color);
+	transform: scaleY(0.5);
+	transform-origin: 0 0;
+}
+
+/* 底部边框 */
+.bl-hairline--bottom::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 2rpx;
+	background-color: var(--bl-border-color, $border-color);
+	transform: scaleY(0.5);
+	transform-origin: 0 100%;
+}
+
+/* 左侧边框 */
+.bl-hairline--left::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 2rpx;
+	background-color: var(--bl-border-color, $border-color);
+	transform: scaleX(0.5);
+	transform-origin: 0 0;
+}
+
+/* 右侧边框 */
+.bl-hairline--right::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 2rpx;
+	background-color: var(--bl-border-color, $border-color);
+	transform: scaleX(0.5);
+	transform-origin: 100% 0;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-hairline {
+		/* 移动端特定样式 */
+	}
+}
+

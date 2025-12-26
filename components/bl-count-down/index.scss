@@ -1,0 +1,83 @@
+/**
+ * BlCountDown 组件样式
+ * 参考 Ant Design Statistic.Countdown 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-count-down {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+}
+
+.bl-count-down__item {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 48rpx;
+	height: 48rpx;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.bl-count-down__delimiter {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1;
+}
+
+/* ==================== 倒计时尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-count-down--large {
+	.bl-count-down__item {
+		min-width: 64rpx;
+		height: 64rpx;
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+	
+	.bl-count-down__delimiter {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+		margin: 0 var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+
+/* 小尺寸 */
+.bl-count-down--small {
+	.bl-count-down__item {
+		min-width: 40rpx;
+		height: 40rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+	
+	.bl-count-down__delimiter {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+		margin: 0 4rpx;
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-count-down__item {
+		min-width: 44rpx;
+		height: 44rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

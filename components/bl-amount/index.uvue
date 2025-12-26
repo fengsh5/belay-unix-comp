@@ -1,0 +1,155 @@
+<template>
+	<text :class="amountClass" :style="amountStyle">
+		{{ displayAmount }}
+	</text>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlAmount',
+		props: {
+			/**
+			 * 金额数值
+			 */
+			value: {
+				type: [Number, String],
+				default: 0
+			},
+			/**
+			 * 是否显示货币符号
+			 */
+			showSymbol: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 货币符号
+			 */
+			symbol: {
+				type: String,
+				default: '¥'
+			},
+			/**
+			 * 小数位数
+			 */
+			decimals: {
+				type: Number,
+				default: 2
+			},
+			/**
+			 * 是否使用千分位分隔符
+			 */
+			thousandSeparator: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 千分位分隔符
+			 */
+			separator: {
+				type: String,
+				default: ','
+			},
+			/**
+			 * 金额大小
+			 */
+			size: {
+				type: String,
+				default: 'medium' // small | medium | large
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			amountClass(): string {
+				const classes: string[] = ['bl-amount']
+				classes.push(`bl-amount--${this.size}`)
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			amountStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			displayAmount(): string {
+				let num = 0
+				if (typeof this.value === 'number') {
+					num = this.value
+				} else if (typeof this.value === 'string') {
+					num = Number(this.value) || 0
+				}
+				
+				// 处理负数
+				const isNegative = num < 0
+				if (isNegative) {
+					num = -num
+				}
+				
+				// 格式化小数
+				let formatted = num.toFixed(this.decimals)
+				
+				// 添加千分位分隔符
+				if (this.thousandSeparator) {
+					const parts = formatted.split('.')
+					parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.separator)
+					formatted = parts.join('.')
+				}
+				
+				// 添加符号
+				let result = formatted
+				if (this.showSymbol) {
+					result = `${this.symbol}${formatted}`
+				}
+				
+				// 处理负数
+				if (isNegative) {
+					result = `-${result}`
+				}
+				
+				return result
+			}
+		}
+	}
+</script>
+
+<style>
+	.bl-amount {
+		color: var(--bl-text-color-primary, #323233);
+		font-weight: 500;
+	}
+	
+	.bl-amount--small {
+		font-size: 12px;
+	}
+	
+	.bl-amount--medium {
+		font-size: 16px;
+	}
+	
+	.bl-amount--large {
+		font-size: 24px;
+		font-weight: 600;
+	}
+</style>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

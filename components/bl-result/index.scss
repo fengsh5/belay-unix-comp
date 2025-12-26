@@ -1,0 +1,98 @@
+/**
+ * BlResult 组件样式
+ * 参考 Ant Design Result 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-result {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: var(--bl-spacing-xl, $spacing-xl) var(--bl-spacing-lg, $spacing-lg);
+	text-align: center;
+}
+
+.bl-result__icon {
+	margin-bottom: var(--bl-spacing-lg, $spacing-lg);
+	font-size: 128rpx;
+	line-height: 1;
+}
+
+.bl-result__title {
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-xl, $font-size-xl);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-result__subtitle {
+	margin-bottom: var(--bl-spacing-lg, $spacing-lg);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-result__extra {
+	margin-top: var(--bl-spacing-lg, $spacing-lg);
+}
+
+/* ==================== 状态样式 ==================== */
+
+/* 成功 */
+.bl-result--success {
+	.bl-result__icon {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 错误 */
+.bl-result--error {
+	.bl-result__icon {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* 信息 */
+.bl-result--info {
+	.bl-result__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 警告 */
+.bl-result--warning {
+	.bl-result__icon {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* 404 */
+.bl-result--404 {
+	.bl-result__icon {
+		color: var(--bl-text-color-secondary, $text-color-secondary);
+		font-size: 200rpx;
+	}
+}
+
+/* 403 */
+.bl-result--403 {
+	.bl-result__icon {
+		color: var(--bl-text-color-secondary, $text-color-secondary);
+		font-size: 200rpx;
+	}
+}
+
+/* 500 */
+.bl-result--500 {
+	.bl-result__icon {
+		color: var(--bl-text-color-secondary, $text-color-secondary);
+		font-size: 200rpx;
+	}
+}
+

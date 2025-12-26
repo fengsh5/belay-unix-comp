@@ -1,0 +1,96 @@
+/**
+ * BlSegmented 组件样式
+ * 参考 Ant Design Segmented 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-segmented {
+	display: inline-flex;
+	flex-direction: row;
+	background-color: var(--bl-segmented-bg, rgba(0, 0, 0, 0.04));
+	border-radius: var(--bl-border-radius, $border-radius);
+	padding: 4rpx;
+	box-sizing: border-box;
+}
+
+.bl-segmented--block {
+	display: flex;
+	width: 100%;
+}
+
+.bl-segmented__item {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-md, $spacing-md);
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	cursor: pointer;
+	transition: all 0.3s;
+	position: relative;
+	box-sizing: border-box;
+	min-width: 0;
+	
+	&:active:not(.bl-segmented__item--disabled):not(.bl-segmented__item--selected) {
+		opacity: 0.8;
+	}
+}
+
+.bl-segmented__item--selected {
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-primary-color, $primary-color);
+	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.bl-segmented__item--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-segmented__item-label {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.bl-segmented__item--selected .bl-segmented__item-label {
+	color: var(--bl-primary-color, $primary-color);
+	font-weight: 500;
+}
+
+.bl-segmented__item-icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+}
+
+/* ==================== 尺寸 ==================== */
+.bl-segmented--small {
+	.bl-segmented__item {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	.bl-segmented__item-label {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+.bl-segmented--large {
+	.bl-segmented__item {
+		padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-lg, $spacing-lg);
+	}
+	
+	.bl-segmented__item-label {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+

@@ -1,0 +1,93 @@
+/**
+ * 英文（美式）语言包
+ * 参考 Ant Design 的 Locale 结构
+ */
+
+import type { Locale } from '../utils/BlI18n/locale.uts'
+
+/**
+ * 英文（美式）语言配置
+ */
+export const enUS: Locale = {
+	locale: 'en-US',
+	localeName: 'en-US',
+	
+	// 通用
+	common: {
+		ok: 'OK',
+		cancel: 'Cancel',
+		confirm: 'Confirm',
+		submit: 'Submit',
+		reset: 'Reset',
+		save: 'Save',
+		delete: 'Delete',
+		edit: 'Edit',
+		add: 'Add',
+		search: 'Search',
+		loading: 'Loading...',
+		noData: 'No Data',
+		success: 'Success',
+		error: 'Error',
+		warning: 'Warning',
+		info: 'Info'
+	},
+	
+	// 按钮
+	button: {
+		submit: 'Submit',
+		reset: 'Reset',
+		cancel: 'Cancel',
+		confirm: 'Confirm',
+		save: 'Save',
+		delete: 'Delete',
+		edit: 'Edit',
+		add: 'Add',
+		search: 'Search',
+		loading: 'Loading...',
+		primary: 'Primary Button',
+		secondary: 'Secondary Button',
+		default: 'Default Button'
+	},
+	
+	// 表单
+	form: {
+		required: 'This field is required',
+		invalid: 'Invalid format',
+		minLength: 'Length must be at least {{min}} characters',
+		maxLength: 'Length must not exceed {{max}} characters',
+		min: 'Value must be at least {{min}}',
+		max: 'Value must not exceed {{max}}',
+		pattern: 'Invalid format'
+	},
+	
+	// 消息
+	message: {
+		success: 'Operation successful',
+		error: 'Operation failed',
+		warning: 'Warning',
+		info: 'Information'
+	},
+	
+	// 组件相关翻译
+	comp: {
+		confirm: 'Confirm',
+		cancel: 'Cancel',
+		retry: 'Retry',
+		search: 'Search',
+		prev: 'Previous',
+		next: 'Next',
+		finish: 'Finish',
+		searchPlaceholder: 'Please enter search content',
+		close: 'Close',
+		change: 'Change',
+		clear: 'Clear',
+		shareDialog: {
+			share: 'Share',
+			screenShot: 'Screenshot',
+			save: 'Save',
+			retry: 'Retry',
+			saveSuccess: 'Save successful',
+			saveFailed: 'Save failed'
+		}
+	}
+}

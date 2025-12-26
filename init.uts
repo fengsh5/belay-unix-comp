@@ -1,0 +1,52 @@
+/**
+ * 组件库初始化
+ * 一键初始化语言资源
+ */
+
+import { BlI18n, initDefaultLocales, loadDefaultLocales } from './utils/BlI18n/index.uts'
+
+/**
+ * 初始化组件库（从代码中加载）
+ * 自动注册默认语言资源，并从本地存储恢复用户设置
+ */
+export function initBlComponents(): void {
+	// 初始化默认语言资源
+	initDefaultLocales()
+	
+	// 初始化语言（从本地存储读取）
+	BlI18n.initLocale()
+	
+	// 如果没有保存的语言，使用默认语言（zh-CN）
+	const currentLocale = BlI18n.getLocale()
+	if (currentLocale == null || Object.keys(currentLocale).length == 0) {
+		const defaultLocale = BlI18n.getLocaleByCode('zh-CN')
+		if (defaultLocale != null) {
+			BlI18n.config({ locale: defaultLocale })
+		}
+	}
+	
+	console.log('[BlComponents] 组件库初始化完成')
+}
+
+/**
+ * 初始化组件库（从本地文件加载）
+ * 优先从 JSON 文件加载配置，失败则使用代码中的默认值
+ */
+export async function initBlComponentsFromFile(): Promise<void> {
+	// 从文件加载默认语言资源
+	await loadDefaultLocales()
+	
+	// 初始化语言（从本地存储读取）
+	BlI18n.initLocale()
+	
+	// 如果没有保存的语言，使用默认语言（zh-CN）
+	const currentLocale = BlI18n.getLocale()
+	if (currentLocale == null || Object.keys(currentLocale).length == 0) {
+		const defaultLocale = BlI18n.getLocaleByCode('zh-CN')
+		if (defaultLocale != null) {
+			BlI18n.config({ locale: defaultLocale })
+		}
+	}
+	
+	console.log('[BlComponents] 组件库初始化完成（从文件加载）')
+}

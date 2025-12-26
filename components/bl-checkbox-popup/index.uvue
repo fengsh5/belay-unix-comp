@@ -1,0 +1,121 @@
+<template>
+	<bl-popup
+		:visible="visible"
+		:overlay-closable="overlayClosable"
+		position="bottom"
+		:round="round"
+		@close="handleClose"
+	>
+		<view class="bl-checkboxpopup__header" v-if="title != null && title != ''">
+			<text class="bl-checkboxpopup__title">{{ title }}</text>
+			<bl-icon name="close" class="bl-checkboxpopup__close" @click="handleClose"></bl-icon>
+		</view>
+		<view class="bl-checkboxpopup__content">
+			<bl-checkbox-group :value="value" @change="handleChange">
+				<view 
+					v-for="(option, index) in options" 
+					:key="index"
+					class="bl-checkboxpopup__item"
+				>
+					<bl-checkbox
+						:value="option.value"
+						:label="option.label"
+						:disabled="option.disabled || false"
+					></bl-checkbox>
+				</view>
+			</bl-checkbox-group>
+		</view>
+		<view v-if="showConfirm" class="bl-checkboxpopup__footer">
+			<bl-button type="primary" :text="confirmText" @click="handleConfirm"></bl-button>
+		</view>
+	</bl-popup>
+</template>
+
+<script lang="uts">
+	type CheckboxOption = {
+		label: string
+		value: string | number
+		disabled?: boolean
+	}
+	
+	export default {
+		name: 'BlCheckboxPopup',
+		props: {
+			/**
+			 * 是否显示
+			 */
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 选项列表
+			 */
+			options: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前选中的值数组
+			 */
+			value: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 是否显示圆角
+			 */
+			round: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示确认按钮
+			 */
+			showConfirm: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 确认按钮文本
+			 */
+			confirmText: {
+				type: String,
+				default: '确定'
+			},
+			/**
+			 * 点击遮罩层是否可关闭
+			 */
+			overlayClosable: {
+				type: Boolean,
+				default: true
+			}
+		},
+		emits: ['close', 'change', 'confirm', 'update:visible'],
+		methods: {
+			handleClose(): void {
+				this.$emit('update:visible', false)
+				this.$emit('close')
+			},
+			handleChange(value: Array<string | number>): void {
+				this.$emit('change', value)
+			},
+			handleConfirm(): void {
+				this.$emit('confirm', this.value)
+				this.handleClose()
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

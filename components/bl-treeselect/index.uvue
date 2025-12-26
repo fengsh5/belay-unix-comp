@@ -1,0 +1,283 @@
+<template>
+	<view class="bl-treeselect" :style="treeselectStyle">
+		<view 
+			:class="['bl-treeselect__selector', disabled ? 'bl-treeselect__selector--disabled' : '', visible ? 'bl-treeselect__selector--open' : '']"
+			@click="handleSelectorClick"
+		>
+			<view class="bl-treeselect__selector-content">
+				<slot>
+					<text v-if="displayText" class="bl-treeselect__selector-text">{{ displayText }}</text>
+					<text v-else class="bl-treeselect__selector-placeholder">{{ placeholder }}</text>
+				</slot>
+			</view>
+			<view v-if="allowClear && currentValue != null && currentValue != ''" class="bl-treeselect__selector-clear" @click.stop="handleClear">
+				<bl-icon 
+					name="close" 
+					:size="20"
+					color="var(--bl-text-color-secondary, #8c8c8c)"
+				></bl-icon>
+			</view>
+			<view class="bl-treeselect__selector-arrow">
+				<bl-icon 
+					name="down" 
+					:size="20"
+					color="var(--bl-text-color-secondary, #8c8c8c)"
+				></bl-icon>
+			</view>
+		</view>
+		<view 
+			v-if="visible"
+			class="bl-treeselect__dropdown"
+		>
+			<view v-if="showSearch" class="bl-treeselect__search">
+				<bl-input
+					v-model="searchValue"
+					:placeholder="searchPlaceholderValue"
+					@input="handleSearch"
+				></bl-input>
+			</view>
+			<view class="bl-treeselect__tree">
+				<bl-tree
+					:tree-data="filteredTreeData"
+					:checkable="multiple"
+					:show-line="showLine"
+					:show-icon="showIcon"
+					:selected-keys="multiple ? null : currentValueArray"
+					:checked-keys="multiple ? currentValueArray : null"
+					@select="handleTreeSelect"
+					@check="handleTreeCheck"
+				></bl-tree>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { t } from '../../utils/BlI18n/index.uts'
+	
+	export default {
+		name: 'BlTreeSelect',
+		props: {
+			/**
+			 * 当前值
+			 */
+			value: {
+				type: [String, Number, Array],
+				default: null
+			},
+			/**
+			 * 默认值
+			 */
+			defaultValue: {
+				type: [String, Number, Array],
+				default: null
+			},
+			/**
+			 * 树节点数据
+			 */
+			treeData: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 输入框占位符
+			 */
+			placeholder: {
+				type: String,
+				default: '请选择'
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否允许清除
+			 */
+			allowClear: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否多选
+			 */
+			multiple: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示搜索框
+			 */
+			showSearch: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示树连接线
+			 */
+			showLine: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示图标
+			 */
+			showIcon: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'search', 'expand', 'update:value'],
+		data() {
+			return {
+				visible: false as boolean,
+				internalValue: null as string | number | Array<string | number> | null,
+				searchValue: '' as string
+			}
+		},
+		computed: {
+			treeselectStyle(): string {
+				return this.customStyle || ''
+			},
+			currentValue(): string | number | Array<string | number> | null {
+				if (this.value != null) {
+					return this.value as string | number | Array<string | number>
+				}
+				return this.internalValue
+			},
+			currentValueArray(): Array<string | number> {
+				if (this.currentValue == null) {
+					return []
+				}
+				if (Array.isArray(this.currentValue)) {
+					return this.currentValue
+				}
+				return [this.currentValue]
+			},
+			displayText(): string {
+				if (this.currentValue == null) {
+					return ''
+				}
+				if (Array.isArray(this.currentValue)) {
+					if (this.currentValue.length == 0) {
+						return ''
+					}
+					return `已选择 ${this.currentValue.length} 项`
+				}
+				return this.getNodeTitle(this.currentValue) || ''
+			},
+			filteredTreeData(): Array<any> {
+				const treeData = this.treeData as Array<any>
+				if (!this.searchValue || this.searchValue == '') {
+					return treeData
+				}
+				return this.filterTreeData(treeData, this.searchValue.toLowerCase())
+			},
+			searchPlaceholderValue(): string {
+				return t('comp.search')
+			}
+		},
+		created() {
+			if (this.value == null && this.defaultValue != null) {
+				this.internalValue = this.defaultValue as string | number | Array<string | number> | null
+			}
+		},
+		watch: {
+			value(newVal: string | number | Array<string | number> | null): void {
+				if (newVal != null) {
+					this.internalValue = newVal
+				}
+			}
+		},
+		methods: {
+			handleSelectorClick(): void {
+				if (this.disabled) {
+					return
+				}
+				this.visible = !this.visible
+			},
+			handleClear(): void {
+				this.updateValue(this.multiple ? [] : null)
+			},
+			handleSearch(event: any): void {
+				this.searchValue = event.detail.value
+				this.$emit('search', this.searchValue)
+			},
+			handleTreeSelect(selectedKeys: Array<string | number>, info: any): void {
+				if (this.multiple) {
+					return
+				}
+				const value = selectedKeys.length > 0 ? selectedKeys[0] : null
+				this.updateValue(value)
+				this.visible = false
+			},
+			handleTreeCheck(checkedKeys: Array<string | number>, info: any): void {
+				if (!this.multiple) {
+					return
+				}
+				this.updateValue(checkedKeys)
+			},
+			updateValue(value: string | number | Array<string | number> | null): void {
+				if (this.value == null) {
+					this.internalValue = value
+				}
+				this.$emit('update:value', value)
+				this.$emit('change', value)
+			},
+			getNodeTitle(key: string | number): string {
+				return this.findNodeTitle(this.treeData as Array<any>, key) || ''
+			},
+			findNodeTitle(nodes: Array<any>, key: string | number): string | null {
+				for (const node of nodes) {
+					if (node.key == key) {
+						return node.title
+					}
+					if (node.children && node.children.length > 0) {
+						const found = this.findNodeTitle(node.children, key)
+						if (found != null) {
+							return found
+						}
+					}
+				}
+				return null
+			},
+			filterTreeData(nodes: Array<any>, searchText: string): Array<any> {
+				const result: Array<any> = []
+				for (const node of nodes) {
+					const title = node.title.toLowerCase()
+					const match = title.indexOf(searchText) >= 0
+					const filteredChildren = node.children && node.children.length > 0 ? this.filterTreeData(node.children, searchText) : []
+					
+					if (match || filteredChildren.length > 0) {
+						result.push({
+							...node,
+							children: filteredChildren.length > 0 ? filteredChildren : node.children
+						})
+					}
+				}
+				return result
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

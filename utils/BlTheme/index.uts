@@ -1,0 +1,514 @@
+/**
+ * 主题切换工具（参考 Ant Design 的 ConfigProvider 方案）
+ * 
+ * 使用方式：
+ * 
+ * // 方式一：通过组件属性传递主题配置
+ * <bl-theme-provider :theme="themeConfig">
+ *   <your-content />
+ * </bl-theme-provider>
+ * 
+ * // 方式二：通过全局配置方法动态切换主题
+ * import { BlTheme } from '@/uni_modules/belay-unix/utils/BlTheme/index.uts'
+ * 
+ * BlTheme.config({
+ *   theme: {
+ *     'primary-color': '#409eff',
+ *     'background-color': '#ffffff',
+ *     // ... 其他主题变量
+ *   }
+ * })
+ */
+
+// 主题配置类型（对应 SCSS 变量文件中的主题定义）
+export type ThemeConfig = {
+	// 主色调
+	'primary-color'?: string
+	'primary-color-1'?: string
+	'primary-color-2'?: string
+	'primary-color-3'?: string
+	'primary-color-4'?: string
+	'secondary-color'?: string
+	
+	// 功能色
+	'success-color'?: string
+	'success-color-1'?: string
+	'success-color-2'?: string
+	'success-color-3'?: string
+	'success-color-4'?: string
+	
+	'error-color'?: string
+	'error-color-1'?: string
+	'error-color-2'?: string
+	'error-color-3'?: string
+	'error-color-4'?: string
+	
+	'warning-color'?: string
+	'warning-color-1'?: string
+	'warning-color-2'?: string
+	'warning-color-3'?: string
+	'warning-color-4'?: string
+	
+	'info-color'?: string
+	'info-color-1'?: string
+	'info-color-2'?: string
+	'info-color-3'?: string
+	'info-color-4'?: string
+	
+	// 基础色
+	'black-color'?: string
+	'white-color'?: string
+	
+	// 灰度颜色
+	'gray-1'?: string
+	'gray-2'?: string
+	'gray-3'?: string
+	'gray-4'?: string
+	'gray-5'?: string
+	'gray-6'?: string
+	
+	// 背景色
+	'background-color'?: string
+	'background-color-secondary'?: string
+	
+	// 文字颜色
+	'text-color'?: string
+	'text-color-secondary'?: string
+	'text-color-disabled'?: string
+	
+	// 边框颜色
+	'border-color'?: string
+	'border-color-light'?: string
+	'border-color-lighter'?: string
+	'border-color-extra-light'?: string
+	
+	// 圆角
+	'border-radius'?: string
+	'border-radius-small'?: string
+	'border-radius-large'?: string
+	'border-radius-round'?: string
+	'border-radius-circle'?: string
+	
+	// 间距
+	'spacing-xs'?: string
+	'spacing-sm'?: string
+	'spacing-md'?: string
+	'spacing-lg'?: string
+	'spacing-xl'?: string
+	
+	// 字体大小
+	'font-size-xs'?: string
+	'font-size-sm'?: string
+	'font-size-base'?: string
+	'font-size-lg'?: string
+	'font-size-xl'?: string
+	
+	// 行高
+	'line-height-base'?: string
+	'line-height-sm'?: string
+	'line-height-lg'?: string
+	
+	// z-index
+	'z-index-base'?: string
+	'z-index-dropdown'?: string
+	'z-index-sticky'?: string
+	'z-index-fixed'?: string
+	'z-index-modal'?: string
+	'z-index-tooltip'?: string
+}
+
+// 主题配置选项类型
+export type ThemeConfigOptions = {
+	theme?: ThemeConfig
+}
+
+// 浅色主题默认配置（对应 variables.scss 中的 $theme-light）
+const defaultLightTheme: ThemeConfig = {
+	// 主色调
+	'primary-color': '#409eff', // 与 variables.scss 保持一致
+	'primary-color-1': '#66b1ff',
+	'primary-color-2': '#85c1ff',
+	'primary-color-3': '#a6d3ff',
+	'primary-color-4': '#c6e2ff',
+	'secondary-color': '#909399',
+	
+	// 功能色
+	'success-color': '#67c23a',
+	'success-color-1': '#85ce61',
+	'success-color-2': '#a4da89',
+	'success-color-3': '#c2e7b0',
+	'success-color-4': '#e1f5d8',
+	
+	'error-color': '#f56c6c',
+	'error-color-1': '#f78989',
+	'error-color-2': '#f9a7a7',
+	'error-color-3': '#fbc4c4',
+	'error-color-4': '#fde2e2',
+	
+	'warning-color': '#e6a23c',
+	'warning-color-1': '#eab563',
+	'warning-color-2': '#eec88a',
+	'warning-color-3': '#f2dab1',
+	'warning-color-4': '#f6ecd8',
+	
+	'info-color': '#909399',
+	'info-color-1': '#a6a9ad',
+	'info-color-2': '#bcbec2',
+	'info-color-3': '#d3d4d6',
+	'info-color-4': '#e9e9eb',
+	
+	// 基础色
+	'black-color': '#000000',
+	'white-color': '#ffffff',
+	
+	// 灰度颜色
+	'gray-1': '#303133',
+	'gray-2': '#606266',
+	'gray-3': '#909399',
+	'gray-4': '#c0c4cc',
+	'gray-5': '#dcdfe6',
+	'gray-6': '#e4e7ed',
+	
+	// 背景色
+	'background-color': '#ffffff',
+	'background-color-secondary': '#f5f7fa',
+	
+	// 文字颜色
+	'text-color': '#303133',
+	'text-color-secondary': '#606266',
+	'text-color-disabled': '#c0c4cc',
+	
+	// 边框颜色
+	'border-color': '#dcdfe6',
+	'border-color-light': '#e4e7ed',
+	'border-color-lighter': '#ebeef5',
+	'border-color-extra-light': '#f2f6fc',
+	
+	// 圆角
+	'border-radius': '8rpx',
+	'border-radius-small': '4rpx',
+	'border-radius-large': '16rpx',
+	'border-radius-round': '40rpx',
+	'border-radius-circle': '50%',
+	
+	// 间距
+	'spacing-xs': '8rpx',
+	'spacing-sm': '16rpx',
+	'spacing-md': '32rpx',
+	'spacing-lg': '48rpx',
+	'spacing-xl': '64rpx',
+	
+	// 字体大小
+	'font-size-xs': '20rpx',
+	'font-size-sm': '24rpx',
+	'font-size-base': '28rpx',
+	'font-size-lg': '32rpx',
+	'font-size-xl': '36rpx',
+	
+	// 行高
+	'line-height-base': '1.5',
+	'line-height-sm': '1.2',
+	'line-height-lg': '1.8',
+	
+	// z-index
+	'z-index-base': '1',
+	'z-index-dropdown': '1000',
+	'z-index-sticky': '1020',
+	'z-index-fixed': '1030',
+	'z-index-modal': '1040',
+	'z-index-tooltip': '1050'
+}
+
+// 深色主题默认配置（对应 variables.scss 中的 $theme-dark）
+const defaultDarkTheme: ThemeConfig = {
+	// 主色调
+	'primary-color': '#66b1ff',
+	'primary-color-1': '#85c1ff',
+	'primary-color-2': '#a6d3ff',
+	'primary-color-3': '#c6e2ff',
+	'primary-color-4': '#d9ecff',
+	'secondary-color': '#a6a9ad',
+	
+	// 功能色
+	'success-color': '#85ce61',
+	'success-color-1': '#95d471',
+	'success-color-2': '#a4da89',
+	'success-color-3': '#b4e0a1',
+	'success-color-4': '#c3e6b9',
+	
+	'error-color': '#f78989',
+	'error-color-1': '#f89a9a',
+	'error-color-2': '#f9abab',
+	'error-color-3': '#fabcbc',
+	'error-color-4': '#fbcdcd',
+	
+	'warning-color': '#eab563',
+	'warning-color-1': '#ecbc73',
+	'warning-color-2': '#eec88a',
+	'warning-color-3': '#f0d4a1',
+	'warning-color-4': '#f2e0b8',
+	
+	'info-color': '#a6a9ad',
+	'info-color-1': '#b0b3b7',
+	'info-color-2': '#babdc1',
+	'info-color-3': '#c4c7cb',
+	'info-color-4': '#ced1d5',
+	
+	// 基础色
+	'black-color': '#ffffff',
+	'white-color': '#000000',
+	
+	// 灰度颜色
+	'gray-1': '#e5eaf3',
+	'gray-2': '#cfd3dc',
+	'gray-3': '#a8adb5',
+	'gray-4': '#6c6e72',
+	'gray-5': '#4c4d4f',
+	'gray-6': '#2d2d2d',
+	
+	// 背景色
+	'background-color': '#1d1e1f',
+	'background-color-secondary': '#252526',
+	
+	// 文字颜色
+	'text-color': '#e5eaf3',
+	'text-color-secondary': '#cfd3dc',
+	'text-color-disabled': '#6c6e72',
+	
+	// 边框颜色
+	'border-color': '#4c4d4f',
+	'border-color-light': '#3d3e40',
+	'border-color-lighter': '#2d2d2d',
+	'border-color-extra-light': '#252526',
+	
+	// 圆角（深色主题与浅色主题相同）
+	'border-radius': '8rpx',
+	'border-radius-small': '4rpx',
+	'border-radius-large': '16rpx',
+	'border-radius-round': '40rpx',
+	'border-radius-circle': '50%',
+	
+	// 间距（深色主题与浅色主题相同）
+	'spacing-xs': '8rpx',
+	'spacing-sm': '16rpx',
+	'spacing-md': '32rpx',
+	'spacing-lg': '48rpx',
+	'spacing-xl': '64rpx',
+	
+	// 字体大小（深色主题与浅色主题相同）
+	'font-size-xs': '20rpx',
+	'font-size-sm': '24rpx',
+	'font-size-base': '28rpx',
+	'font-size-lg': '32rpx',
+	'font-size-xl': '36rpx',
+	
+	// 行高（深色主题与浅色主题相同）
+	'line-height-base': '1.5',
+	'line-height-sm': '1.2',
+	'line-height-lg': '1.8',
+	
+	// z-index（深色主题与浅色主题相同）
+	'z-index-base': '1',
+	'z-index-dropdown': '1000',
+	'z-index-sticky': '1020',
+	'z-index-fixed': '1030',
+	'z-index-modal': '1040',
+	'z-index-tooltip': '1050'
+}
+
+// 当前全局主题配置
+let globalThemeConfig: ThemeConfig = {}
+
+// 主题变更监听器
+type ThemeChangeListener = (theme: ThemeConfig) => void
+const themeChangeListeners: ThemeChangeListener[] = []
+
+/**
+ * BlTheme 类（参考 Ant Design 的 ConfigProvider）
+ * 提供全局主题配置和切换功能
+ */
+export class BlTheme {
+	/**
+	 * 配置主题（类似 antd 的 ConfigProvider.config）
+	 * @param options 主题配置选项
+	 */
+	static config(options: ThemeConfigOptions): void {
+		if (options.theme != null) {
+			// 合并主题配置（只更新提供的属性）
+			for (const key in options.theme) {
+				const value = options.theme[key as keyof ThemeConfig]
+				if (value != null) {
+					globalThemeConfig[key as keyof ThemeConfig] = value
+				}
+			}
+			
+			// 应用主题到 CSS 变量
+			applyThemeToCSS(globalThemeConfig)
+			
+			// 通知所有监听器
+			themeChangeListeners.forEach(listener => {
+				listener(globalThemeConfig)
+			})
+			
+			// 保存到本地存储
+			try {
+				uni.setStorageSync('bl-theme-config', globalThemeConfig)
+			} catch (e) {
+				console.error('[BlTheme] 保存主题配置失败', e)
+			}
+		}
+	}
+	
+	/**
+	 * 获取当前主题配置
+	 */
+	static getTheme(): ThemeConfig {
+		return { ...globalThemeConfig }
+	}
+	
+	/**
+	 * 重置主题为默认值
+	 * @param themeName 主题名称（'light' | 'dark'），默认为 'light'
+	 */
+	static resetTheme(themeName: 'light' | 'dark' = 'light'): void {
+		const defaultTheme = themeName === 'light' ? defaultLightTheme : defaultDarkTheme
+		globalThemeConfig = { ...defaultTheme }
+		this.config({ theme: globalThemeConfig })
+	}
+	
+	/**
+	 * 设置预设主题（浅色或深色）
+	 * @param themeName 主题名称（'light' | 'dark'）
+	 */
+	static setPresetTheme(themeName: 'light' | 'dark'): void {
+		const presetTheme = themeName === 'light' ? defaultLightTheme : defaultDarkTheme
+		globalThemeConfig = { ...presetTheme }
+		this.config({ theme: globalThemeConfig })
+	}
+	
+	/**
+	 * 添加主题变更监听器
+	 * @param listener 监听器函数
+	 */
+	static onThemeChange(listener: ThemeChangeListener): void {
+		themeChangeListeners.push(listener)
+	}
+	
+	/**
+	 * 移除主题变更监听器
+	 * @param listener 监听器函数
+	 */
+	static offThemeChange(listener: ThemeChangeListener): void {
+		const index = themeChangeListeners.indexOf(listener)
+		if (index >= 0) {
+			themeChangeListeners.splice(index, 1)
+		}
+	}
+	
+	/**
+	 * 初始化主题（从本地存储读取）
+	 */
+	static initTheme(): void {
+		try {
+			const savedConfig = uni.getStorageSync('bl-theme-config')
+			if (savedConfig != null && typeof savedConfig == 'object') {
+				globalThemeConfig = savedConfig as ThemeConfig
+				applyThemeToCSS(globalThemeConfig)
+			} else {
+				// 如果没有保存的配置，使用默认浅色主题
+				this.resetTheme('light')
+			}
+		} catch (e) {
+			console.error('[BlTheme] 读取主题配置失败', e)
+			// 读取失败时使用默认浅色主题
+			this.resetTheme('light')
+		}
+	}
+}
+
+/**
+ * 应用主题到 CSS 变量
+ * 在 uni-app x 中，通过设置页面根元素的样式来实现主题切换
+ * @param theme 主题配置对象
+ */
+function applyThemeToCSS(theme: ThemeConfig): void {
+	// 在 H5 平台，直接设置 document 的 CSS 变量
+	// #ifdef H5
+	try {
+		if (typeof document != 'undefined' && document.documentElement != null) {
+			// 设置 CSS 变量
+			for (const key in theme) {
+				const value = theme[key as keyof ThemeConfig]
+				if (value != null) {
+					// 将主题变量名转换为 CSS 变量名（添加 --bl- 前缀）
+					const cssVarName = `--bl-${key}`
+					document.documentElement.style.setProperty(cssVarName, value)
+				}
+			}
+		}
+	} catch (e) {
+		console.error('[BlTheme] 应用主题到 CSS 失败', e)
+	}
+	// #endif
+	
+	// 在 APP 和小程序平台，主题切换通过 BlThemeProvider 组件的内联样式实现
+	// BlThemeProvider 会生成 CSS 变量，子组件通过 var(--bl-xxx) 使用
+	// #ifdef APP || MP
+	// 注意：在 APP 和小程序中，无法直接操作 document.documentElement
+	// 因此需要通过 BlThemeProvider 组件的内联样式来设置 CSS 变量
+	// BlThemeProvider 组件会自动处理主题切换
+	// #endif
+}
+
+/**
+ * 获取主题变量的 CSS 变量名
+ * @param key 主题变量键名
+ * @returns CSS 变量名（如 '--bl-primary-color'）
+ */
+export function getThemeCSSVar(key: keyof ThemeConfig): string {
+	return `--bl-${key}`
+}
+
+/**
+ * 获取主题变量的值
+ * @param key 主题变量键名
+ * @param theme 主题配置对象，如果不提供则使用全局主题配置
+ * @returns 主题变量的值
+ */
+export function getThemeValue(key: keyof ThemeConfig, theme?: ThemeConfig | null): string | null {
+	const config = theme || globalThemeConfig
+	if (config == null) {
+		return null
+	}
+	const value = config[key]
+	return value != null ? value : null
+}
+
+/**
+ * 合并主题配置（深度合并）
+ * @param base 基础主题配置
+ * @param override 要覆盖的主题配置
+ * @returns 合并后的主题配置
+ */
+export function mergeThemeConfig(base: ThemeConfig, override: ThemeConfig): ThemeConfig {
+	const result: ThemeConfig = { ...base }
+	for (const key in override) {
+		const value = override[key as keyof ThemeConfig]
+		if (value != null) {
+			result[key as keyof ThemeConfig] = value
+		}
+	}
+	return result
+}
+
+/**
+ * 获取默认主题配置
+ * @param themeName 主题名称（'light' | 'dark'），默认为 'light'
+ * @returns 默认主题配置
+ */
+export function getDefaultTheme(themeName: 'light' | 'dark' = 'light'): ThemeConfig {
+	return themeName === 'light' ? { ...defaultLightTheme } : { ...defaultDarkTheme }
+}
+
+// 导出默认主题配置（供组件使用）
+export { defaultLightTheme, defaultDarkTheme }

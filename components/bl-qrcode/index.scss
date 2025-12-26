@@ -1,0 +1,33 @@
+/**
+ * BlQRCode 组件样式
+ * 参考 Ant Design QRCode 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-qrcode {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+}
+
+.bl-qrcode--bordered {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-qrcode__canvas {
+	display: block;
+}
+
+.bl-qrcode__content {
+	margin-top: var(--bl-spacing-sm, $spacing-sm);
+	text-align: center;
+}
+

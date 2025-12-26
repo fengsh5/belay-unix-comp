@@ -1,0 +1,253 @@
+<template>
+	<view :class="numberInputClass" :style="numberInputStyle">
+		<view 
+			v-if="showMinus" 
+			:class="buttonClass('minus')"
+			:style="buttonStyle('minus')"
+			@click="handleMinus"
+		>
+			<text class="bl-numberinput__button-text">-</text>
+		</view>
+		<input
+			:class="inputClass"
+			:style="inputStyle"
+			:value="displayValue"
+			type="number"
+			:disabled="disabled || !editable"
+			:placeholder="placeholder"
+			@input="handleInput"
+			@blur="handleBlur"
+			@focus="handleFocus"
+		/>
+		<view 
+			v-if="showPlus" 
+			:class="buttonClass('plus')"
+			:style="buttonStyle('plus')"
+			@click="handlePlus"
+		>
+			<text class="bl-numberinput__button-text">+</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlNumberInput',
+		props: {
+			/**
+			 * 当前值
+			 */
+			value: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 最小值
+			 */
+			min: {
+				type: Number,
+				default: Number.MIN_SAFE_INTEGER
+			},
+			/**
+			 * 最大值
+			 */
+			max: {
+				type: Number,
+				default: Number.MAX_SAFE_INTEGER
+			},
+			/**
+			 * 步长，每次点击时改变的值
+			 */
+			step: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否可编辑
+			 */
+			editable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示减少按钮
+			 */
+			showMinus: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示增加按钮
+			 */
+			showPlus: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 占位符
+			 */
+			placeholder: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 输入框宽度
+			 */
+			width: {
+				type: [Number, String],
+				default: 120
+			},
+			/**
+			 * 按钮大小
+			 */
+			buttonSize: {
+				type: Number,
+				default: 48
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				currentValue: 0
+			}
+		},
+		emits: ['change', 'input', 'blur', 'focus', 'plus', 'minus'],
+		computed: {
+			numberInputClass(): string {
+				const classes: string[] = ['bl-numberinput']
+				if (this.disabled) {
+					classes.push('bl-numberinput--disabled')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			numberInputStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			displayValue(): string {
+				return String(this.currentValue)
+			},
+			inputClass(): string {
+				return 'bl-numberinput__input'
+			},
+			inputStyle(): string {
+				const styles: string[] = []
+				const widthValue = typeof this.width === 'number' ? `${this.width}px` : this.width
+				styles.push(`width: ${widthValue}`)
+				return styles.join('; ')
+			}
+		},
+		watch: {
+			value: {
+				handler(newVal: number) {
+					this.currentValue = this.formatValue(newVal)
+				},
+				immediate: true
+			}
+		},
+		methods: {
+			buttonClass(type: string): string {
+				const classes: string[] = ['bl-numberinput__button']
+				classes.push(`bl-numberinput__button--${type}`)
+				if (this.disabled || this.isButtonDisabled(type)) {
+					classes.push('bl-numberinput__button--disabled')
+				}
+				return classes.join(' ')
+			},
+			buttonStyle(type: string): string {
+				const styles: string[] = []
+				styles.push(`width: ${this.buttonSize}px`)
+				styles.push(`height: ${this.buttonSize}px`)
+				return styles.join('; ')
+			},
+			isButtonDisabled(type: string): boolean {
+				if (type === 'minus') {
+					return this.currentValue <= this.min
+				}
+				if (type === 'plus') {
+					return this.currentValue >= this.max
+				}
+				return false
+			},
+			formatValue(value: number): number {
+				let num = Number(value)
+				if (isNaN(num)) {
+					num = 0
+				}
+				if (num < this.min) {
+					num = this.min
+				}
+				if (num > this.max) {
+					num = this.max
+				}
+				return num
+			},
+			updateValue(value: number): void {
+				const newValue = this.formatValue(value)
+				if (newValue != this.currentValue) {
+					this.currentValue = newValue
+					this.$emit('change', newValue)
+					this.$emit('input', newValue)
+				}
+			},
+			handleMinus(): void {
+				if (this.disabled || this.isButtonDisabled('minus')) {
+					return
+				}
+				const newValue = this.currentValue - this.step
+				this.updateValue(newValue)
+				this.$emit('minus', newValue)
+			},
+			handlePlus(): void {
+				if (this.disabled || this.isButtonDisabled('plus')) {
+					return
+				}
+				const newValue = this.currentValue + this.step
+				this.updateValue(newValue)
+				this.$emit('plus', newValue)
+			},
+			handleInput(e: any): void {
+				const value = e.detail?.value || ''
+				const numValue = value === '' ? 0 : Number(value)
+				this.updateValue(numValue)
+			},
+			handleBlur(e: any): void {
+				this.$emit('blur', e)
+			},
+			handleFocus(e: any): void {
+				this.$emit('focus', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

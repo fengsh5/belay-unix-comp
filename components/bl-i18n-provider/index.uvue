@@ -1,0 +1,137 @@
+<template>
+	<view>
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * BlI18nProvider 国际化提供者组件（Vue3/uni-app x 版本）
+	 * 
+	 * 这是功能完整的多语言提供者组件，支持：
+	 * - 通过 locale 属性传递语言配置对象
+	 * - 自动初始化默认语言
+	 * - 从本地文件加载语言资源
+	 * - 监听语言变更
+	 * - 集成 BlI18n 工具类
+	 * 
+	 * 使用示例：
+	 * <bl-i18n-provider :locale="locale">
+	 *   <view>内容</view>
+	 * </bl-i18n-provider>
+	 * 
+	 * 注意：此组件仅支持 uni-app x 项目（Vue3）
+	 * Vue2 版本请使用 index.vue（功能有限）
+	 */
+	import { 
+		BlI18n,
+		type Locale,
+		initDefaultLocales,
+		loadDefaultLocales
+	} from '../../utils/BlI18n/index.uts'
+	
+	export default {
+		name: 'BlI18nProvider',
+		props: {
+			/**
+			 * 语言配置对象（参考 antd 的 ConfigProvider locale 属性）
+			 * 可以传递 Locale 对象，类似 antd 的 zhCN、enUS 等
+			 */
+			locale: {
+				type: Object,
+				default: null
+			},
+			/**
+			 * 是否自动初始化默认语言
+			 */
+			autoInit: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否从本地文件加载语言资源（优先从文件加载，失败则使用代码中的默认值）
+			 */
+			loadFromFile: {
+				type: Boolean,
+				default: false
+			}
+		},
+		created() {
+			// 自动初始化默认语言资源
+			if (this.autoInit) {
+				if (this.loadFromFile) {
+					// 从本地文件加载
+					loadDefaultLocales().then(() => {
+						// 加载成功
+					}).catch(() => {
+						// 加载失败，使用代码中的默认值
+						initDefaultLocales()
+					})
+				} else {
+					// 从代码中加载
+					initDefaultLocales()
+				}
+			}
+			
+			// 初始化语言（从本地存储读取）
+			BlI18n.initLocale()
+			
+			// 设置语言配置
+			if (this.locale != null && typeof this.locale == 'object') {
+				const localeObj = this.locale as Locale
+				const localeCode = (localeObj.locale as string) || (localeObj.localeName as string) || 'zh-CN'
+				
+				// 注册语言（如果还未注册）
+				if (!BlI18n.isLocaleRegistered(localeCode)) {
+					BlI18n.registerLocale(localeCode, localeObj)
+			}
+			
+				// 配置全局语言
+				BlI18n.config({ locale: localeObj })
+			} else {
+				// 如果没有指定，尝试从本地存储恢复
+				const savedLocale = BlI18n.getLocale()
+				if (savedLocale == null || Object.keys(savedLocale).length == 0) {
+					// 如果没有保存的语言，使用默认语言（zh-CN）
+					const defaultLocale = BlI18n.getLocaleByCode('zh-CN')
+					if (defaultLocale != null) {
+						BlI18n.config({ locale: defaultLocale })
+					}
+				}
+			}
+			
+			// 监听语言变更
+			BlI18n.onLocaleChange(this.handleLocaleChange)
+		},
+		watch: {
+			locale: {
+				handler(newLocale: Locale | null) {
+					if (newLocale != null && typeof newLocale == 'object') {
+						const localeObj = newLocale as Locale
+						const localeCode = (localeObj.locale as string) || (localeObj.localeName as string) || 'zh-CN'
+						
+						// 注册语言（如果还未注册）
+						if (!BlI18n.isLocaleRegistered(localeCode)) {
+							BlI18n.registerLocale(localeCode, localeObj)
+						}
+						
+						// 配置全局语言
+						BlI18n.config({ locale: localeObj })
+					}
+				},
+				deep: true,
+				immediate: false
+			}
+		},
+		beforeUnmount() {
+			// 移除监听器
+			BlI18n.offLocaleChange(this.handleLocaleChange)
+		},
+		methods: {
+			handleLocaleChange(locale: Locale): void {
+				// 语言变更时的处理
+				console.log('[BlI18nProvider] 语言已切换为:', locale)
+			}
+		}
+	}
+</script>

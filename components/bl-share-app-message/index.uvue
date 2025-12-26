@@ -1,0 +1,417 @@
+<template>
+	<view v-if="showShareButton" :class="shareButtonClass" :style="shareButtonStyle" @click="handleShareClick">
+		<slot name="trigger">
+			<bl-button type="primary" :text="shareButtonText"></bl-button>
+		</slot>
+	</view>
+</template>
+
+<script lang="uts">
+	type SharePlatform = 'weixin' | 'qq' | 'sina' | 'copy'
+	
+	type SharePayload = {
+		title?: string
+		path?: string
+		imageUrl?: string
+		href?: string
+		content?: string
+		summary?: string
+		media?: string
+	}
+	
+	export default {
+		name: 'BlShareAppMessage',
+		props: {
+			/**
+			 * 分享配置对象或函数
+			 */
+			payload: {
+				type: [Object, Function],
+				default: null
+			},
+			/**
+			 * 分享标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 分享路径（小程序）
+			 */
+			path: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 分享链接（H5/APP）
+			 */
+			href: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 分享图片
+			 */
+			imageUrl: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 分享内容（APP）
+			 */
+			content: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 分享摘要（APP）
+			 */
+			summary: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * APP端支持的分享平台
+			 */
+			platforms: {
+				type: Array,
+				default: () => ['weixin', 'qq', 'sina', 'copy']
+			},
+			/**
+			 * 是否显示分享按钮（APP/H5）
+			 */
+			showShareButton: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 分享按钮文本
+			 */
+			shareButtonText: {
+				type: String,
+				default: '分享'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['share', 'success', 'fail'],
+		computed: {
+			shareButtonClass(): string {
+				const classes: string[] = ['bl-shareappmessage']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			shareButtonStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			shareData(): SharePayload {
+				if (this.payload != null) {
+					if (typeof this.payload === 'function') {
+						return (this.payload as Function)() || {}
+					}
+					return this.payload as SharePayload
+				}
+				
+				return {
+					title: this.title,
+					path: this.path,
+					href: this.href,
+					imageUrl: this.imageUrl,
+					content: this.content,
+					summary: this.summary
+				}
+			}
+		},
+		mounted() {
+			// 小程序端：配置页面分享
+			// #ifdef MP
+			this.setupMiniProgramShare()
+			// #endif
+		},
+		methods: {
+			/**
+			 * 小程序端配置分享
+			 */
+			setupMiniProgramShare(): void {
+				// #ifdef MP
+				const pages = getCurrentPages()
+				if (pages.length > 0) {
+					const currentPage = pages[pages.length - 1]
+					if (currentPage != null) {
+						const shareData = this.shareData
+						(currentPage as any).onShareAppMessage = () => {
+							this.$emit('share', shareData)
+							return {
+								title: shareData.title || '',
+								path: shareData.path || '/pages/index/index',
+								imageUrl: shareData.imageUrl || ''
+							}
+						}
+					}
+				}
+				// #endif
+			},
+			/**
+			 * APP端分享
+			 */
+			shareToApp(platform?: SharePlatform): void {
+				// #ifdef APP
+				// uni-app x中plus对象在APP端自动可用，不需要typeof检查
+				const shareData = this.shareData
+				// @ts-ignore - plus对象在APP端全局可用
+				plus.share.getServices((services: any[]) => {
+					if (!services || services.length === 0) {
+						uni.showToast({
+							title: '未找到可用的分享服务',
+							icon: 'none'
+						})
+						return
+					}
+					
+					// 如果指定了平台，直接分享
+					if (platform != null && platform != 'copy') {
+						const service = services.find((s: any) => {
+							if (platform === 'weixin') {
+								return s.id === 'weixin' || s.id === 'weixin_timeline'
+							} else if (platform === 'qq') {
+								return s.id === 'qq'
+							} else if (platform === 'sina') {
+								return s.id === 'sinaweibo'
+							}
+							return false
+						})
+						
+						if (service != null) {
+							this.doShare(service, shareData)
+						} else {
+							uni.showToast({
+								title: '该分享平台不可用',
+								icon: 'none'
+							})
+						}
+						return
+					}
+					
+					// 显示分享菜单
+					this.showShareMenu(services, shareData)
+				}, (error: any) => {
+					console.error('[BlShareAppMessage] getServices error:', error)
+					this.$emit('fail', error)
+				})
+				// #endif
+			},
+			/**
+			 * 显示分享菜单
+			 */
+			showShareMenu(services: any[], shareData: SharePayload): void {
+				// #ifdef APP
+				const menuItems: any[] = []
+				
+				for (const platform of this.platforms) {
+					if (platform === 'copy') {
+						menuItems.push({
+							title: '复制链接',
+							action: () => this.copyLink(shareData.href || '')
+						})
+						continue
+					}
+					
+					const service = services.find((s: any) => {
+						if (platform === 'weixin') {
+							return s.id === 'weixin' || s.id === 'weixin_timeline'
+						} else if (platform === 'qq') {
+							return s.id === 'qq'
+						} else if (platform === 'sina') {
+							return s.id === 'sinaweibo'
+						}
+						return false
+					})
+					
+					if (service != null) {
+						const platformName = this.getPlatformName(platform)
+						menuItems.push({
+							title: platformName,
+							action: () => this.doShare(service, shareData)
+						})
+					}
+				}
+				
+				if (menuItems.length === 0) {
+					uni.showToast({
+						title: '未找到可用的分享服务',
+						icon: 'none'
+					})
+					return
+				}
+				
+				// 显示操作菜单
+				uni.showActionSheet({
+					itemList: menuItems.map(item => item.title),
+					success: (res) => {
+						const item = menuItems[res.tapIndex]
+						if (item != null && item.action != null) {
+							item.action()
+						}
+					}
+				})
+				// #endif
+			},
+			/**
+			 * 执行分享
+			 */
+			doShare(service: any, shareData: SharePayload): void {
+				// #ifdef APP
+				const shareOptions: any = {
+					type: 'web',
+					href: shareData.href || '',
+					title: shareData.title || '',
+					content: shareData.content || shareData.summary || '',
+					thumbs: [shareData.imageUrl || ''],
+					media: shareData.imageUrl || ''
+				}
+				
+				service.send(shareOptions, () => {
+					uni.showToast({
+						title: '分享成功',
+						icon: 'success'
+					})
+					this.$emit('success', { platform: service.id })
+				}, (error: any) => {
+					console.error('[BlShareAppMessage] share error:', error)
+					uni.showToast({
+						title: error.message || '分享失败',
+						icon: 'none'
+					})
+					this.$emit('fail', error)
+				})
+				// #endif
+			},
+			/**
+			 * H5端分享
+			 */
+			shareToH5(): void {
+				// #ifdef H5
+				// H5端使用uni-app API，不支持直接调用浏览器API
+				// 如果需要使用Web Share API，应该在UTS插件中实现
+				const shareData = this.shareData
+				// 降级到复制链接
+				this.copyLink(shareData.href || '')
+				// #endif
+			},
+			/**
+			 * 复制链接
+			 */
+			copyLink(url: string): void {
+				// 使用uni-app跨平台API
+				if (url == null || url == '') {
+					// 获取当前页面URL
+					// #ifdef H5
+					// H5端可以通过uni API获取
+					// #endif
+					url = '/'
+				}
+				
+				uni.setClipboardData({
+					data: url,
+					success: () => {
+						uni.showToast({
+							title: '链接已复制',
+							icon: 'success'
+						})
+						this.$emit('success', { platform: 'copy' })
+					},
+					fail: (error: any) => {
+						console.error('[BlShareAppMessage] copy error:', error)
+						uni.showToast({
+							title: '复制失败',
+							icon: 'none'
+						})
+						this.$emit('fail', error)
+					}
+				})
+			},
+			/**
+			 * 获取平台名称
+			 */
+			getPlatformName(platform: SharePlatform): string {
+				const names: Record<string, string> = {
+					weixin: '微信',
+					qq: 'QQ',
+					sina: '微博',
+					copy: '复制链接'
+				}
+				return names[platform] || platform
+			},
+			/**
+			 * 处理分享点击
+			 */
+			handleShareClick(): void {
+				const shareData = this.shareData
+				this.$emit('share', shareData)
+				
+				// #ifdef MP
+				// 小程序端通过右上角分享按钮触发
+				uni.showToast({
+					title: '请点击右上角分享',
+					icon: 'none'
+				})
+				// #endif
+				
+				// #ifdef APP
+				this.shareToApp()
+				// #endif
+				
+				// #ifdef H5
+				this.shareToH5()
+				// #endif
+			},
+			/**
+			 * 主动触发分享（可指定平台）
+			 */
+			share(platform?: SharePlatform): void {
+				// #ifdef APP
+				if (platform != null) {
+					this.shareToApp(platform)
+				} else {
+					this.shareToApp()
+				}
+				// #endif
+				
+				// #ifdef H5
+				this.shareToH5()
+				// #endif
+				
+				// #ifdef MP
+				uni.showToast({
+					title: '请点击右上角分享',
+					icon: 'none'
+				})
+				// #endif
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

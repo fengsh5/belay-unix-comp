@@ -1,0 +1,102 @@
+/**
+ * BlTabButton 组件样式
+ * 参考 Ant Design Tab 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tabbutton {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex: 1;
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	position: relative;
+	box-sizing: border-box;
+	
+	&:not(.bl-tabbutton--active):active {
+		opacity: 0.8;
+	}
+}
+
+.bl-tabbutton__icon {
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: color 0.3s;
+}
+
+.bl-tabbutton__text {
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: color 0.3s;
+	text-align: center;
+}
+
+.bl-tabbutton__badge {
+	position: absolute;
+	top: 4rpx;
+	right: 4rpx;
+}
+
+/* ==================== 标签按钮状态 ==================== */
+
+/* 激活状态 */
+.bl-tabbutton--active {
+	.bl-tabbutton__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	.bl-tabbutton__text {
+		color: var(--bl-primary-color, $primary-color);
+		font-weight: 500;
+	}
+}
+
+/* ==================== 标签按钮尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-tabbutton--large {
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	
+	.bl-tabbutton__icon {
+		font-size: 48rpx;
+		margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	.bl-tabbutton__text {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* 小尺寸 */
+.bl-tabbutton--small {
+	padding: 4rpx var(--bl-spacing-xs, $spacing-xs);
+	
+	.bl-tabbutton__icon {
+		font-size: 32rpx;
+		margin-bottom: 2rpx;
+	}
+	
+	.bl-tabbutton__text {
+		font-size: 20rpx;
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-tabbutton {
+		padding: 4rpx var(--bl-spacing-xs, $spacing-xs);
+	}
+}
+

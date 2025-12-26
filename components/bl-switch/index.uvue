@@ -1,0 +1,88 @@
+<template>
+	<switch 
+		:class="switchClass" 
+		:style="switchStyle"
+		:checked="checked"
+		:disabled="disabled"
+		:type="type"
+		:color="color"
+		@change="handleChange"
+	></switch>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlSwitch',
+		props: {
+			/**
+			 * 是否选中
+			 */
+			checked: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 样式类型，有效值：switch | checkbox
+			 */
+			type: {
+				type: String,
+				default: 'switch'
+			},
+			/**
+			 * switch 的颜色，同 css 的 color
+			 */
+			color: {
+				type: String,
+				default: '#1aad19'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change'],
+		computed: {
+			switchClass(): string {
+				const classes: string[] = ['bl-switch']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			switchStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleChange(e: any): void {
+				this.$emit('change', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

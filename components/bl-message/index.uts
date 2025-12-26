@@ -1,0 +1,6 @@
+/**
+ * BlMessage 组件统一导出
+ */
+
+export { default as BlMessage } from './message.uts'
+

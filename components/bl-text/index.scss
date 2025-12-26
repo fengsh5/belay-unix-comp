@@ -1,0 +1,112 @@
+/**
+ * BlText 组件样式
+ * 参考 Ant Design Typography 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-text {
+	box-sizing: border-box;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+}
+
+/* ==================== 文本类型 ==================== */
+
+/* 标题文本 */
+.bl-text--h1 {
+	font-size: var(--bl-font-size-xl, $font-size-xl);
+	font-weight: 600;
+	line-height: 1.2;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-text--h2 {
+	font-size: 40rpx;
+	font-weight: 600;
+	line-height: 1.2;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-text--h3 {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	line-height: 1.3;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-text--h4 {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1.4;
+	color: var(--bl-text-color, $text-color);
+}
+
+/* 正文文本 */
+.bl-text--body {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-text--secondary {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+}
+
+.bl-text--disabled {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+}
+
+/* 链接文本 */
+.bl-text--link {
+	color: var(--bl-primary-color, $primary-color);
+	cursor: pointer;
+	text-decoration: none;
+	transition: color 0.3s;
+	
+	&:active {
+		color: var(--bl-primary-color-1, $primary-color-1);
+	}
+}
+
+/* 代码文本 */
+.bl-text--code {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	padding: 2rpx 8rpx;
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+/* ==================== 文本尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-text--large {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+}
+
+/* 默认尺寸 */
+.bl-text--default {
+	font-size: var(--bl-font-size-base, $font-size-base);
+}
+
+/* 小尺寸 */
+.bl-text--small {
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

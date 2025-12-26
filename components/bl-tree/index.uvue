@@ -1,0 +1,210 @@
+<template>
+	<view class="bl-tree" :style="treeStyle">
+		<BlTreeNode
+			v-for="(node, index) in treeData"
+			:key="node.key"
+			:node="node"
+			:level="0"
+			:checkable="checkable"
+			:show-icon="showIcon"
+			:show-line="showLine"
+			:expanded-keys="currentExpandedKeys"
+			:selected-keys="currentSelectedKeys"
+			:checked-keys="currentCheckedKeys"
+			:disabled="disabled"
+			@expand="handleExpand"
+			@select="handleSelect"
+			@check="handleCheck"
+		></BlTreeNode>
+	</view>
+</template>
+
+<script lang="uts">
+	import BlTreeNode from './node.uvue'
+	
+	export default {
+		name: 'BlTree',
+		components: {
+			BlTreeNode
+		},
+		props: {
+			/**
+			 * 树节点数据
+			 */
+			treeData: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 是否显示复选框
+			 */
+			checkable: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否默认展开所有节点
+			 */
+			defaultExpandAll: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 默认展开的节点 key
+			 */
+			defaultExpandedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前展开的节点 key（受控）
+			 */
+			expandedKeys: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 默认选中的节点 key
+			 */
+			defaultSelectedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前选中的节点 key（受控）
+			 */
+			selectedKeys: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 默认勾选的节点 key
+			 */
+			defaultCheckedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前勾选的节点 key（受控）
+			 */
+			checkedKeys: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 是否显示连接线
+			 */
+			showLine: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示图标
+			 */
+			showIcon: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['expand', 'select', 'check', 'update:expandedKeys', 'update:selectedKeys', 'update:checkedKeys'],
+		data() {
+			return {
+				internalExpandedKeys: [] as Array<string | number>,
+				internalSelectedKeys: [] as Array<string | number>,
+				internalCheckedKeys: [] as Array<string | number>
+			}
+		},
+		computed: {
+			currentExpandedKeys(): Array<string | number> {
+				if (this.expandedKeys != null) {
+					return this.expandedKeys as Array<string | number>
+				}
+				if (this.defaultExpandAll) {
+					return this.getAllKeys(this.treeData as Array<any>)
+				}
+				return this.internalExpandedKeys.length > 0 ? this.internalExpandedKeys : (this.defaultExpandedKeys as Array<string | number>)
+			},
+			currentSelectedKeys(): Array<string | number> {
+				return this.selectedKeys != null ? (this.selectedKeys as Array<string | number>) : (this.internalSelectedKeys.length > 0 ? this.internalSelectedKeys : (this.defaultSelectedKeys as Array<string | number>))
+			},
+			currentCheckedKeys(): Array<string | number> {
+				return this.checkedKeys != null ? (this.checkedKeys as Array<string | number>) : (this.internalCheckedKeys.length > 0 ? this.internalCheckedKeys : (this.defaultCheckedKeys as Array<string | number>))
+			},
+			treeStyle(): string {
+				return this.customStyle || ''
+			}
+		},
+		created() {
+			if (this.defaultExpandAll) {
+				this.internalExpandedKeys = this.getAllKeys(this.treeData as Array<any>)
+			} else if (this.expandedKeys == null) {
+				this.internalExpandedKeys = (this.defaultExpandedKeys || []) as Array<string | number>
+			}
+			if (this.selectedKeys == null) {
+				this.internalSelectedKeys = (this.defaultSelectedKeys || []) as Array<string | number>
+			}
+			if (this.checkedKeys == null) {
+				this.internalCheckedKeys = (this.defaultCheckedKeys || []) as Array<string | number>
+			}
+		},
+		methods: {
+			getAllKeys(nodes: Array<any>): Array<string | number> {
+				const keys: Array<string | number> = []
+				nodes.forEach(node => {
+					keys.push(node.key)
+					if (node.children && node.children.length > 0) {
+						keys.push(...this.getAllKeys(node.children))
+					}
+				})
+				return keys
+			},
+			handleExpand(expandedKeys: Array<string | number>, info: any): void {
+				if (this.expandedKeys == null) {
+					this.internalExpandedKeys = expandedKeys
+				}
+				this.$emit('update:expandedKeys', expandedKeys)
+				this.$emit('expand', expandedKeys, info)
+			},
+			handleSelect(selectedKeys: Array<string | number>, info: any): void {
+				if (this.selectedKeys == null) {
+					this.internalSelectedKeys = selectedKeys
+				}
+				this.$emit('update:selectedKeys', selectedKeys)
+				this.$emit('select', selectedKeys, info)
+			},
+			handleCheck(checkedKeys: Array<string | number>, info: any): void {
+				if (this.checkedKeys == null) {
+					this.internalCheckedKeys = checkedKeys
+				}
+				this.$emit('update:checkedKeys', checkedKeys)
+				this.$emit('check', checkedKeys, info)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

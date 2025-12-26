@@ -1,0 +1,120 @@
+<template>
+	<view 
+		:class="['bl-result', `bl-result--${status}`]"
+		:style="resultStyle"
+	>
+		<view class="bl-result__icon">
+			<slot name="icon">
+				<bl-icon 
+					:name="iconName" 
+					:size="iconSize"
+					:color="iconColor"
+				></bl-icon>
+			</slot>
+		</view>
+		<view v-if="title || $slots.title" class="bl-result__title">
+			<slot name="title">{{ title }}</slot>
+		</view>
+		<view v-if="subTitle || $slots.subTitle" class="bl-result__subtitle">
+			<slot name="subTitle">{{ subTitle }}</slot>
+		</view>
+		<view v-if="$slots.default || $slots.extra" class="bl-result__extra">
+			<slot name="extra">
+				<slot></slot>
+			</slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlResult',
+		props: {
+			/**
+			 * 结果状态
+			 */
+			status: {
+				type: String,
+				default: 'info'
+			},
+			/**
+			 * 标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 副标题
+			 */
+			subTitle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义图标
+			 */
+			icon: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			resultStyle() {
+				return this.customStyle || ''
+			},
+			iconName() {
+				if (this.icon) {
+					return this.icon
+				}
+				const iconMap = {
+					success: 'check-circle',
+					error: 'close-circle',
+					info: 'info-circle',
+					warning: 'exclamation-circle',
+					'404': 'file-unknown',
+					'403': 'lock',
+					'500': 'close-circle'
+				}
+				return iconMap[this.status] || 'info-circle'
+			},
+			iconSize() {
+				if (this.status === '404' || this.status === '403' || this.status === '500') {
+					return 200
+				}
+				return 128
+			},
+			iconColor() {
+				const colorMap = {
+					success: 'var(--bl-success-color, #52c41a)',
+					error: 'var(--bl-error-color, #ff4d4f)',
+					info: 'var(--bl-primary-color, #1890ff)',
+					warning: 'var(--bl-warning-color, #faad14)',
+					'404': 'var(--bl-text-color-secondary, #8c8c8c)',
+					'403': 'var(--bl-text-color-secondary, #8c8c8c)',
+					'500': 'var(--bl-text-color-secondary, #8c8c8c)'
+				}
+				return colorMap[this.status] || 'var(--bl-primary-color, #1890ff)'
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

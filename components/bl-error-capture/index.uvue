@@ -1,0 +1,103 @@
+<template>
+	<view v-if="!hasError" class="bl-errorcapture">
+		<slot></slot>
+	</view>
+	<bl-empty
+		v-else
+		type="error"
+		:desc="errorMessage"
+		:retry-text="retryText"
+		@retry="handleRetry"
+	></bl-empty>
+</template>
+
+<script lang="uts">
+	// 错误类型定义
+	type ErrorInfo = string | {
+		message?: string
+		[key: string]: string | number | boolean | null | undefined
+	}
+
+	export default {
+		name: 'BlErrorCapture',
+		props: {
+			/**
+			 * 错误信息
+			 */
+			error: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否显示错误
+			 */
+			showError: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 错误提示文本
+			 */
+			errorMessage: {
+				type: String,
+				default: '出现错误，请重试'
+			},
+			/**
+			 * 重试按钮文本
+			 */
+			retryText: {
+				type: String,
+				default: '重试'
+			}
+		},
+		data() {
+			return {
+				hasError: false,
+				errorInfo: ''
+			}
+		},
+		watch: {
+			error: {
+				handler(newVal: string) {
+					this.hasError = newVal != null && newVal != '' && this.showError
+					if (this.hasError) {
+						this.errorInfo = newVal
+					}
+				},
+				immediate: true
+			},
+			showError: {
+				handler(newVal: boolean) {
+					if (!newVal) {
+						this.hasError = false
+					} else if (this.error != null && this.error != '') {
+						this.hasError = true
+					}
+				}
+			}
+		},
+		emits: ['retry', 'error'],
+		methods: {
+			handleRetry(): void {
+				this.hasError = false
+				this.errorInfo = ''
+				this.$emit('retry')
+			},
+			captureError(error: ErrorInfo): void {
+				this.hasError = true
+				if (typeof error == 'string') {
+					this.errorInfo = error
+				} else if (error != null && typeof error == 'object') {
+					const errorObj = error as { message?: string }
+					this.errorInfo = errorObj.message || '未知错误'
+				}
+				this.$emit('error', error)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

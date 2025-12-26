@@ -1,0 +1,65 @@
+<template>
+	<slot></slot>
+</template>
+
+<script lang="uts">
+	import { EventBus } from '../BlEventBus/index.uts'
+	import { setPageContext } from './hooks.uts'
+	
+	/**
+	 * 页面状态
+	 */
+	export type PageState = {
+		visible?: boolean
+		ready?: boolean
+	}
+	
+	/**
+	 * 页面上下文值
+	 */
+	export type PageContextValue = {
+		eventBus: EventBus
+		state: PageState
+	}
+	
+	export default {
+		name: 'BlPageContext',
+		data() {
+			return {
+				eventBus: new EventBus(),
+				state: {
+					visible: false,
+					ready: false
+				} as PageState
+			}
+		},
+		created() {
+			// 设置全局上下文，供 hooks 使用
+			setPageContext({
+				eventBus: this.eventBus,
+				state: this.state
+			})
+		},
+		onShow() {
+			// 页面显示时
+			this.state.visible = true
+			this.eventBus.emit('show')
+		},
+		onHide() {
+			// 页面隐藏时
+			this.state.visible = false
+			this.eventBus.emit('hide')
+		},
+		onReady() {
+			// 页面初次渲染完成时
+			this.state.ready = true
+			this.eventBus.emit('ready')
+		},
+		beforeUnmount() {
+			// 组件销毁前清理事件总线和上下文
+			this.eventBus.clear()
+			setPageContext(null)
+		}
+	}
+</script>
+

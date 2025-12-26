@@ -1,0 +1,217 @@
+/**
+ * Belay-Unix 组件库 SCSS Mixins 文件
+ * 
+ * 提供常用的样式 mixin，方便在项目中使用
+ * 
+ * 使用方式：
+ * @import '@/uni_modules/belay-unix/styles/mixins.scss';
+ */
+
+/* ==================== 清除浮动 ==================== */
+@mixin clearfix {
+	&::before,
+	&::after {
+		content: "";
+		display: table;
+	}
+	&::after {
+		clear: both;
+	}
+}
+
+/* ==================== 文本省略 ==================== */
+@mixin text-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 多行文本省略 */
+@mixin text-ellipsis-multi($lines: 2) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: $lines;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* ==================== 居中 ==================== */
+@mixin center-flex {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin center-absolute {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+/* ==================== 1px 边框 ==================== */
+@mixin hairline($color: $border-color, $direction: bottom) {
+	position: relative;
+	
+	&::after {
+		content: "";
+		position: absolute;
+		background-color: $color;
+		
+		@if $direction == top {
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 2rpx;
+			transform: scaleY(0.5);
+		} @else if $direction == bottom {
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 2rpx;
+			transform: scaleY(0.5);
+		} @else if $direction == left {
+			top: 0;
+			left: 0;
+			width: 2rpx;
+			height: 100%;
+			transform: scaleX(0.5);
+		} @else if $direction == right {
+			top: 0;
+			right: 0;
+			width: 2rpx;
+			height: 100%;
+			transform: scaleX(0.5);
+		} @else {
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 2rpx;
+			transform: scaleY(0.5);
+		}
+	}
+}
+
+/* ==================== 按钮样式 ==================== */
+@mixin button-base {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	text-align: center;
+	cursor: pointer;
+	user-select: none;
+	border: none;
+	outline: none;
+	transition: all 0.3s;
+}
+
+@mixin button-variant($color, $background, $border) {
+	color: $color;
+	background-color: $background;
+	border-color: $border;
+	
+	&:hover {
+		opacity: 0.8;
+	}
+	
+	&:active {
+		opacity: 0.6;
+	}
+	
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+/* ==================== 卡片样式 ==================== */
+@mixin card {
+	background-color: $background-color;
+	border-radius: $border-radius;
+	box-shadow: 0 4rpx 24rpx 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== 滚动条样式 ==================== */
+@mixin scrollbar($width: 12rpx, $thumb-color: rgba(0, 0, 0, 0.2), $track-color: transparent) {
+	&::-webkit-scrollbar {
+		width: $width;
+		height: $width;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background-color: $thumb-color;
+		border-radius: $width / 2;
+	}
+	
+	&::-webkit-scrollbar-track {
+		background-color: $track-color;
+	}
+}
+
+/* ==================== 响应式断点 ==================== */
+@mixin respond-to($breakpoint) {
+	@if $breakpoint == xs {
+		@media (max-width: 575px) {
+			@content;
+		}
+	} @else if $breakpoint == sm {
+		@media (min-width: 576px) {
+			@content;
+		}
+	} @else if $breakpoint == md {
+		@media (min-width: 768px) {
+			@content;
+		}
+	} @else if $breakpoint == lg {
+		@media (min-width: 992px) {
+			@content;
+		}
+	} @else if $breakpoint == xl {
+		@media (min-width: 1200px) {
+			@content;
+		}
+	}
+}
+
+/* ==================== 动画 ==================== */
+@mixin fade-in($duration: 0.3s) {
+	animation: fadeIn $duration;
+	
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+}
+
+@mixin slide-up($duration: 0.3s) {
+	animation: slideUp $duration;
+	
+	@keyframes slideUp {
+		from {
+			transform: translateY(100%);
+		}
+		to {
+			transform: translateY(0);
+		}
+	}
+}
+
+@mixin slide-down($duration: 0.3s) {
+	animation: slideDown $duration;
+	
+	@keyframes slideDown {
+		from {
+			transform: translateY(-100%);
+		}
+		to {
+			transform: translateY(0);
+		}
+	}
+}
+

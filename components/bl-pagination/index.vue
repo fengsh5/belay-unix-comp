@@ -1,0 +1,293 @@
+<template>
+	<view 
+		:class="['bl-pagination', size !== 'default' ? `bl-pagination--${size}` : '', simple ? 'bl-pagination--simple' : '']"
+		:style="paginationStyle"
+	>
+		<view v-if="showTotal" class="bl-pagination__total">
+			<slot name="total" :total="total" :range="[startIndex, endIndex]">
+				<text>共 {{ total }} 条</text>
+			</slot>
+		</view>
+		
+		<view 
+			v-if="showPrevNext"
+			:class="['bl-pagination__prev', currentPage === 1 || disabled ? 'bl-pagination__prev--disabled' : '']"
+			@click="handlePrev"
+		>
+			<bl-icon 
+				name="left" 
+				:size="24"
+				:color="currentPage === 1 || disabled ? 'var(--bl-text-color-disabled, #bfbfbf)' : 'var(--bl-text-color, #000000d9)'"
+			></bl-icon>
+		</view>
+		
+		<template v-if="!simple">
+			<view 
+				v-for="page in pageList" 
+				:key="page"
+				:class="['bl-pagination__item', page === currentPage ? 'bl-pagination__item--active' : '', page === '...' ? 'bl-pagination__item--ellipsis' : '', disabled ? 'bl-pagination__item--disabled' : '']"
+				@click="handlePageClick(page)"
+			>
+				<text>{{ page }}</text>
+			</view>
+		</template>
+		
+		<view 
+			v-if="showPrevNext"
+			:class="['bl-pagination__next', currentPage === totalPages || disabled ? 'bl-pagination__next--disabled' : '']"
+			@click="handleNext"
+		>
+			<bl-icon 
+				name="right" 
+				:size="24"
+				:color="currentPage === totalPages || disabled ? 'var(--bl-text-color-disabled, #bfbfbf)' : 'var(--bl-text-color, #000000d9)'"
+			></bl-icon>
+		</view>
+		
+		<view v-if="showSizeChanger" class="bl-pagination__size-changer">
+			<text>{{ currentPageSize }} 条/页</text>
+		</view>
+		
+		<view v-if="showQuickJumper" class="bl-pagination__quick-jumper">
+			<text>跳至</text>
+			<input 
+				class="bl-pagination__quick-jumper-input"
+				type="number"
+				:value="quickJumperValue"
+				@input="handleQuickJumperInput"
+				@confirm="handleQuickJumperConfirm"
+			/>
+			<text>页</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlPagination',
+		props: {
+			/**
+			 * 当前页码
+			 */
+			current: {
+				type: Number,
+				default: null
+			},
+			/**
+			 * 默认页码
+			 */
+			defaultCurrent: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 每页条数
+			 */
+			pageSize: {
+				type: Number,
+				default: null
+			},
+			/**
+			 * 默认每页条数
+			 */
+			defaultPageSize: {
+				type: Number,
+				default: 10
+			},
+			/**
+			 * 数据总数
+			 */
+			total: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否显示总数
+			 */
+			showTotal: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示每页条数选择器
+			 */
+			showSizeChanger: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 每页条数选项
+			 */
+			pageSizeOptions: {
+				type: Array,
+				default: () => [10, 20, 50, 100]
+			},
+			/**
+			 * 是否显示快速跳转
+			 */
+			showQuickJumper: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示上一页/下一页按钮
+			 */
+			showPrevNext: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否简单模式
+			 */
+			simple: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 尺寸
+			 */
+			size: {
+				type: String,
+				default: 'default'
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				internalCurrent: 1,
+				internalPageSize: 10,
+				quickJumperValue: ''
+			}
+		},
+		computed: {
+			currentPage() {
+				return this.current != null ? this.current : this.internalCurrent
+			},
+			currentPageSize() {
+				return this.pageSize != null ? this.pageSize : this.internalPageSize
+			},
+			totalPages() {
+				return Math.ceil(this.total / this.currentPageSize)
+			},
+			startIndex() {
+				return (this.currentPage - 1) * this.currentPageSize + 1
+			},
+			endIndex() {
+				return Math.min(this.currentPage * this.currentPageSize, this.total)
+			},
+			paginationStyle() {
+				return this.customStyle || ''
+			},
+			pageList() {
+				const pages = []
+				const total = this.totalPages
+				const current = this.currentPage
+				
+				if (total <= 7) {
+					// 总页数小于等于7，显示所有页码
+					for (let i = 1; i <= total; i++) {
+						pages.push(i)
+					}
+				} else {
+					// 总页数大于7，显示省略号
+					if (current <= 3) {
+						// 当前页在前3页
+						for (let i = 1; i <= 5; i++) {
+							pages.push(i)
+						}
+						pages.push('...')
+						pages.push(total)
+					} else if (current >= total - 2) {
+						// 当前页在后3页
+						pages.push(1)
+						pages.push('...')
+						for (let i = total - 4; i <= total; i++) {
+							pages.push(i)
+						}
+					} else {
+						// 当前页在中间
+						pages.push(1)
+						pages.push('...')
+						for (let i = current - 1; i <= current + 1; i++) {
+							pages.push(i)
+						}
+						pages.push('...')
+						pages.push(total)
+					}
+				}
+				
+				return pages
+			}
+		},
+		created() {
+			if (this.current == null) {
+				this.internalCurrent = this.defaultCurrent
+			}
+			if (this.pageSize == null) {
+				this.internalPageSize = this.defaultPageSize
+			}
+		},
+		methods: {
+			handlePageClick(page) {
+				if (this.disabled || page === '...' || page === this.currentPage) {
+					return
+				}
+				this.updatePage(page)
+			},
+			handlePrev() {
+				if (this.disabled || this.currentPage <= 1) {
+					return
+				}
+				this.updatePage(this.currentPage - 1)
+			},
+			handleNext() {
+				if (this.disabled || this.currentPage >= this.totalPages) {
+					return
+				}
+				this.updatePage(this.currentPage + 1)
+			},
+			updatePage(page) {
+				if (this.current == null) {
+					this.internalCurrent = page
+				}
+				this.$emit('update:current', page)
+				this.$emit('change', page, this.currentPageSize)
+			},
+			handleQuickJumperInput(event) {
+				this.quickJumperValue = event.detail.value
+			},
+			handleQuickJumperConfirm(event) {
+				const page = parseInt(event.detail.value)
+				if (page >= 1 && page <= this.totalPages) {
+					this.updatePage(page)
+					this.quickJumperValue = ''
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

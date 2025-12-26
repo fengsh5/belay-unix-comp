@@ -1,0 +1,122 @@
+<template>
+	<view 
+		:class="['bl-collapse__panel', isActive ? 'bl-collapse__panel--active' : '', disabled || collapseDisabled ? 'bl-collapse__panel--disabled' : '']"
+		:style="panelStyle"
+	>
+		<view 
+			:class="['bl-collapse__header', disabled || collapseDisabled ? 'bl-collapse__header--disabled' : '']"
+			@click="handleClick"
+		>
+			<view v-if="showArrow" class="bl-collapse__arrow">
+				<bl-icon 
+					name="right" 
+					:size="24"
+					color="var(--bl-text-color-secondary, #8c8c8c)"
+				></bl-icon>
+			</view>
+			<view class="bl-collapse__title">
+				<slot name="header">{{ header }}</slot>
+			</view>
+		</view>
+		<view 
+			:class="['bl-collapse__content', isActive ? 'bl-collapse__content--active' : '']"
+		>
+			<view class="bl-collapse__body">
+				<slot></slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlCollapsePanel',
+		props: {
+			/**
+			 * 面板 key
+			 */
+			key: {
+				type: [String, Number],
+				required: true
+			},
+			/**
+			 * 面板标题
+			 */
+			header: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示箭头
+			 */
+			showArrow: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		inject: {
+			collapse: {
+				type: Object,
+				default: null
+			}
+		},
+		computed: {
+			isActive(): boolean {
+				const self: any = this
+				const collapse = self.collapse
+				const key = self.key
+				if (collapse) {
+					return collapse.isPanelActive(key)
+				}
+				return false
+			},
+			collapseDisabled(): boolean {
+				const self: any = this
+				const collapse = self.collapse
+				return collapse ? collapse.disabled : false
+			},
+			panelStyle(): string {
+				const self: any = this
+				const customStyle = self.customStyle
+				return customStyle || ''
+			}
+		},
+		methods: {
+			handleClick(): void {
+				const self: any = this
+				if (self.disabled || self.collapseDisabled) {
+					return
+				}
+				if (self.collapse) {
+					self.collapse.handlePanelChange(self.key)
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

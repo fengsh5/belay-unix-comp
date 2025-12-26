@@ -1,0 +1,135 @@
+<template>
+	<view :class="themeClass" :style="themeStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * BlThemeProvider 主题提供者组件（Vue3/uni-app x 版本）
+	 * 
+	 * 这是功能完整的主题提供者组件，支持：
+	 * - 通过 theme 属性传递主题配置对象
+	 * - 通过 presetTheme 属性使用预设主题（'light' | 'dark'）
+	 * - 自动合并主题配置（组件 theme > 全局主题 > 预设主题）
+	 * - 通过内联样式设置 CSS 变量
+	 * - 监听全局主题变化
+	 * 
+	 * 使用示例：
+	 * <bl-theme-provider :theme="themeConfig">
+	 *   <view>内容</view>
+	 * </bl-theme-provider>
+	 * 
+	 * 或使用预设主题：
+	 * <bl-theme-provider preset-theme="dark">
+	 *   <view>内容</view>
+	 * </bl-theme-provider>
+	 * 
+	 * 注意：此组件仅支持 uni-app x 项目（Vue3）
+	 * Vue2 版本请使用 index.vue（功能有限）
+	 */
+	import { 
+		type ThemeConfig, 
+		BlTheme,
+		getDefaultTheme,
+		mergeThemeConfig,
+		getThemeCSSVar
+	} from '../../utils/BlTheme/index.uts'
+	
+	export default {
+		name: 'BlThemeProvider',
+		props: {
+			/**
+			 * 主题配置对象（参考 antd 的 ConfigProvider theme 属性）
+			 * 可以传递部分主题变量，会自动与默认主题合并
+			 */
+			theme: {
+				type: Object,
+				default: null
+			},
+			/**
+			 * 预设主题名称（'light' | 'dark'）
+			 * 当 theme 属性为空时，使用预设主题
+			 */
+			presetTheme: {
+				type: String,
+				default: 'light'
+			}
+		},
+		data() {
+			return {
+				currentThemeConfig: {} as ThemeConfig
+			}
+		},
+		computed: {
+			themeClass(): string {
+				return 'bl-theme-provider'
+			},
+			themeStyle(): string {
+				// 生成 CSS 变量样式字符串
+				const styles: string[] = []
+				
+				for (const key in this.currentThemeConfig) {
+					const value = this.currentThemeConfig[key as keyof ThemeConfig]
+					if (value != null) {
+						const cssVarName = getThemeCSSVar(key as keyof ThemeConfig)
+						styles.push(`${cssVarName}: ${value}`)
+					}
+				}
+				
+				return styles.join('; ')
+			}
+		},
+		created() {
+			this.updateTheme()
+			
+			// 监听全局主题变化
+			BlTheme.onThemeChange(this.handleGlobalThemeChange)
+		},
+		watch: {
+			theme: {
+				handler() {
+					this.updateTheme()
+				},
+				deep: true,
+				immediate: false
+			},
+			presetTheme() {
+				this.updateTheme()
+			}
+		},
+		beforeUnmount() {
+			// 移除监听器
+			BlTheme.offThemeChange(this.handleGlobalThemeChange)
+		},
+		methods: {
+			updateTheme(): void {
+				// 获取基础主题配置
+				const presetThemeName = (this.presetTheme != null && (this.presetTheme == 'light' || this.presetTheme == 'dark'))
+					? this.presetTheme
+					: 'light'
+				const baseTheme = getDefaultTheme(presetThemeName)
+				
+				// 获取全局主题配置
+				const globalTheme = BlTheme.getTheme()
+				
+				// 合并主题配置：组件 theme > 全局主题 > 预设主题
+				let mergedTheme = mergeThemeConfig(baseTheme, globalTheme)
+				if (this.theme != null && typeof this.theme == 'object') {
+					mergedTheme = mergeThemeConfig(mergedTheme, this.theme as ThemeConfig)
+				}
+				
+				this.currentThemeConfig = mergedTheme
+			},
+			handleGlobalThemeChange(theme: ThemeConfig): void {
+				// 当全局主题变化时，重新计算当前主题
+				this.updateTheme()
+			}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

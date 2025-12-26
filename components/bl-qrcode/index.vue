@@ -1,0 +1,146 @@
+<template>
+	<view 
+		:class="['bl-qrcode', bordered ? 'bl-qrcode--bordered' : '']"
+		:style="qrcodeStyle"
+		@click="handleClick"
+	>
+		<canvas 
+			:canvas-id="canvasId"
+			:id="canvasId"
+			:style="canvasStyle"
+			class="bl-qrcode__canvas"
+		></canvas>
+		<view v-if="$slots.default" class="bl-qrcode__content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlQRCode',
+		props: {
+			/**
+			 * 二维码内容
+			 */
+			value: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 二维码大小
+			 */
+			size: {
+				type: Number,
+				default: 200
+			},
+			/**
+			 * 二维码颜色
+			 */
+			color: {
+				type: String,
+				default: '#000000'
+			},
+			/**
+			 * 二维码背景颜色
+			 */
+			backgroundColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			/**
+			 * 二维码容错级别
+			 */
+			errorCorrectLevel: {
+				type: String,
+				default: 'M'
+			},
+			/**
+			 * 是否显示边框
+			 */
+			bordered: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				canvasId: `qrcode-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+			}
+		},
+		computed: {
+			qrcodeStyle() {
+				return this.customStyle || ''
+			},
+			canvasStyle() {
+				return `width: ${this.size}rpx; height: ${this.size}rpx;`
+			}
+		},
+		mounted() {
+			this.drawQRCode()
+		},
+		watch: {
+			value() {
+				this.drawQRCode()
+			},
+			size() {
+				this.drawQRCode()
+			},
+			color() {
+				this.drawQRCode()
+			},
+			backgroundColor() {
+				this.drawQRCode()
+			}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('click')
+			},
+			drawQRCode() {
+				// 在 uni-app 中，需要使用第三方库或原生 API 生成二维码
+				// 这里使用 uni-app 的 API
+				// #ifdef MP-WEIXIN
+				// 微信小程序可以使用 wx.createQRCode 或第三方库
+				// #endif
+				
+				// #ifdef APP || H5
+				// 可以使用 canvas 绘制或第三方库
+				// 这里简化处理，实际需要使用二维码生成库
+				// #endif
+				
+				// 注意：实际实现需要使用二维码生成库，如 qrcode.js
+				// 这里只是占位实现
+				const ctx = uni.createCanvasContext(this.canvasId, this)
+				ctx.setFillStyle(this.backgroundColor)
+				ctx.fillRect(0, 0, this.size, this.size)
+				
+				// TODO: 实际需要使用二维码生成库绘制二维码
+				// 这里只是示例，实际需要调用二维码生成函数
+				
+				ctx.draw(false, () => {
+					// 绘制完成
+				})
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

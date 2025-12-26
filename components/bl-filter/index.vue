@@ -1,0 +1,83 @@
+<template>
+	<view :class="filterClass" :style="filterStyle">
+		<bl-hairline placement="['bottom']"></bl-hairline>
+		<view class="bl-filter__content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+/**
+ * BlFilter 筛选组件
+ * 支持 Vue 2 和 Vue 3
+ */
+export default {
+	name: 'BlFilter',
+	props: {
+		/**
+		 * 是否固定在顶部
+		 */
+		fixed: {
+			type: Boolean,
+			default: false
+		},
+		/**
+		 * 背景颜色
+		 */
+		backgroundColor: {
+			type: String,
+			default: '#fff'
+		},
+		/**
+		 * 高度
+		 */
+		height: {
+			type: [Number, String],
+			default: 88
+		},
+		/**
+		 * 自定义样式
+		 */
+		customStyle: {
+			type: String,
+			default: ''
+		},
+		/**
+		 * 自定义类名
+		 */
+		customClass: {
+			type: String,
+			default: ''
+		}
+	},
+	computed: {
+		filterClass() {
+			const classes = ['bl-filter']
+			if (this.fixed) {
+				classes.push('bl-filter--fixed')
+			}
+			if (this.customClass) {
+				classes.push(this.customClass)
+			}
+			return classes.join(' ')
+		},
+		filterStyle() {
+			const styles = []
+			styles.push(`background-color: ${this.backgroundColor}`)
+			const heightValue = typeof this.height === 'number' ? `${this.height}px` : this.height
+			styles.push(`height: ${heightValue}`)
+			if (this.customStyle) {
+				styles.push(this.customStyle)
+			}
+			return styles.join('; ')
+		}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

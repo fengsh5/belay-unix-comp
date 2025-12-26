@@ -1,0 +1,154 @@
+/**
+ * BlTabs 组件样式
+ * 参考 Ant Design Tabs 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tabs {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.bl-tabs__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: var(--bl-background-color, $background-color);
+	border-bottom: 2rpx solid var(--bl-border-color-lighter, $border-color-lighter);
+	position: relative;
+	
+	&--scrollable {
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+}
+
+.bl-tabs__nav {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	white-space: nowrap;
+	position: relative;
+	
+	&--active {
+		color: var(--bl-primary-color, $primary-color);
+		font-weight: 500;
+		
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 4rpx;
+			background-color: var(--bl-primary-color, $primary-color);
+		}
+	}
+	
+	&--disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+	
+	&:not(.bl-tabs__nav--disabled):active {
+		opacity: 0.8;
+	}
+}
+
+.bl-tabs__nav-icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-tabs__nav-title {
+	line-height: 1.5715;
+}
+
+.bl-tabs__body {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+.bl-tabs__panel-wrap {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&--animate {
+		transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	}
+}
+
+/* ==================== 标签页类型 ==================== */
+
+/* 卡片式标签 */
+.bl-tabs--card {
+	.bl-tabs__header {
+		border-bottom: none;
+	}
+	
+	.bl-tabs__nav {
+		border: 2rpx solid var(--bl-border-color, $border-color);
+		border-radius: var(--bl-border-radius, $border-radius) var(--bl-border-radius, $border-radius) 0 0;
+		margin-right: var(--bl-spacing-xs, $spacing-xs);
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		
+		&--active {
+			background-color: var(--bl-background-color, $background-color);
+			border-bottom-color: var(--bl-background-color, $background-color);
+			
+			&::after {
+				display: none;
+			}
+		}
+	}
+}
+
+/* ==================== 标签页尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-tabs--large {
+	.bl-tabs__nav {
+		padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-tabs--small {
+	.bl-tabs__nav {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-tabs__nav {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

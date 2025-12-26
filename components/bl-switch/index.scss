@@ -1,0 +1,118 @@
+/**
+ * BlSwitch 组件样式
+ * 参考 Ant Design Switch 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-switch {
+	box-sizing: border-box;
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	min-width: 88rpx;
+	height: 48rpx;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	user-select: none;
+	
+	&::after {
+		content: '';
+		position: absolute;
+		top: 2rpx;
+		left: 2rpx;
+		width: 40rpx;
+		height: 40rpx;
+		background-color: var(--bl-white-color, $white-color);
+		border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+		box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.12);
+		transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	}
+	
+	/* 选中状态 */
+	&[checked] {
+		background-color: var(--bl-primary-color, $primary-color);
+		border-color: var(--bl-primary-color, $primary-color);
+		
+		&::after {
+			left: calc(100% - 42rpx);
+		}
+	}
+	
+	/* 禁用状态 */
+	&[disabled] {
+		cursor: not-allowed;
+		opacity: 0.6;
+		
+		&::after {
+			opacity: 0.6;
+		}
+	}
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-switch--large {
+	min-width: 104rpx;
+	height: 56rpx;
+	
+	&::after {
+		width: 48rpx;
+		height: 48rpx;
+		top: 2rpx;
+		left: 2rpx;
+	}
+	
+	&[checked]::after {
+		left: calc(100% - 50rpx);
+	}
+}
+
+/* 小尺寸 */
+.bl-switch--small {
+	min-width: 72rpx;
+	height: 40rpx;
+	
+	&::after {
+		width: 32rpx;
+		height: 32rpx;
+		top: 2rpx;
+		left: 2rpx;
+	}
+	
+	&[checked]::after {
+		left: calc(100% - 34rpx);
+	}
+}
+
+/* ==================== 类型变体 ==================== */
+
+/* Switch 类型（默认） */
+.bl-switch--switch {
+	/* switch 类型使用基础样式 */
+}
+
+/* Checkbox 类型 */
+.bl-switch--checkbox {
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	
+	&::after {
+		border-radius: var(--bl-border-radius-small, $border-radius-small);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-switch {
+		min-width: 80rpx;
+		height: 44rpx;
+	}
+}
+

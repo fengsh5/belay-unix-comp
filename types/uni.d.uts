@@ -1,0 +1,162 @@
+/**
+ * uni-app x 全局对象类型声明
+ * 
+ * 此文件定义了 uni 全局对象的类型，用于提供类型提示和类型检查
+ * 注意：uni 是 uni-app x 运行时提供的全局对象，包含所有 uni API
+ */
+
+/**
+ * uni 事件总线接口
+ */
+type UniEventBus = {
+	/**
+	 * 触发事件
+	 */
+	$emit: (eventName: string, data?: any) => void
+	
+	/**
+	 * 监听事件
+	 */
+	$on: (eventName: string, callback: (data?: any) => void) => void
+	
+	/**
+	 * 取消监听事件
+	 */
+	$off: (eventName: string, callback?: (data?: any) => void) => void
+	
+	/**
+	 * 监听事件（仅一次）
+	 */
+	$once: (eventName: string, callback: (data?: any) => void) => void
+}
+
+/**
+ * uni.showToast 选项
+ */
+type UniShowToastOptions = {
+	title: string
+	icon?: 'success' | 'error' | 'loading' | 'none'
+	duration?: number
+	mask?: boolean
+	image?: string
+	position?: 'top' | 'center' | 'bottom'
+}
+
+/**
+ * uni.getSystemInfoSync 返回类型
+ */
+type UniSystemInfo = {
+	windowWidth: number
+	windowHeight: number
+	pixelRatio: number
+	screenWidth: number
+	screenHeight: number
+	statusBarHeight: number
+	safeAreaInsets?: {
+		top: number
+		right: number
+		bottom: number
+		left: number
+	}
+	[key: string]: number | string | boolean | { [key: string]: number } | null | undefined
+}
+
+/**
+ * uni.previewImage 选项
+ */
+type UniPreviewImageOptions = {
+	urls: string[]
+	current?: string | number
+	success?: () => void
+	fail?: (err: { errMsg?: string }) => void
+	complete?: () => void
+}
+
+/**
+ * uni.saveImageToPhotosAlbum 选项
+ */
+type UniSaveImageOptions = {
+	filePath: string
+	success?: () => void
+	fail?: (err: { errMsg?: string }) => void
+	complete?: () => void
+}
+
+/**
+ * uni.canvasToTempFilePath 选项
+ */
+type UniCanvasToTempFilePathOptions = {
+	canvasId?: string
+	canvas?: any
+	width?: number
+	height?: number
+	destWidth?: number
+	destHeight?: number
+	fileType?: 'jpg' | 'png'
+	quality?: number
+	success?: (res: { tempFilePath: string }) => void
+	fail?: (err: { errMsg?: string }) => void
+	complete?: () => void
+}
+
+/**
+ * uni.getImageInfo 选项
+ */
+type UniGetImageInfoOptions = {
+	src: string
+	success?: (res: { width: number; height: number; path?: string; src?: string }) => void
+	fail?: (err: { errMsg?: string }) => void
+	complete?: () => void
+}
+
+/**
+ * uni 全局对象类型定义
+ * 
+ * 注意：这是一个简化的类型定义，实际 uni 对象包含更多 API
+ * 完整的类型定义应该从 @dcloudio/uni-app 类型包中获取
+ */
+type UniObject = UniEventBus & {
+	/**
+	 * 显示消息提示框
+	 */
+	showToast: (options: UniShowToastOptions) => void
+	
+	/**
+	 * 获取系统信息（同步）
+	 */
+	getSystemInfoSync: () => UniSystemInfo
+	
+	/**
+	 * 预览图片
+	 */
+	previewImage: (options: UniPreviewImageOptions) => void
+	
+	/**
+	 * 保存图片到相册
+	 */
+	saveImageToPhotosAlbum: (options: UniSaveImageOptions) => void
+	
+	/**
+	 * 将 canvas 转换为临时文件路径
+	 */
+	canvasToTempFilePath: (options: UniCanvasToTempFilePathOptions, context?: any) => void
+	
+	/**
+	 * 获取图片信息
+	 */
+	getImageInfo: (options: UniGetImageInfoOptions) => void
+	
+	/**
+	 * 其他 API...
+	 * 注意：这里只定义了常用的 API，实际使用时 uni 对象包含更多方法
+	 */
+	[key: string]: ((...args: any[]) => any) | any
+}
+
+/**
+ * 声明全局 uni 对象
+ * 
+ * 在 uni-app x 环境中，uni 是全局可用的对象
+ */
+declare const uni: UniObject
+

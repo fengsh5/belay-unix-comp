@@ -1,0 +1,264 @@
+<template>
+	<view class="bl-tree__node" :style="nodeStyle">
+		<view class="bl-tree__node-content">
+			<view 
+				v-if="hasChildren"
+				:class="['bl-tree__node-switcher', isExpanded ? 'bl-tree__node-switcher--open' : '']"
+				@click="handleSwitcherClick"
+			>
+				<bl-icon 
+					name="right" 
+					:size="20"
+					color="var(--bl-text-color-secondary, #8c8c8c)"
+				></bl-icon>
+			</view>
+			<view v-else class="bl-tree__node-switcher bl-tree__node-switcher--noop"></view>
+			
+			<view 
+				v-if="checkable"
+				class="bl-tree__node-checkbox"
+				@click.stop="handleCheckboxClick"
+			>
+				<bl-checkbox
+					:value="isChecked"
+					:disabled="node.disableCheckbox || disabled"
+					@change="handleCheckboxChange"
+				></bl-checkbox>
+			</view>
+			
+			<view v-if="showIcon && (node.icon || $slots.icon)" class="bl-tree__node-icon">
+				<slot name="icon" :node="node">
+					<bl-icon 
+						v-if="node.icon"
+						:name="node.icon" 
+						:size="20"
+						color="var(--bl-text-color-secondary, #8c8c8c)"
+					></bl-icon>
+				</slot>
+			</view>
+			
+			<view 
+				:class="['bl-tree__node-title', isSelected ? 'bl-tree__node-title--selected' : '', node.disabled || disabled ? 'bl-tree__node-title--disabled' : '']"
+				@click="handleTitleClick"
+			>
+				<slot name="title" :node="node">
+					<slot :node="node">
+						{{ node.title }}
+					</slot>
+				</slot>
+			</view>
+		</view>
+		
+		<view 
+			v-if="hasChildren"
+			:class="['bl-tree__node-children', isExpanded ? 'bl-tree__node--open' : '']"
+		>
+			<!-- 递归组件：使用 PascalCase 名称，通过 components 注册 -->
+			<BlTreeNode
+				v-for="child in node.children"
+				:key="child.key"
+				:node="child"
+				:level="level + 1"
+				:checkable="checkable"
+				:show-icon="showIcon"
+				:show-line="showLine"
+				:expanded-keys="expandedKeys"
+				:selected-keys="selectedKeys"
+				:checked-keys="checkedKeys"
+				:disabled="disabled"
+				@expand="handleExpand"
+				@select="handleSelect"
+				@check="handleCheck"
+			></BlTreeNode>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	// 树节点事件信息类型
+	type TreeNodeEventInfo = {
+		expanded?: boolean
+		selected?: boolean
+		checked?: boolean
+		node: {
+			key: string | number
+			title: string
+			children?: TreeNodeEventInfo['node'][]
+			disabled?: boolean
+			disableCheckbox?: boolean
+			selectable?: boolean
+			icon?: string
+			[key: string]: string | number | boolean | TreeNodeEventInfo['node'][] | null | undefined
+		}
+		[key: string]: string | number | boolean | TreeNodeEventInfo['node'] | null | undefined
+	}
+
+	export default {
+		name: 'BlTreeNode',
+		// 递归组件：注册自己以便在模板中使用
+		components: {
+			BlTreeNode: () => import('./node.uvue')
+		},
+		props: {
+			/**
+			 * 节点数据
+			 */
+			node: {
+				type: Object,
+				required: true
+			},
+			/**
+			 * 节点层级
+			 */
+			level: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否显示复选框
+			 */
+			checkable: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示图标
+			 */
+			showIcon: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示连接线
+			 */
+			showLine: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 展开的节点 key
+			 */
+			expandedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 选中的节点 key
+			 */
+			selectedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 勾选的节点 key
+			 */
+			checkedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			}
+		},
+		computed: {
+			hasChildren(): boolean {
+				return this.node.children != null && this.node.children.length > 0
+			},
+			isExpanded(): boolean {
+				return this.expandedKeys.indexOf(this.node.key) >= 0
+			},
+			isSelected(): boolean {
+				return this.selectedKeys.indexOf(this.node.key) >= 0
+			},
+			isChecked(): boolean {
+				return this.checkedKeys.indexOf(this.node.key) >= 0
+			},
+			nodeStyle(): string {
+				return ''
+			}
+		},
+		methods: {
+			handleSwitcherClick(): void {
+				if (this.node.disabled || this.disabled) {
+					return
+				}
+				this.toggleExpand()
+			},
+			handleTitleClick(): void {
+				if (this.node.disabled || this.disabled || this.node.selectable == false) {
+					return
+				}
+				this.toggleSelect()
+			},
+			handleCheckboxClick(): void {
+				// 点击事件由 checkbox 的 change 事件处理
+			},
+			handleCheckboxChange(checked: boolean): void {
+				this.toggleCheck()
+			},
+			toggleExpand(): void {
+				const newExpandedKeys = [...this.expandedKeys]
+				const index = newExpandedKeys.indexOf(this.node.key)
+				
+				if (index >= 0) {
+					newExpandedKeys.splice(index, 1)
+				} else {
+					newExpandedKeys.push(this.node.key)
+				}
+				
+				this.$emit('expand', newExpandedKeys, {
+					expanded: index < 0,
+					node: this.node
+				})
+			},
+			toggleSelect(): void {
+				const newSelectedKeys = [...this.selectedKeys]
+				const index = newSelectedKeys.indexOf(this.node.key)
+				
+				if (index >= 0) {
+					newSelectedKeys.splice(index, 1)
+				} else {
+					newSelectedKeys.push(this.node.key)
+				}
+				
+				this.$emit('select', newSelectedKeys, {
+					selected: index < 0,
+					node: this.node
+				})
+			},
+			toggleCheck(): void {
+				const newCheckedKeys = [...this.checkedKeys]
+				const index = newCheckedKeys.indexOf(this.node.key)
+				
+				if (index >= 0) {
+					newCheckedKeys.splice(index, 1)
+				} else {
+					newCheckedKeys.push(this.node.key)
+				}
+				
+				this.$emit('check', newCheckedKeys, {
+					checked: index < 0,
+					node: this.node
+				})
+			},
+			handleExpand(expandedKeys: Array<string | number>, info: TreeNodeEventInfo): void {
+				this.$emit('expand', expandedKeys, info)
+			},
+			handleSelect(selectedKeys: Array<string | number>, info: TreeNodeEventInfo): void {
+				this.$emit('select', selectedKeys, info)
+			},
+			handleCheck(checkedKeys: Array<string | number>, info: TreeNodeEventInfo): void {
+				this.$emit('check', checkedKeys, info)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

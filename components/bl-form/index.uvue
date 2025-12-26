@@ -1,0 +1,170 @@
+<template>
+	<form 
+		:class="formClass" 
+		:style="formStyle"
+		@submit="handleSubmit"
+		@reset="handleReset"
+	>
+		<slot></slot>
+	</form>
+</template>
+
+<script lang="uts">
+	// 表单验证规则类型
+	type FormRule = {
+		required?: boolean
+		message?: string
+		[key: string]: boolean | string | number | null | undefined
+	}
+
+	type FormRules = {
+		[key: string]: FormRule
+	}
+
+	// 表单数据对象类型
+	type FormModel = {
+		[key: string]: string | number | boolean | null | undefined
+	}
+
+	// 表单验证结果类型
+	type ValidateResult = {
+		valid: boolean
+		errors: string[]
+	}
+
+	// 事件类型
+	type FormEvent = {
+		preventDefault?: () => void
+		[key: string]: string | number | boolean | (() => void) | null | undefined
+	}
+
+	export default {
+		name: 'BlForm',
+		provide() {
+			return {
+				form: this
+			}
+		},
+		props: {
+			/**
+			 * 表单数据对象
+			 */
+			model: {
+				type: Object,
+				default: () => ({})
+			},
+			/**
+			 * 表单验证规则
+			 */
+			rules: {
+				type: Object,
+				default: () => ({})
+			},
+			/**
+			 * 表单标签宽度
+			 */
+			labelWidth: {
+				type: [Number, String],
+				default: 0
+			},
+			/**
+			 * 是否显示必填标识
+			 */
+			showRequired: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['submit', 'reset', 'validate'],
+		computed: {
+			formClass(): string {
+				const classes: string[] = ['bl-form']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			formStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleSubmit(e: FormEvent): void {
+				if (e.preventDefault) {
+					e.preventDefault()
+				}
+				this.validate((valid: boolean) => {
+					if (valid) {
+						this.$emit('submit', this.model)
+					}
+				})
+			},
+			handleReset(e: FormEvent): void {
+				this.$emit('reset', e)
+			},
+			validate(callback: (valid: boolean) => void): void {
+				// 基础的表单验证逻辑
+				// 实际项目中可以集成更复杂的验证规则
+				const errors: string[] = []
+				
+				if (this.rules != null && typeof this.rules == 'object') {
+					const rulesObj = this.rules as FormRules
+					const modelObj = this.model as FormModel
+					
+					for (const field in rulesObj) {
+						const rule = rulesObj[field]
+						const value = modelObj[field]
+						
+						if (rule != null && typeof rule == 'object') {
+							// 必填验证
+							if (rule.required && (value == null || value == '')) {
+								const message = rule.message || `${field}不能为空`
+								errors.push(message)
+							}
+							
+							// 其他验证规则可以在这里扩展
+						}
+					}
+				}
+				
+				const valid = errors.length == 0
+				const result: ValidateResult = {
+					valid: valid,
+					errors: errors
+				}
+				this.$emit('validate', result)
+				callback(valid)
+			},
+			resetFields(): void {
+				// 重置表单字段
+				const modelObj = this.model as FormModel
+				for (const field in modelObj) {
+					modelObj[field] = ''
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

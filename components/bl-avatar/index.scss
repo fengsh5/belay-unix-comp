@@ -1,0 +1,106 @@
+/**
+ * BlAvatar 组件样式
+ * 参考 Ant Design Avatar 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-avatar {
+	position: relative;
+	overflow: hidden;
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	box-sizing: border-box;
+	flex-shrink: 0;
+	
+	&--round {
+		border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	}
+	
+	&--square {
+		border-radius: var(--bl-border-radius, $border-radius);
+	}
+}
+
+.bl-avatar__image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.bl-avatar__placeholder {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+}
+
+.bl-avatar__text {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1;
+	text-align: center;
+	white-space: nowrap;
+}
+
+/* ==================== 头像尺寸 ==================== */
+
+/* 大尺寸 (large) */
+.bl-avatar--large {
+	width: 120rpx;
+	height: 120rpx;
+	
+	.bl-avatar__text {
+		font-size: var(--bl-font-size-xl, $font-size-xl);
+	}
+}
+
+/* 默认尺寸 (default) */
+.bl-avatar--default {
+	width: 88rpx;
+	height: 88rpx;
+	
+	.bl-avatar__text {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* 小尺寸 (small) */
+.bl-avatar--small {
+	width: 64rpx;
+	height: 64rpx;
+	
+	.bl-avatar__text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 头像类型 ==================== */
+
+/* 图标头像 */
+.bl-avatar--icon {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	
+	.bl-avatar__text {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-avatar--default {
+		width: 80rpx;
+		height: 80rpx;
+	}
+}
+

@@ -1,0 +1,138 @@
+<template>
+	<!-- #ifdef MP -->
+	<view 
+		v-if="showTabbar"
+		:class="tabbarClass" 
+		:style="tabbarStyle"
+	>
+		<bl-tabbar 
+			:value="current"
+			:fixed="fixed"
+			:safe-area-bottom="safeAreaBottom"
+			@change="handleChange"
+		>
+			<bl-tab-button
+				v-for="(item, index) in list"
+				:key="index"
+				:text="item.text"
+				:icon="item.iconPath"
+				:badge="item.badge"
+				:active="current === index"
+				@click="handleItemClick(index)"
+			></bl-tab-button>
+		</bl-tabbar>
+	</view>
+	<!-- #endif -->
+</template>
+
+<script lang="uts">
+	type TabbarItem = {
+		pagePath: string
+		text: string
+		iconPath?: string
+		selectedIconPath?: string
+		badge?: string | number
+	}
+	
+	export default {
+		name: 'BlMPCustomTabbar',
+		props: {
+			/**
+			 * 当前选中的tab索引
+			 */
+			current: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * tabbar列表
+			 */
+			list: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 是否显示tabbar
+			 */
+			showTabbar: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否固定在底部
+			 */
+			fixed: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示安全区域
+			 */
+			safeAreaBottom: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'switch'],
+		computed: {
+			tabbarClass(): string {
+				const classes: string[] = ['bl-mpcustomtabbar']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			tabbarStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleChange(index: number): void {
+				this.$emit('change', index)
+				this.switchTab(index)
+			},
+			handleItemClick(index: number): void {
+				this.handleChange(index)
+			},
+			switchTab(index: number): void {
+				if (index >= 0 && index < this.list.length) {
+					const item = this.list[index] as TabbarItem
+					if (item.pagePath != null && item.pagePath != '') {
+						uni.switchTab({
+							url: `/${item.pagePath}`,
+							success: () => {
+								this.$emit('switch', index)
+							},
+							fail: (err) => {
+								console.error('[BlMPCustomTabbar] switchTab fail:', err)
+							}
+						})
+					}
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

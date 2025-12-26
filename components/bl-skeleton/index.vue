@@ -1,0 +1,172 @@
+<template>
+	<view 
+		:class="['bl-skeleton', active ? 'bl-skeleton--active' : '', round ? 'bl-skeleton--round' : '']"
+		:style="skeletonStyle"
+	>
+		<slot>
+			<view v-if="avatar || title || paragraph" class="bl-skeleton__header">
+				<view 
+					v-if="avatar"
+					:class="['bl-skeleton__avatar', `bl-skeleton__avatar--${avatarShape}`, `bl-skeleton__avatar--${avatarSizeValue}`]"
+					:style="avatarStyle"
+				></view>
+				<view class="bl-skeleton__content">
+					<view 
+						v-if="title"
+						class="bl-skeleton__title"
+						:style="titleStyle"
+					></view>
+					<view v-if="paragraph" class="bl-skeleton__paragraph">
+						<view 
+							v-for="(line, index) in paragraphLines" 
+							:key="index"
+							class="bl-skeleton__paragraph-line"
+							:style="getParagraphLineStyle(index)"
+						></view>
+					</view>
+				</view>
+			</view>
+		</slot>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlSkeleton',
+		props: {
+			/**
+			 * 是否显示动画效果
+			 */
+			active: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示头像占位图
+			 */
+			avatar: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 头像占位图大小
+			 */
+			avatarSize: {
+				type: [Number, String],
+				default: 'default'
+			},
+			/**
+			 * 头像占位图形状
+			 */
+			avatarShape: {
+				type: String,
+				default: 'circle'
+			},
+			/**
+			 * 是否显示标题占位图
+			 */
+			title: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 标题占位图宽度
+			 */
+			titleWidth: {
+				type: [Number, String],
+				default: '60%'
+			},
+			/**
+			 * 是否显示段落占位图
+			 */
+			paragraph: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 段落占位图行数
+			 */
+			paragraphRows: {
+				type: Number,
+				default: 3
+			},
+			/**
+			 * 段落占位图宽度
+			 */
+			paragraphWidth: {
+				type: [Number, String, Array],
+				default: null
+			},
+			/**
+			 * 是否显示圆角
+			 */
+			round: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			avatarSizeValue() {
+				if (typeof this.avatarSize === 'number') {
+					return 'default'
+				}
+				return this.avatarSize
+			},
+			avatarStyle() {
+				if (typeof this.avatarSize === 'number') {
+					return `width: ${this.avatarSize}rpx; height: ${this.avatarSize}rpx;`
+				}
+				return ''
+			},
+			titleStyle() {
+				const width = typeof this.titleWidth === 'number' ? `${this.titleWidth}rpx` : this.titleWidth
+				return `width: ${width};`
+			},
+			paragraphLines() {
+				return Array.from({ length: this.paragraphRows }, (_, i) => i)
+			},
+			skeletonStyle() {
+				return this.customStyle || ''
+			}
+		},
+		methods: {
+			getParagraphLineStyle(index) {
+				if (!this.paragraphWidth) {
+					return ''
+				}
+				
+				if (Array.isArray(this.paragraphWidth)) {
+					const width = this.paragraphWidth[index] || this.paragraphWidth[this.paragraphWidth.length - 1]
+					const widthValue = typeof width === 'number' ? `${width}rpx` : width
+					return `width: ${widthValue};`
+				} else {
+					if (index === this.paragraphRows - 1) {
+						// 最后一行默认60%宽度
+						return 'width: 60%;'
+					}
+					const widthValue = typeof this.paragraphWidth === 'number' ? `${this.paragraphWidth}rpx` : this.paragraphWidth
+					return `width: ${widthValue};`
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

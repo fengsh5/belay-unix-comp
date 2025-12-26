@@ -1,0 +1,151 @@
+/**
+ * BlTour 组件样式
+ * 参考 Ant Design Tour 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tour {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9999;
+	pointer-events: none;
+}
+
+.bl-tour__mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.45);
+	pointer-events: auto;
+}
+
+.bl-tour__popup {
+	position: absolute;
+	z-index: 10000;
+	min-width: 300rpx;
+	max-width: 500rpx;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	padding: var(--bl-spacing-lg, $spacing-lg);
+	box-sizing: border-box;
+	pointer-events: auto;
+	animation: bl-tour-fade-in 0.3s ease-out;
+}
+
+@keyframes bl-tour-fade-in {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.bl-tour__popup--top {
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__popup--bottom {
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__popup--left {
+	right: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-right: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__popup--right {
+	left: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-left: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__title {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-tour__close {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+.bl-tour__content {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-tour__footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+
+.bl-tour__indicators {
+	display: flex;
+	flex-direction: row;
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-tour__indicator {
+	width: 16rpx;
+	height: 16rpx;
+	border-radius: 50%;
+	background-color: var(--bl-border-color, $border-color);
+	transition: all 0.3s;
+}
+
+.bl-tour__indicator--active {
+	background-color: var(--bl-primary-color, $primary-color);
+	width: 32rpx;
+	border-radius: 8rpx;
+}
+
+.bl-tour__actions {
+	display: flex;
+	flex-direction: row;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+

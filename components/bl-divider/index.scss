@@ -1,0 +1,82 @@
+/**
+ * BlDivider 组件样式
+ * 参考 Ant Design Divider 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-divider {
+	display: flex;
+	align-items: center;
+	margin: var(--bl-spacing-md, $spacing-md) 0;
+	color: var(--bl-border-color, $border-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	box-sizing: border-box;
+}
+
+.bl-divider__side {
+	height: 2rpx;
+	flex: 1;
+	border-bottom: 2rpx solid currentColor;
+	box-sizing: border-box;
+}
+
+.bl-divider__side--dashed {
+	border-style: dashed;
+}
+
+.bl-divider__tip {
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	margin: 0 var(--bl-spacing-sm, $spacing-sm);
+	white-space: nowrap;
+}
+
+/* ==================== 分割线方向 ==================== */
+
+/* 水平分割线（默认） */
+.bl-divider--horizontal {
+	flex-direction: row;
+}
+
+/* 垂直分割线 */
+.bl-divider--vertical {
+	flex-direction: column;
+	height: 100%;
+	margin: 0 var(--bl-spacing-sm, $spacing-sm);
+	
+	.bl-divider__side {
+		width: 2rpx;
+		height: 100%;
+		border-bottom: none;
+		border-right: 2rpx solid currentColor;
+	}
+}
+
+/* ==================== 分割线类型 ==================== */
+
+/* 实线（默认） */
+.bl-divider--solid {
+	.bl-divider__side {
+		border-style: solid;
+	}
+}
+
+/* 虚线 */
+.bl-divider--dashed {
+	.bl-divider__side {
+		border-style: dashed;
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-divider {
+		margin: var(--bl-spacing-sm, $spacing-sm) 0;
+	}
+}
+

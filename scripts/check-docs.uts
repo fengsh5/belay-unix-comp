@@ -1,0 +1,156 @@
+/**
+ * 文档完整性检查脚本
+ * 
+ * 检查所有组件是否都有完整的 README.md 文档
+ * 验证文档是否包含必要的部分：Props、Events、Slots、示例等
+ */
+
+import * as fs from 'fs'
+import * as path from 'path'
+
+// 组件目录
+const COMPONENTS_DIR = path.join(__dirname, '../components')
+
+// 必需的文档部分
+const REQUIRED_SECTIONS = [
+  '## 📦 引入',
+  '## 📋 Props',
+  '## 📡 Events',
+  '## 🎨 Slots',
+  '## 💡 示例'
+]
+
+/**
+ * 检查单个组件的文档
+ */
+function checkComponentDoc(componentName: string): {
+  hasReadme: boolean
+  missingSections: string[]
+  hasExamples: boolean
+} {
+  const readmePath = path.join(COMPONENTS_DIR, componentName, 'README.md')
+  
+  if (!fs.existsSync(readmePath)) {
+    return {
+      hasReadme: false,
+      missingSections: REQUIRED_SECTIONS,
+      hasExamples: false
+    }
+  }
+  
+  const content = fs.readFileSync(readmePath, 'utf-8')
+  const missingSections: string[] = []
+  
+  for (const section of REQUIRED_SECTIONS) {
+    if (!content.includes(section)) {
+      missingSections.push(section)
+    }
+  }
+  
+  // 检查是否有示例代码
+  const hasExamples = content.includes('```vue') || content.includes('```typescript')
+  
+  return {
+    hasReadme: true,
+    missingSections,
+    hasExamples
+  }
+}
+
+/**
+ * 获取所有组件列表
+ */
+function getAllComponents(): string[] {
+  const components: string[] = []
+  const entries = fs.readdirSync(COMPONENTS_DIR, { withFileTypes: true })
+  
+  for (const entry of entries) {
+    if (entry.isDirectory() && entry.name.startsWith('bl-')) {
+      components.push(entry.name)
+    }
+  }
+  
+  return components.sort()
+}
+
+/**
+ * 主函数
+ */
+function main(): void {
+  console.log('📚 开始检查组件文档完整性...\n')
+  
+  const components = getAllComponents()
+  const results: Array<{
+    name: string
+    status: '✅' | '⚠️' | '❌'
+    issues: string[]
+  }> = []
+  
+  for (const component of components) {
+    const doc = checkComponentDoc(component)
+    const issues: string[] = []
+    let status: '✅' | '⚠️' | '❌' = '✅'
+    
+    if (!doc.hasReadme) {
+      status = '❌'
+      issues.push('缺少 README.md 文件')
+    } else {
+      if (doc.missingSections.length > 0) {
+        status = doc.missingSections.length === REQUIRED_SECTIONS.length ? '❌' : '⚠️'
+        issues.push(`缺少文档部分: ${doc.missingSections.join(', ')}`)
+      }
+      
+      if (!doc.hasExamples) {
+        status = status == '❌' ? '❌' : '⚠️'
+        issues.push('缺少使用示例')
+      }
+    }
+    
+    results.push({
+      name: component,
+      status,
+      issues
+    })
+  }
+  
+  // 输出结果
+  console.log('检查结果:\n')
+  let passCount = 0
+  let warnCount = 0
+  let failCount = 0
+  
+  for (const result of results) {
+    if (result.status == '✅') {
+      passCount++
+      console.log(`${result.status} ${result.name}`)
+    } else {
+      if (result.status == '⚠️') {
+        warnCount++
+      } else {
+        failCount++
+      }
+      console.log(`${result.status} ${result.name}`)
+      for (const issue of result.issues) {
+        console.log(`   - ${issue}`)
+      }
+    }
+  }
+  
+  console.log(`\n📊 统计:`)
+  console.log(`  ✅ 通过: ${passCount}`)
+  console.log(`  ⚠️  警告: ${warnCount}`)
+  console.log(`  ❌ 失败: ${failCount}`)
+  console.log(`  总计: ${results.length}`)
+  
+  if (failCount > 0 || warnCount > 0) {
+    console.log(`\n⚠️  发现 ${failCount + warnCount} 个组件需要完善文档`)
+    process.exit(1)
+  } else {
+    console.log(`\n✅ 所有组件文档检查通过！`)
+    process.exit(0)
+  }
+}
+
+// 运行主函数
+main()
+

@@ -1,0 +1,111 @@
+<template>
+	<view :class="rowClass" :style="rowStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+/**
+ * BlRow 行布局组件
+ * 支持 Vue 2 和 Vue 3
+ */
+export default {
+	name: 'BlRow',
+	props: {
+		/**
+		 * 水平行间距
+		 */
+		gutterHorizontal: {
+			type: [Number, String],
+			default: null
+		},
+		/**
+		 * 垂直行间距
+		 */
+		gutterVertical: {
+			type: [Number, String],
+			default: null
+		},
+		/**
+		 * 水平对齐方式
+		 */
+		align: {
+			type: String,
+			default: 'flex-start'
+		},
+		/**
+		 * 垂直对齐方式
+		 */
+		justify: {
+			type: String,
+			default: 'flex-start'
+		},
+		/**
+		 * 是否支持换行
+		 */
+		wrap: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * 自定义样式
+		 */
+		customStyle: {
+			type: String,
+			default: ''
+		}
+	},
+	provide() {
+		return {
+			row: this
+		}
+	},
+	computed: {
+		rowClass() {
+			return 'bl-row'
+		},
+		rowStyle() {
+			const styles = []
+			
+			if (this.wrap) {
+				styles.push('flex-wrap: wrap')
+			}
+			
+			if (this.gutterHorizontal != null) {
+				const gutterValue = typeof this.gutterHorizontal === 'number' 
+					? `${this.gutterHorizontal}px` 
+					: this.gutterHorizontal
+				styles.push(`margin-left: -${gutterValue}`)
+				styles.push(`margin-right: -${gutterValue}`)
+			}
+			
+			if (this.gutterVertical != null) {
+				const gutterValue = typeof this.gutterVertical === 'number' 
+					? `${this.gutterVertical}px` 
+					: this.gutterVertical
+				styles.push(`margin-top: -${gutterValue}`)
+			}
+			
+			if (this.align) {
+				styles.push(`align-items: ${this.align}`)
+			}
+			
+			if (this.justify) {
+				styles.push(`justify-content: ${this.justify}`)
+			}
+			
+			if (this.customStyle) {
+				styles.push(this.customStyle)
+			}
+			
+			return styles.join('; ')
+		}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

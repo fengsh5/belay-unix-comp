@@ -1,0 +1,169 @@
+/**
+ * BlMenu 组件样式
+ * 参考 Ant Design Menu 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-menu {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+}
+
+.bl-menu--horizontal {
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.bl-menu--vertical,
+.bl-menu--inline {
+	flex-direction: column;
+}
+
+/* ==================== 菜单项 ==================== */
+.bl-menu__item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	transition: all 0.3s;
+	position: relative;
+	
+	&:active:not(.bl-menu__item--disabled):not(.bl-menu__item--selected) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-menu__item--selected {
+	background-color: var(--bl-primary-color-1, $primary-color-1);
+	color: var(--bl-primary-color, $primary-color);
+	font-weight: 500;
+}
+
+.bl-menu__item--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-menu__item--danger {
+	color: var(--bl-error-color, $error-color);
+	
+	&.bl-menu__item--selected {
+		background-color: var(--bl-error-color-1, $error-color-1);
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+.bl-menu__item-icon {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-menu__item-content {
+	flex: 1;
+}
+
+/* ==================== SubMenu ==================== */
+.bl-menu__submenu {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-menu__submenu-title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	transition: all 0.3s;
+	
+	&:active:not(.bl-menu__submenu-title--disabled) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-menu__submenu-title--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-menu__submenu-icon {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-menu__submenu-title-text {
+	flex: 1;
+}
+
+.bl-menu__submenu-arrow {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	transition: transform 0.3s;
+}
+
+.bl-menu__submenu--open .bl-menu__submenu-arrow {
+	transform: rotate(90deg);
+}
+
+.bl-menu__submenu-content {
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height 0.3s ease-out;
+}
+
+.bl-menu__submenu--open .bl-menu__submenu-content {
+	max-height: 2000rpx;
+}
+
+/* ==================== 主题样式 ==================== */
+
+/* 浅色主题（默认） */
+.bl-menu--light {
+	/* light 主题使用基础样式 */
+}
+
+.bl-menu--dark {
+	background-color: var(--bl-menu-dark-bg, #001529);
+	
+	.bl-menu__item {
+		color: var(--bl-menu-dark-color, rgba(255, 255, 255, 0.65));
+		
+		&:active:not(.bl-menu__item--disabled):not(.bl-menu__item--selected) {
+			background-color: var(--bl-menu-dark-item-active-bg, rgba(255, 255, 255, 0.08));
+		}
+	}
+	
+	.bl-menu__item--selected {
+		background-color: var(--bl-primary-color, $primary-color);
+		color: var(--bl-text-color-inverse, #fff);
+	}
+	
+	.bl-menu__submenu-title {
+		color: var(--bl-menu-dark-color, rgba(255, 255, 255, 0.65));
+		
+		&:active:not(.bl-menu__submenu-title--disabled) {
+			background-color: var(--bl-menu-dark-item-active-bg, rgba(255, 255, 255, 0.08));
+		}
+	}
+}
+

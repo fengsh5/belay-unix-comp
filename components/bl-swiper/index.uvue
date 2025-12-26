@@ -1,0 +1,194 @@
+<template>
+	<swiper
+		:class="swiperClass"
+		:style="swiperStyle"
+		:current="current"
+		:indicator-dots="indicatorDots"
+		:indicator-color="indicatorColor"
+		:indicator-active-color="indicatorActiveColorValue"
+		:autoplay="autoplayValue"
+		:interval="interval"
+		:duration="duration"
+		:circular="circularValue"
+		:vertical="vertical"
+		:previous-margin="previousMargin"
+		:next-margin="nextMargin"
+		:display-multiple-items="displayMultipleItems"
+		:skip-hidden-item-layout="skipHiddenItemLayout"
+		@change="handleChange"
+		@transition="handleTransition"
+		@animationfinish="handleAnimationfinish"
+	>
+		<!-- 如果提供了 items，自动生成 swiper-item -->
+		<template v-if="items != null && items.length > 0">
+			<swiper-item v-for="(item, index) in items" :key="index">
+				<slot :item="item" :index="index"></slot>
+			</swiper-item>
+		</template>
+		<!-- 否则使用默认插槽，用户需要自己提供 swiper-item -->
+		<slot v-else></slot>
+	</swiper>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlSwiper',
+		props: {
+			/**
+			 * 当前显示的滑块索引
+			 */
+			current: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否显示指示点
+			 */
+			indicatorDots: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 指示点颜色
+			 */
+			indicatorColor: {
+				type: String,
+				default: 'rgba(0, 0, 0, .3)'
+			},
+			/**
+			 * 当前选中的指示点颜色
+			 */
+			indicatorActiveColor: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否自动播放
+			 */
+			autoplay: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自动播放时间间隔
+			 */
+			interval: {
+				type: Number,
+				default: 5000
+			},
+			/**
+			 * 滑动动画时长
+			 */
+			duration: {
+				type: Number,
+				default: 500
+			},
+			/**
+			 * 是否采用衔接滑动
+			 */
+			circular: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 滑动方向是否为纵向
+			 */
+			vertical: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 前边距
+			 */
+			previousMargin: {
+				type: String,
+				default: '0px'
+			},
+			/**
+			 * 后边距
+			 */
+			nextMargin: {
+				type: String,
+				default: '0px'
+			},
+			/**
+			 * 同时显示的滑块数量
+			 */
+			displayMultipleItems: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 是否跳过未显示的滑块布局
+			 */
+			skipHiddenItemLayout: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 数据列表（用于自动生成 swiper-item）
+			 * 如果提供了此属性，组件会自动将每个数据项包裹在 swiper-item 中
+			 * 如果不提供，则使用默认插槽，用户需要自己提供 swiper-item
+			 */
+			items: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'transition', 'animationfinish'],
+		computed: {
+			swiperClass(): string {
+				return 'bl-swiper'
+			},
+			swiperStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			indicatorActiveColorValue(): string {
+				return this.indicatorActiveColor != null && this.indicatorActiveColor != '' 
+					? this.indicatorActiveColor 
+					: 'var(--bl-primary-color)'
+			},
+			circularValue(): boolean {
+				// 设计模式下禁止循环，因为可能导致 DOM 元素获取错误
+				// #ifdef H5
+				// 在 H5 环境下可能需要特殊处理
+				// #endif
+				return this.circular
+			},
+			autoplayValue(): boolean {
+				// 设计模式下禁止自动播放
+				// #ifdef H5
+				// 在 H5 环境下可能需要特殊处理
+				// #endif
+				return this.autoplay
+			}
+		},
+		methods: {
+			handleChange(evt: any): void {
+				this.$emit('change', evt)
+			},
+			handleTransition(evt: any): void {
+				this.$emit('transition', evt)
+			},
+			handleAnimationfinish(evt: any): void {
+				this.$emit('animationfinish', evt)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

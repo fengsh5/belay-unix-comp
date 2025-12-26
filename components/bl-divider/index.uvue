@@ -1,0 +1,67 @@
+<template>
+	<view 
+		:class="dividerClass"
+		:style="dividerStyle"
+	>
+		<view :class="sideClass" :style="sideStyle"></view>
+		<text v-if="tip != null && tip != ''" class="bl-divider__tip">{{ tip }}</text>
+		<view :class="sideClass" :style="sideStyle"></view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlDivider',
+		props: {
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 虚线样式
+			 */
+			dashed: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 分割线中间文字
+			 */
+			tip: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: [],
+		computed: {
+			dividerClass(): string {
+				return 'bl-divider'
+			},
+			dividerStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			sideClass(): string {
+				const classes: string[] = ['bl-divider__side']
+				if (this.dashed) {
+					classes.push('bl-divider__side--dashed')
+				}
+				return classes.join(' ')
+			},
+			sideStyle(): string {
+				return ''
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

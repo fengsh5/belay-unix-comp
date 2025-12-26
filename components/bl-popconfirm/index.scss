@@ -1,0 +1,94 @@
+/**
+ * BlPopconfirm 组件样式
+ * 参考 Ant Design Popconfirm 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-popconfirm {
+	position: relative;
+	display: inline-block;
+}
+
+.bl-popconfirm__popup {
+	position: absolute;
+	z-index: 1000;
+	min-width: 300rpx;
+	max-width: 500rpx;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	padding: var(--bl-spacing-md, $spacing-md);
+	box-sizing: border-box;
+	animation: bl-popconfirm-fade-in 0.3s ease-out;
+}
+
+@keyframes bl-popconfirm-fade-in {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.bl-popconfirm__popup--top {
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-popconfirm__popup--bottom {
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-popconfirm__popup--left {
+	right: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-popconfirm__popup--right {
+	left: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-popconfirm__content {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-popconfirm__title {
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-popconfirm__description {
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+}
+
+.bl-popconfirm__actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+

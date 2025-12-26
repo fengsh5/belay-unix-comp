@@ -1,0 +1,109 @@
+<template>
+	<view 
+		:class="spaceClass" 
+		:style="spaceStyle"
+	>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlSpace',
+		props: {
+			/**
+			 * 间距大小
+			 */
+			size: {
+				type: [Number, String],
+				default: 'middle'
+			},
+			/**
+			 * 间距方向
+			 */
+			direction: {
+				type: String,
+				default: 'horizontal'
+			},
+			/**
+			 * 对齐方式
+			 */
+			align: {
+				type: String,
+				default: 'center'
+			},
+			/**
+			 * 是否自动换行，仅在 horizontal 时有效
+			 */
+			wrap: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			spaceClass() {
+				const classes = ['bl-space']
+				
+				// 方向
+				classes.push(`bl-space--${this.direction}`)
+				
+				// 对齐方式
+				if (this.align) {
+					classes.push(`bl-space--align-${this.align}`)
+				}
+				
+				// 换行
+				if (this.wrap && this.direction === 'horizontal') {
+					classes.push('bl-space--wrap')
+				}
+				
+				// 尺寸
+				if (typeof this.size === 'string') {
+					classes.push(`bl-space--${this.size}`)
+				}
+				
+				// 自定义类名
+				if (this.customClass) {
+					classes.push(this.customClass)
+				}
+				
+				return classes.join(' ')
+			},
+			spaceStyle() {
+				let style = ''
+				
+				// 自定义尺寸
+				if (typeof this.size === 'number') {
+					const sizeValue = `${this.size}rpx`
+					style += `--bl-space-size: ${sizeValue};`
+				}
+				
+				// 自定义样式
+				if (this.customStyle) {
+					style += this.customStyle
+				}
+				
+				return style
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

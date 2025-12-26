@@ -1,0 +1,738 @@
+<template>
+	<view :class="posterPainterClass" :style="posterPainterStyle">
+		<!-- #ifdef APP || H5 -->
+		<canvas
+			:id="canvasId"
+			type="2d"
+			:style="canvasStyle"
+			:disable-scroll="true"
+			@touchstart="handleTouchStart"
+			@touchmove="handleTouchMove"
+			@touchend="handleTouchEnd"
+		></canvas>
+		<!-- #endif -->
+		
+		<!-- #ifdef MP -->
+		<canvas
+			:canvas-id="canvasId"
+			:style="canvasStyle"
+			:disable-scroll="true"
+			@touchstart="handleTouchStart"
+			@touchmove="handleTouchMove"
+			@touchend="handleTouchEnd"
+		></canvas>
+		<!-- #endif -->
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	type PaletteView = {
+		type: 'image' | 'text' | 'rect' | 'circle' | 'line'
+		url?: string
+		top?: number | string
+		left?: number | string
+		width?: number | string
+		height?: number | string
+		text?: string
+		fontSize?: number | string
+		color?: string
+		textAlign?: 'left' | 'center' | 'right'
+		background?: string
+		borderRadius?: number | string
+		x?: number
+		y?: number
+		x2?: number
+		y2?: number
+		borderWidth?: number
+		borderColor?: string
+		r?: number
+	}
+	
+	type Palette = {
+		width: number | string
+		height: number | string
+		background?: string
+		borderRadius?: number | string
+		views: PaletteView[]
+	}
+	
+	export default {
+		name: 'BlPosterPainter',
+		props: {
+			/**
+			 * 海报绘制配置
+			 */
+			palette: {
+				type: Object,
+				default: null
+			},
+			/**
+			 * 画布宽度
+			 */
+			width: {
+				type: [Number, String],
+				default: 750
+			},
+			/**
+			 * 画布高度
+			 */
+			height: {
+				type: [Number, String],
+				default: 1334
+			},
+			/**
+			 * 缩放比例
+			 */
+			scaleRatio: {
+				type: Number,
+				default: 2
+			},
+			/**
+			 * Canvas ID
+			 */
+			canvasId: {
+				type: String,
+				default: 'posterCanvas'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				ctx: null as any,
+				canvasEl: null as any,
+				isDrawing: false,
+				currentPalette: null as Palette | null
+			}
+		},
+		watch: {
+			palette: {
+				handler(newVal: Palette | null) {
+					if (newVal != null) {
+						this.currentPalette = newVal as Palette
+						this.$nextTick(() => {
+							this.render()
+						})
+					}
+				},
+				immediate: true
+			}
+		},
+		mounted() {
+			this.initCanvas()
+			if (this.palette != null) {
+				this.$nextTick(() => {
+					this.render()
+				})
+			}
+		},
+		emits: ['complete', 'fail', 'imgOk', 'imgErr'],
+		computed: {
+			posterPainterClass(): string {
+				const classes: string[] = ['bl-posterpainter']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			posterPainterStyle(): string {
+				const styles: string[] = []
+				styles.push('position: relative')
+				styles.push('width: 100%')
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			canvasStyle(): string {
+				const w = this.getPixelValue(this.width)
+				const h = this.getPixelValue(this.height)
+				return `width: ${w}px; height: ${h}px; display: block;`
+			},
+			canvasWidth(): number {
+				return this.getPixelValue(this.width)
+			},
+			canvasHeight(): number {
+				return this.getPixelValue(this.height)
+			}
+		},
+		methods: {
+			/**
+			 * 获取像素值
+			 */
+			getPixelValue(value: number | string): number {
+				if (typeof value === 'number') {
+					return value
+				}
+				if (typeof value === 'string') {
+					if (value.endsWith('px')) {
+						const num = Number(value.replace('px', ''))
+						if (!isNaN(num)) {
+							return num
+						}
+					}
+					
+					// 处理px单位
+					if (value.endsWith('px')) {
+						const num = Number(value.replace('px', ''))
+						if (!isNaN(num)) {
+							return num
+						}
+					}
+				}
+				return 750
+			},
+			/**
+			 * 初始化Canvas
+			 */
+			initCanvas(): void {
+				// #ifdef MP
+				// 小程序端使用旧版API
+				this.ctx = uni.createCanvasContext(this.canvasId, this)
+				// #endif
+				
+				// #ifdef APP || H5
+				// APP和H5端使用2D Canvas API
+				this.$nextTick(() => {
+					const query = uni.createSelectorQuery().in(this)
+					query.select(`#${this.canvasId}`)
+						.fields({ node: true, size: true }, () => {})
+						.exec((res: any) => {
+							if (res != null && res[0] != null) {
+								const canvas = res[0].node
+								const ctx = canvas.getContext('2d')
+								const dpr = this.scaleRatio
+								
+								canvas.width = this.canvasWidth * dpr
+								canvas.height = this.canvasHeight * dpr
+								ctx.scale(dpr, dpr)
+								
+								this.ctx = ctx
+								this.canvasEl = canvas
+								
+								if (this.palette != null) {
+									this.render()
+								}
+							}
+						})
+				})
+				// #endif
+			},
+			/**
+			 * 渲染海报
+			 */
+			async render(): Promise<void> {
+				const palette = this.currentPalette || this.palette as Palette | null
+				if (palette == null) {
+					return
+				}
+				
+				if (this.ctx == null) {
+					await this.initCanvas()
+				}
+				
+				// 等待canvas初始化完成
+				await new Promise<void>((resolve) => {
+					this.$nextTick(() => {
+						resolve()
+					})
+				})
+				
+				try {
+					
+					// 绘制背景
+					await this.drawBackground(palette)
+					
+					// 绘制所有视图
+					for (const view of palette.views) {
+						await this.drawView(view)
+					}
+					
+					// 完成绘制
+					this.finishDraw()
+				} catch (error: any) {
+					console.error('[BlPosterPainter] render error:', error)
+					this.$emit('imgErr', error)
+					this.$emit('fail', error)
+				}
+			},
+			/**
+			 * 绘制背景
+			 */
+			async drawBackground(palette: Palette): Promise<void> {
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.setFillStyle(palette.background || '#ffffff')
+					ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight)
+					
+					// 绘制圆角
+					if (palette.borderRadius != null) {
+						const radius = this.getPixelValue(palette.borderRadius)
+						ctx.setFillStyle(palette.background || '#ffffff')
+						ctx.beginPath()
+						ctx.arc(radius, radius, radius, Math.PI, Math.PI * 1.5)
+						ctx.arc(this.canvasWidth - radius, radius, radius, Math.PI * 1.5, Math.PI * 2)
+						ctx.arc(this.canvasWidth - radius, this.canvasHeight - radius, radius, 0, Math.PI * 0.5)
+						ctx.arc(radius, this.canvasHeight - radius, radius, Math.PI * 0.5, Math.PI)
+						ctx.closePath()
+						ctx.fill()
+					}
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.fillStyle = palette.background || '#ffffff'
+					ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight)
+					
+					// 绘制圆角
+					if (palette.borderRadius != null) {
+						const radius = this.getPixelValue(palette.borderRadius)
+						ctx.fillStyle = palette.background || '#ffffff'
+						ctx.beginPath()
+						ctx.arc(radius, radius, radius, Math.PI, Math.PI * 1.5)
+						ctx.arc(this.canvasWidth - radius, radius, radius, Math.PI * 1.5, Math.PI * 2)
+						ctx.arc(this.canvasWidth - radius, this.canvasHeight - radius, radius, 0, Math.PI * 0.5)
+						ctx.arc(radius, this.canvasHeight - radius, radius, Math.PI * 0.5, Math.PI)
+						ctx.closePath()
+						ctx.fill()
+					}
+				}
+				// #endif
+			},
+			/**
+			 * 绘制单个视图
+			 */
+			async drawView(view: PaletteView): Promise<void> {
+				if (view.type === 'image') {
+					await this.drawImage(view)
+				} else if (view.type === 'text') {
+					this.drawText(view)
+				} else if (view.type === 'rect') {
+					this.drawRect(view)
+				} else if (view.type === 'circle') {
+					this.drawCircle(view)
+				} else if (view.type === 'line') {
+					this.drawLine(view)
+				}
+			},
+			/**
+			 * 绘制图片
+			 */
+			async drawImage(view: PaletteView): Promise<void> {
+				if (view.url == null || view.url == '') {
+					return
+				}
+				
+				const left = this.getPixelValue(view.left || 0)
+				const top = this.getPixelValue(view.top || 0)
+				const width = this.getPixelValue(view.width || 0)
+				const height = this.getPixelValue(view.height || 0)
+				const borderRadius = view.borderRadius != null ? this.getPixelValue(view.borderRadius) : 0
+				
+				// #ifdef MP
+				// 小程序端直接使用drawImage
+				const ctx = this.ctx
+				if (ctx != null) {
+					if (borderRadius > 0) {
+						ctx.save()
+						ctx.beginPath()
+						ctx.arc(left + borderRadius, top + borderRadius, borderRadius, Math.PI, Math.PI * 1.5)
+						ctx.arc(left + width - borderRadius, top + borderRadius, borderRadius, Math.PI * 1.5, Math.PI * 2)
+						ctx.arc(left + width - borderRadius, top + height - borderRadius, borderRadius, 0, Math.PI * 0.5)
+						ctx.arc(left + borderRadius, top + height - borderRadius, borderRadius, Math.PI * 0.5, Math.PI)
+						ctx.closePath()
+						ctx.clip()
+					}
+					ctx.drawImage(view.url as string, left, top, width, height)
+					if (borderRadius > 0) {
+						ctx.restore()
+					}
+				}
+				// #endif
+				
+				// #ifdef APP
+				// APP端使用uni.getImageInfo加载图片
+				await new Promise<void>((resolve, reject) => {
+					uni.getImageInfo({
+						src: view.url as string,
+						success: (res: any) => {
+							const ctx = this.ctx
+							if (ctx != null) {
+								if (borderRadius > 0) {
+									ctx.save()
+									ctx.beginPath()
+									ctx.arc(left + borderRadius, top + borderRadius, borderRadius, Math.PI, Math.PI * 1.5)
+									ctx.arc(left + width - borderRadius, top + borderRadius, borderRadius, Math.PI * 1.5, Math.PI * 2)
+									ctx.arc(left + width - borderRadius, top + height - borderRadius, borderRadius, 0, Math.PI * 0.5)
+									ctx.arc(left + borderRadius, top + height - borderRadius, borderRadius, Math.PI * 0.5, Math.PI)
+									ctx.closePath()
+									ctx.clip()
+								}
+								
+								// APP端使用图片路径绘制
+								// uni-app x APP端支持直接使用路径绘制
+								const imageSrc = res.path || res.src || view.url
+								try {
+									// 尝试创建Image对象（如果canvas支持）
+									if (this.canvasEl != null && typeof (this.canvasEl as any).createImage === 'function') {
+										const img = (this.canvasEl as any).createImage()
+										img.onload = () => {
+											ctx.drawImage(img, left, top, width, height)
+											if (borderRadius > 0) {
+												ctx.restore()
+											}
+											resolve()
+										}
+										img.onerror = () => {
+											// 降级：尝试直接绘制路径
+											try {
+												ctx.drawImage(imageSrc as string, left, top, width, height)
+												if (borderRadius > 0) {
+													ctx.restore()
+												}
+												resolve()
+											} catch (e: any) {
+												reject(new Error(`Failed to draw image: ${e.message || 'unknown error'}`))
+											}
+										}
+										img.src = imageSrc as string
+									} else {
+										// 直接使用路径绘制（某些平台支持）
+										ctx.drawImage(imageSrc as string, left, top, width, height)
+										if (borderRadius > 0) {
+											ctx.restore()
+										}
+										resolve()
+									}
+								} catch (err: any) {
+									reject(new Error(`Failed to draw image: ${err.message || 'unknown error'}`))
+								}
+							} else {
+								resolve()
+							}
+						},
+						fail: (err: any) => {
+							reject(new Error(`Failed to get image info: ${err.errMsg || err.message || 'unknown error'}`))
+						}
+					})
+				})
+				// #endif
+				
+				// #ifdef H5
+				// H5端需要先加载图片（注意：H5端不支持直接使用document，应使用uni API）
+				// H5端canvas图片绘制需要预先加载，这里提供基础实现
+				// 实际使用时可能需要通过UTS插件实现图片加载
+				await new Promise<void>((resolve) => {
+					// H5端简化处理，直接绘制
+					const ctx = this.ctx
+					if (ctx != null) {
+						if (borderRadius > 0) {
+							ctx.save()
+							ctx.beginPath()
+							ctx.arc(left + borderRadius, top + borderRadius, borderRadius, Math.PI, Math.PI * 1.5)
+							ctx.arc(left + width - borderRadius, top + borderRadius, borderRadius, Math.PI * 1.5, Math.PI * 2)
+							ctx.arc(left + width - borderRadius, top + height - borderRadius, borderRadius, 0, Math.PI * 0.5)
+							ctx.arc(left + borderRadius, top + height - borderRadius, borderRadius, Math.PI * 0.5, Math.PI)
+							ctx.closePath()
+							ctx.clip()
+						}
+						// 注意：H5端需要实际加载图片后再绘制
+						// 这里仅提供占位，实际需要使用uni.getImageInfo或UTS插件
+						if (borderRadius > 0) {
+							ctx.restore()
+						}
+					}
+					resolve()
+				})
+				// #endif
+			},
+			/**
+			 * 绘制文本
+			 */
+			drawText(view: PaletteView): void {
+				if (view.text == null || view.text == '') {
+					return
+				}
+				
+				const left = this.getPixelValue(view.left || 0)
+				const top = this.getPixelValue(view.top || 0)
+				const fontSize = this.getPixelValue(view.fontSize || 28)
+				const color = view.color || '#000000'
+				const textAlign = view.textAlign || 'left'
+				
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.setFillStyle(color)
+					ctx.setFontSize(fontSize)
+					ctx.setTextAlign(textAlign)
+					ctx.fillText(view.text as string, left, top + fontSize)
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.fillStyle = color
+					ctx.font = `${fontSize}px sans-serif`
+					ctx.textAlign = textAlign as CanvasTextAlign
+					ctx.fillText(view.text as string, left, top + fontSize)
+				}
+				// #endif
+			},
+			/**
+			 * 绘制矩形
+			 */
+			drawRect(view: PaletteView): void {
+				const left = this.getPixelValue(view.left || 0)
+				const top = this.getPixelValue(view.top || 0)
+				const width = this.getPixelValue(view.width || 0)
+				const height = this.getPixelValue(view.height || 0)
+				const background = view.background || '#000000'
+				const borderRadius = view.borderRadius != null ? this.getPixelValue(view.borderRadius) : 0
+				
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.setFillStyle(background)
+					if (borderRadius > 0) {
+						ctx.beginPath()
+						ctx.arc(left + borderRadius, top + borderRadius, borderRadius, Math.PI, Math.PI * 1.5)
+						ctx.arc(left + width - borderRadius, top + borderRadius, borderRadius, Math.PI * 1.5, Math.PI * 2)
+						ctx.arc(left + width - borderRadius, top + height - borderRadius, borderRadius, 0, Math.PI * 0.5)
+						ctx.arc(left + borderRadius, top + height - borderRadius, borderRadius, Math.PI * 0.5, Math.PI)
+						ctx.closePath()
+						ctx.fill()
+					} else {
+						ctx.fillRect(left, top, width, height)
+					}
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.fillStyle = background
+					if (borderRadius > 0) {
+						ctx.beginPath()
+						ctx.arc(left + borderRadius, top + borderRadius, borderRadius, Math.PI, Math.PI * 1.5)
+						ctx.arc(left + width - borderRadius, top + borderRadius, borderRadius, Math.PI * 1.5, Math.PI * 2)
+						ctx.arc(left + width - borderRadius, top + height - borderRadius, borderRadius, 0, Math.PI * 0.5)
+						ctx.arc(left + borderRadius, top + height - borderRadius, borderRadius, Math.PI * 0.5, Math.PI)
+						ctx.closePath()
+						ctx.fill()
+					} else {
+						ctx.fillRect(left, top, width, height)
+					}
+				}
+				// #endif
+			},
+			/**
+			 * 绘制圆形
+			 */
+			drawCircle(view: PaletteView): void {
+				const x = this.getPixelValue(view.x || 0)
+				const y = this.getPixelValue(view.y || 0)
+				const r = this.getPixelValue(view.r || 0)
+				const background = view.background || '#000000'
+				
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.setFillStyle(background)
+					ctx.beginPath()
+					ctx.arc(x, y, r, 0, Math.PI * 2)
+					ctx.closePath()
+					ctx.fill()
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.fillStyle = background
+					ctx.beginPath()
+					ctx.arc(x, y, r, 0, Math.PI * 2)
+					ctx.closePath()
+					ctx.fill()
+				}
+				// #endif
+			},
+			/**
+			 * 绘制线条
+			 */
+			drawLine(view: PaletteView): void {
+				const x1 = this.getPixelValue(view.x || 0)
+				const y1 = this.getPixelValue(view.y || 0)
+				const x2 = this.getPixelValue(view.x2 || 0)
+				const y2 = this.getPixelValue(view.y2 || 0)
+				const color = view.color || '#000000'
+				const borderWidth = this.getPixelValue(view.borderWidth || 1)
+				
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.setStrokeStyle(color)
+					ctx.setLineWidth(borderWidth)
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.strokeStyle = color
+					ctx.lineWidth = borderWidth
+					ctx.beginPath()
+					ctx.moveTo(x1, y1)
+					ctx.lineTo(x2, y2)
+					ctx.closePath()
+					ctx.stroke()
+				}
+				// #endif
+			},
+			/**
+			 * 完成绘制
+			 */
+			finishDraw(): void {
+				// #ifdef MP
+				const ctx = this.ctx
+				if (ctx != null) {
+					ctx.draw(false, () => {
+						this.exportImage()
+					})
+				}
+				// #endif
+				
+				// #ifdef APP || H5
+				// APP和H5端绘制完成后直接导出
+				this.exportImage()
+				// #endif
+			},
+			/**
+			 * 导出图片
+			 */
+			exportImage(): void {
+				// #ifdef MP
+				uni.canvasToTempFilePath({
+					canvasId: this.canvasId,
+					width: this.canvasWidth,
+					height: this.canvasHeight,
+					destWidth: this.canvasWidth * this.scaleRatio,
+					destHeight: this.canvasHeight * this.scaleRatio,
+					success: (res: any) => {
+						this.$emit('imgOk', res.tempFilePath)
+						this.$emit('complete', {
+							tempFilePath: res.tempFilePath
+						})
+					},
+					fail: (err: any) => {
+						console.error('[BlPosterPainter] exportImage error:', err)
+						this.$emit('imgErr', err)
+						this.$emit('fail', err)
+					}
+				}, this)
+				// #endif
+				
+				// #ifdef APP
+				if (this.canvasEl != null) {
+					uni.canvasToTempFilePath({
+						canvas: this.canvasEl,
+						width: this.canvasWidth,
+						height: this.canvasHeight,
+						destWidth: this.canvasWidth * this.scaleRatio,
+						destHeight: this.canvasHeight * this.scaleRatio,
+						success: (res: any) => {
+							this.$emit('imgOk', res.tempFilePath)
+							this.$emit('complete', {
+								tempFilePath: res.tempFilePath
+							})
+						},
+						fail: (err: any) => {
+							console.error('[BlPosterPainter] exportImage error:', err)
+							this.$emit('imgErr', err)
+							this.$emit('fail', err)
+						}
+					}, this)
+				}
+				// #endif
+				
+				// #ifdef H5
+				// H5端使用uni.canvasToTempFilePath导出
+				if (this.canvasEl != null) {
+					// H5端canvas导出需要通过UTS插件实现，或使用uni API
+					// 注意：H5端不支持直接调用canvas.toDataURL，需要通过uni API
+					uni.canvasToTempFilePath({
+						canvasId: this.canvasId,
+						canvas: this.canvasEl,
+						width: this.canvasWidth,
+						height: this.canvasHeight,
+						destWidth: this.canvasWidth * this.scaleRatio,
+						destHeight: this.canvasHeight * this.scaleRatio,
+						success: (res: any) => {
+							this.$emit('imgOk', res.tempFilePath)
+							this.$emit('complete', {
+								tempFilePath: res.tempFilePath
+							})
+						},
+						fail: (err: any) => {
+							console.error('[BlPosterPainter] exportImage error:', err)
+							this.$emit('imgErr', err)
+							this.$emit('fail', err)
+						}
+					}, this)
+				}
+				// #endif
+			},
+			/**
+			 * 手动触发绘制
+			 */
+			draw(palette?: Palette): void {
+				if (palette != null) {
+					// 如果传入了新的palette，更新内部palette并重新绘制
+					this.currentPalette = palette
+					this.$nextTick(() => {
+						this.render()
+					})
+				} else if (this.currentPalette != null || this.palette != null) {
+					// 使用当前palette重新绘制
+					this.render()
+				}
+			},
+			handleTouchStart(): void {
+				// 防止触摸事件
+			},
+			handleTouchMove(): void {
+				// 防止触摸事件
+			},
+			handleTouchEnd(): void {
+				// 防止触摸事件
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

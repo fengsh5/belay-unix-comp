@@ -1,0 +1,12 @@
+/**
+ * BlPreviewContext 组件样式
+ * 用于图片预览上下文
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+/* 此组件主要用于提供预览上下文，不需要额外的 CSS 样式 */
+

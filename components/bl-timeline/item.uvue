@@ -1,0 +1,94 @@
+<template>
+	<view 
+		:class="['bl-timeline__item', pending ? 'bl-timeline__item--pending' : '']"
+		:style="itemStyle"
+	>
+		<view 
+			:class="['bl-timeline__head', dot || $slots.dot ? 'bl-timeline__head--custom' : '']"
+			:style="headStyle"
+		>
+			<slot name="dot">
+				<view v-if="dot" class="bl-timeline__dot" :style="dotStyle"></view>
+			</slot>
+		</view>
+		<view class="bl-timeline__tail"></view>
+		<view class="bl-timeline__content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlTimelineItem',
+		props: {
+			/**
+			 * 自定义颜色
+			 */
+			color: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义点
+			 */
+			dot: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		inject: {
+			timeline: {
+				type: Object,
+				default: null
+			}
+		},
+		computed: {
+			pending(): boolean {
+				const self: any = this
+				const timeline = self.timeline
+				return timeline ? timeline.pending : false
+			},
+			itemStyle(): string {
+				const self: any = this
+				const customStyle = self.customStyle
+				return customStyle || ''
+			},
+			headStyle(): string {
+				const self: any = this
+				const color = self.color
+				if (color) {
+					return `border-color: ${color};`
+				}
+				return ''
+			},
+			dotStyle(): string {
+				const self: any = this
+				const color = self.color
+				if (color) {
+					return `background-color: ${color};`
+				}
+				return ''
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

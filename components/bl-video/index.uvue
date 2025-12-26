@@ -1,0 +1,293 @@
+<template>
+	<video
+		:class="videoClass"
+		:style="videoStyle"
+		:src="src"
+		:poster="poster"
+		:autoplay="autoplay"
+		:loop="loop"
+		:muted="muted"
+		:controls="controls"
+		:show-center-play-btn="showCenterPlayBtn"
+		:show-fullscreen-btn="showFullscreenBtn"
+		:show-play-btn="showPlayBtn"
+		:show-progress="showProgress"
+		:show-loading="showLoading"
+		:enable-play-gesture="enablePlayGesture"
+		:object-fit="objectFit"
+		:initial-time="initialTime"
+		:playback-rate="playbackRate"
+		:direction="direction"
+		:enable-progress-gesture="enableProgressGesture"
+		:show-screen-lock-button="showScreenLockButton"
+		:page-gesture="pageGesture"
+		:play-strategy="playStrategy"
+		:poster-size="posterSize"
+		:header="header"
+		:enable-metadata="enableMetadata"
+		:enable-picture-in-picture="enablePictureInPicture"
+		:enable-auto-rotation="enableAutoRotation"
+		@play="handlePlay"
+		@pause="handlePause"
+		@ended="handleEnded"
+		@error="handleError"
+		@waiting="handleWaiting"
+		@progress="handleProgress"
+		@loadedmetadata="handleLoadedMetadata"
+		@timeupdate="handleTimeUpdate"
+		@fullscreenchange="handleFullscreenChange"
+		@useraction="handleUserAction"
+	></video>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlVideo',
+		props: {
+			/**
+			 * 视频资源地址
+			 */
+			src: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 视频封面的图片网络资源地址或云文件ID
+			 */
+			poster: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否自动播放
+			 */
+			autoplay: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否循环播放
+			 */
+			loop: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否静音播放
+			 */
+			muted: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否显示默认播放控件
+			 */
+			controls: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示中央播放按钮
+			 */
+			showCenterPlayBtn: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示全屏按钮
+			 */
+			showFullscreenBtn: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示播放按钮
+			 */
+			showPlayBtn: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示进度条
+			 */
+			showProgress: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示loading控件
+			 */
+			showLoading: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否开启播放手势
+			 */
+			enablePlayGesture: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 当视频大小与 video 容器大小不一致时，视频的表现形式
+			 */
+			objectFit: {
+				type: String,
+				default: 'contain' // contain | fill | cover
+			},
+			/**
+			 * 指定视频初始播放位置
+			 */
+			initialTime: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 播放速率
+			 */
+			playbackRate: {
+				type: Number,
+				default: 1.0
+			},
+			/**
+			 * 设置全屏时视频的方向
+			 */
+			direction: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否开启控制进度的手势
+			 */
+			enableProgressGesture: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示锁屏按钮
+			 */
+			showScreenLockButton: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否开启使用手势控制进度
+			 */
+			pageGesture: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 播放策略
+			 */
+			playStrategy: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 海报图片大小
+			 */
+			posterSize: {
+				type: String,
+				default: 'cover' // contain | cover | fill
+			},
+			/**
+			 * HTTP 请求 Header
+			 */
+			header: {
+				type: Object,
+				default: () => ({})
+			},
+			/**
+			 * 是否接收metadata
+			 */
+			enableMetadata: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否开启画中画
+			 */
+			enablePictureInPicture: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否允许自动旋转
+			 */
+			enableAutoRotation: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['play', 'pause', 'ended', 'error', 'waiting', 'progress', 'loadedMetadata', 'timeUpdate', 'fullscreenChange', 'userAction'],
+		computed: {
+			videoClass(): string {
+				const classes: string[] = ['bl-video']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			videoStyle(): string {
+				const styles: string[] = []
+				styles.push('width: 100%')
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handlePlay(e: any): void {
+				this.$emit('play', e)
+			},
+			handlePause(e: any): void {
+				this.$emit('pause', e)
+			},
+			handleEnded(e: any): void {
+				this.$emit('ended', e)
+			},
+			handleError(e: any): void {
+				this.$emit('error', e)
+			},
+			handleWaiting(e: any): void {
+				this.$emit('waiting', e)
+			},
+			handleProgress(e: any): void {
+				this.$emit('progress', e)
+			},
+			handleLoadedMetadata(e: any): void {
+				this.$emit('loadedMetadata', e)
+			},
+			handleTimeUpdate(e: any): void {
+				this.$emit('timeUpdate', e)
+			},
+			handleFullscreenChange(e: any): void {
+				this.$emit('fullscreenChange', e)
+			},
+			handleUserAction(e: any): void {
+				this.$emit('userAction', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

@@ -1,0 +1,111 @@
+/**
+ * Locale 类型定义
+ * 定义语言包的真实类型结构
+ */
+
+/**
+ * 通用翻译文本
+ */
+export type CommonLocale = {
+	ok: string
+	cancel: string
+	confirm: string
+	submit: string
+	reset: string
+	save: string
+	delete: string
+	edit: string
+	add: string
+	search: string
+	loading: string
+	noData: string
+	success: string
+	error: string
+	warning: string
+	info: string
+}
+
+/**
+ * 按钮翻译文本
+ */
+export type ButtonLocale = {
+	submit: string
+	reset: string
+	cancel: string
+	confirm: string
+	save: string
+	delete: string
+	edit: string
+	add: string
+	search: string
+	loading: string
+	primary: string
+	secondary: string
+	default: string
+}
+
+/**
+ * 表单翻译文本
+ */
+export type FormLocale = {
+	required: string
+	invalid: string
+	minLength: string
+	maxLength: string
+	min: string
+	max: string
+	pattern: string
+}
+
+/**
+ * 消息翻译文本
+ */
+export type MessageLocale = {
+	success: string
+	error: string
+	warning: string
+	info: string
+}
+
+/**
+ * Locale 类型定义
+ * 语言包的完整类型结构
+ */
+export type Locale = {
+	/**
+	 * 语言代码（如 'zh-CN', 'en-US'）
+	 */
+	locale: string
+	
+	/**
+	 * 语言名称（通常与 locale 相同）
+	 */
+	localeName: string
+	
+	/**
+	 * 通用翻译
+	 */
+	common: CommonLocale
+	
+	/**
+	 * 按钮翻译
+	 */
+	button: ButtonLocale
+	
+	/**
+	 * 表单翻译
+	 */
+	form: FormLocale
+	
+	/**
+	 * 消息翻译
+	 */
+	message: MessageLocale
+	
+	/**
+	 * 扩展字段，允许添加其他模块的翻译
+	 * 使用索引签名支持动态扩展
+	 */
+	[key: string]: any
+}
+

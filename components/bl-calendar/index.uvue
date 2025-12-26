@@ -1,0 +1,272 @@
+<template>
+	<view class="bl-calendar" :style="calendarStyle">
+		<view class="bl-calendar__header">
+			<view class="bl-calendar__header-title">{{ currentMonthText }}</view>
+			<view class="bl-calendar__header-actions">
+				<bl-button 
+					size="small"
+					@click="handlePrevMonth"
+				>
+					<bl-icon name="left" :size="20"></bl-icon>
+				</bl-button>
+				<bl-button 
+					size="small"
+					@click="handleToday"
+				>
+					今天
+				</bl-button>
+				<bl-button 
+					size="small"
+					@click="handleNextMonth"
+				>
+					<bl-icon name="right" :size="20"></bl-icon>
+				</bl-button>
+			</view>
+		</view>
+		<view class="bl-calendar__body">
+			<view class="bl-calendar__weekdays">
+				<view 
+					v-for="(day, index) in weekdays" 
+					:key="index"
+					class="bl-calendar__weekday"
+				>
+					{{ day }}
+				</view>
+			</view>
+			<view class="bl-calendar__days">
+				<view 
+					v-for="(week, weekIndex) in calendarDays" 
+					:key="weekIndex"
+					class="bl-calendar__week"
+				>
+					<view 
+						v-for="(day, dayIndex) in week" 
+						:key="dayIndex"
+						:class="['bl-calendar__day', day.isOtherMonth ? 'bl-calendar__day--other-month' : '', day.isToday ? 'bl-calendar__day--today' : '', day.isSelected ? 'bl-calendar__day--selected' : '']"
+						@click="handleDayClick(day.date)"
+					>
+						<slot name="dateCell" :date="day.date">
+							<text class="bl-calendar__day-number">{{ day.day }}</text>
+						</slot>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	type CalendarDay = {
+		date: Date
+		day: number
+		isOtherMonth: boolean
+		isToday: boolean
+		isSelected: boolean
+	}
+	
+	export default {
+		name: 'BlCalendar',
+		props: {
+			/**
+			 * 当前日期
+			 */
+			value: {
+				type: [Date, String],
+				default: null
+			},
+			/**
+			 * 默认日期
+			 */
+			defaultValue: {
+				type: [Date, String],
+				default: null
+			},
+			/**
+			 * 日历模式
+			 */
+			mode: {
+				type: String,
+				default: 'month'
+			},
+			/**
+			 * 是否全屏显示
+			 */
+			fullscreen: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['select', 'panelChange', 'update:value'],
+		data() {
+			return {
+				currentDate: new Date() as Date,
+				selectedDate: null as Date | null
+			}
+		},
+		computed: {
+			calendarStyle(): string {
+				return this.customStyle || ''
+			},
+			currentMonthText(): string {
+				const year = this.currentDate.getFullYear()
+				const month = this.currentDate.getMonth() + 1
+				return `${year}年${month}月`
+			},
+			weekdays(): string[] {
+				return ['日', '一', '二', '三', '四', '五', '六']
+			},
+			calendarDays(): Array<Array<CalendarDay>> {
+				const year = this.currentDate.getFullYear()
+				const month = this.currentDate.getMonth()
+				const firstDay = new Date(year, month, 1)
+				const lastDay = new Date(year, month + 1, 0)
+				const firstDayWeek = firstDay.getDay()
+				const daysInMonth = lastDay.getDate()
+				
+				const weeks: Array<Array<CalendarDay>> = []
+				let currentWeek: Array<CalendarDay> = []
+				
+				// 上个月的日期
+				const prevMonthLastDay = new Date(year, month, 0).getDate()
+				for (let i = firstDayWeek - 1; i >= 0; i--) {
+					const date = new Date(year, month - 1, prevMonthLastDay - i)
+					currentWeek.push({
+						date,
+						day: date.getDate(),
+						isOtherMonth: true,
+						isToday: this.isToday(date),
+						isSelected: this.isSelected(date)
+					})
+				}
+				
+				// 当前月的日期
+				for (let day = 1; day <= daysInMonth; day++) {
+					const date = new Date(year, month, day)
+					currentWeek.push({
+						date,
+						day,
+						isOtherMonth: false,
+						isToday: this.isToday(date),
+						isSelected: this.isSelected(date)
+					})
+					
+					if (currentWeek.length == 7) {
+						weeks.push(currentWeek)
+						currentWeek = []
+					}
+				}
+				
+				// 下个月的日期
+				let nextMonthDay = 1
+				while (currentWeek.length < 7) {
+					const date = new Date(year, month + 1, nextMonthDay)
+					currentWeek.push({
+						date,
+						day: nextMonthDay,
+						isOtherMonth: true,
+						isToday: this.isToday(date),
+						isSelected: this.isSelected(date)
+					})
+					nextMonthDay++
+				}
+				if (currentWeek.length > 0) {
+					weeks.push(currentWeek)
+				}
+				
+				return weeks
+			}
+		},
+		created() {
+			if (this.value != null) {
+				this.currentDate = this.parseDate(this.value)
+				this.selectedDate = this.currentDate
+			} else if (this.defaultValue != null) {
+				const date = this.parseDate(this.defaultValue)
+				this.currentDate = date
+				this.selectedDate = date
+			} else {
+				this.currentDate = new Date()
+			}
+		},
+		watch: {
+			value(newVal: Date | string | null): void {
+				if (newVal != null) {
+					this.currentDate = this.parseDate(newVal)
+					this.selectedDate = this.currentDate
+				}
+			}
+		},
+		methods: {
+			parseDate(date: Date | string): Date {
+				if (date instanceof Date) {
+					return date
+				}
+				return new Date(date)
+			},
+			isToday(date: Date): boolean {
+				const today = new Date()
+				return date.getFullYear() == today.getFullYear() &&
+					date.getMonth() == today.getMonth() &&
+					date.getDate() == today.getDate()
+			},
+			isSelected(date: Date): boolean {
+				if (this.selectedDate == null) {
+					return false
+				}
+				return date.getFullYear() == this.selectedDate.getFullYear() &&
+					date.getMonth() == this.selectedDate.getMonth() &&
+					date.getDate() == this.selectedDate.getDate()
+			},
+			handleDayClick(date: Date): void {
+				this.selectedDate = date
+				if (this.value == null) {
+					// 非受控模式
+				}
+				this.$emit('update:value', date)
+				this.$emit('select', date)
+			},
+			handlePrevMonth(): void {
+				const newDate = new Date(this.currentDate)
+				newDate.setMonth(newDate.getMonth() - 1)
+				this.currentDate = newDate
+				this.$emit('panelChange', newDate, this.mode)
+			},
+			handleNextMonth(): void {
+				const newDate = new Date(this.currentDate)
+				newDate.setMonth(newDate.getMonth() + 1)
+				this.currentDate = newDate
+				this.$emit('panelChange', newDate, this.mode)
+			},
+			handleToday(): void {
+				const today = new Date()
+				this.currentDate = today
+				this.selectedDate = today
+				if (this.value == null) {
+					// 非受控模式
+				}
+				this.$emit('update:value', today)
+				this.$emit('select', today)
+				this.$emit('panelChange', today, this.mode)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

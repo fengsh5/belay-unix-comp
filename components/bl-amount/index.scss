@@ -1,0 +1,67 @@
+/**
+ * BlAmount 组件样式
+ * 金额显示组件
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-amount {
+	display: inline-block;
+	color: var(--bl-text-color, $text-color);
+	font-weight: 500;
+	line-height: 1.5715;
+	box-sizing: border-box;
+}
+
+/* ==================== 金额尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-amount--large {
+	font-size: var(--bl-font-size-xl, $font-size-xl);
+	font-weight: 600;
+}
+
+/* 中等尺寸（默认） */
+.bl-amount--medium {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+}
+
+/* 小尺寸 */
+.bl-amount--small {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+}
+
+/* ==================== 金额类型 ==================== */
+
+/* 主色金额 */
+.bl-amount--primary {
+	color: var(--bl-primary-color, $primary-color);
+}
+
+/* 成功金额 */
+.bl-amount--success {
+	color: var(--bl-success-color, $success-color);
+}
+
+/* 警告金额 */
+.bl-amount--warning {
+	color: var(--bl-warning-color, $warning-color);
+}
+
+/* 错误金额 */
+.bl-amount--error {
+	color: var(--bl-error-color, $error-color);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-amount--medium {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+

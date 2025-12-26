@@ -1,0 +1,166 @@
+<template>
+	<view 
+		v-if="display !== 'none' || !destroyOnClose"
+		:class="['bl-drawer', visible ? 'bl-drawer--visible' : '']"
+		:style="drawerStyle"
+	>
+		<view 
+			v-if="mask"
+			:class="['bl-drawer__mask', visible ? 'bl-drawer__mask--visible' : '']"
+			@click="handleClickMask"
+		></view>
+		<view 
+			:class="['bl-drawer__content', `bl-drawer__content--${placement}`]"
+			:style="contentStyle"
+		>
+			<view v-if="showHeader" :class="['bl-drawer__header', !title && !$slots.title ? 'bl-drawer__header--no-title' : '']">
+				<view class="bl-drawer__title">
+					<slot name="title">{{ title }}</slot>
+				</view>
+				<view v-if="$slots.extra" class="bl-drawer__extra">
+					<slot name="extra"></slot>
+				</view>
+				<view v-if="closable" class="bl-drawer__close" @click="handleClose">
+					<bl-icon 
+						name="close" 
+						:size="32"
+						color="var(--bl-text-color-secondary, #8c8c8c)"
+					></bl-icon>
+				</view>
+			</view>
+			<view class="bl-drawer__body">
+				<slot v-if="display !== 'none' || !destroyOnClose"></slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlDrawer',
+		props: {
+			/**
+			 * 是否显示
+			 */
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 抽屉位置
+			 */
+			placement: {
+				type: String,
+				default: 'right'
+			},
+			/**
+			 * 标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 宽度（placement 为 left 或 right 时）
+			 */
+			width: {
+				type: [Number, String],
+				default: null
+			},
+			/**
+			 * 高度（placement 为 top 或 bottom 时）
+			 */
+			height: {
+				type: [Number, String],
+				default: null
+			},
+			/**
+			 * 是否显示遮罩层
+			 */
+			mask: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 点击遮罩层是否可关闭
+			 */
+			maskClosable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示关闭按钮
+			 */
+			closable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 关闭时销毁子节点
+			 */
+			destroyOnClose: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['close', 'clickMask', 'update:visible'],
+		computed: {
+			display(): string {
+				return this.visible ? 'block' : (this.destroyOnClose ? 'none' : 'block')
+			},
+			showHeader(): boolean {
+				return this.title != '' || this.$slots.title != null || this.closable || this.$slots.extra != null
+			},
+			drawerStyle(): string {
+				return this.customStyle || ''
+			},
+			contentStyle(): string {
+				const styles: string[] = []
+				
+				if (this.placement == 'left' || this.placement == 'right') {
+					if (this.width != null) {
+						const widthValue = typeof this.width == 'number' ? `${this.width}rpx` : this.width as string
+						styles.push(`width: ${widthValue}`)
+					}
+				} else {
+					if (this.height != null) {
+						const heightValue = typeof this.height == 'number' ? `${this.height}rpx` : this.height as string
+						styles.push(`height: ${heightValue}`)
+					}
+				}
+				
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleClose(): void {
+				this.$emit('update:visible', false)
+				this.$emit('close')
+			},
+			handleClickMask(): void {
+				if (this.maskClosable) {
+					this.handleClose()
+				}
+				this.$emit('clickMask')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>

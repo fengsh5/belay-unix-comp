@@ -1,0 +1,139 @@
+/**
+ * BlNoticeBar 组件样式
+ * 参考 Ant Design Alert 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-noticebar {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-warning-color-4, $warning-color-4);
+	border-radius: var(--bl-border-radius, $border-radius);
+	min-height: 72rpx;
+	box-sizing: border-box;
+}
+
+.bl-noticebar__icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-warning-color, $warning-color);
+}
+
+.bl-noticebar__content {
+	flex: 1;
+	overflow: hidden;
+}
+
+.bl-noticebar__text {
+	color: var(--bl-warning-color, $warning-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	white-space: nowrap;
+}
+
+.bl-noticebar__close {
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== 通知栏类型 ==================== */
+
+/* 成功类型 */
+.bl-noticebar--success {
+	background-color: var(--bl-success-color-4, $success-color-4);
+	
+	.bl-noticebar__icon {
+		color: var(--bl-success-color, $success-color);
+	}
+	
+	.bl-noticebar__text {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 信息类型 */
+.bl-noticebar--info {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	
+	.bl-noticebar__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	.bl-noticebar__text {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 警告类型（默认） */
+.bl-noticebar--warning {
+	background-color: var(--bl-warning-color-4, $warning-color-4);
+	
+	.bl-noticebar__icon {
+		color: var(--bl-warning-color, $warning-color);
+	}
+	
+	.bl-noticebar__text {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* 错误类型 */
+.bl-noticebar--error {
+	background-color: var(--bl-error-color-4, $error-color-4);
+	
+	.bl-noticebar__icon {
+		color: var(--bl-error-color, $error-color);
+	}
+	
+	.bl-noticebar__text {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* ==================== 通知栏尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-noticebar--large {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	min-height: 88rpx;
+	
+	.bl-noticebar__text {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-noticebar--small {
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	min-height: 56rpx;
+	
+	.bl-noticebar__text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-noticebar {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+		min-height: 64rpx;
+	}
+}
+

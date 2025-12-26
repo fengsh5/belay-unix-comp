@@ -1,0 +1,149 @@
+/**
+ * 页面上下文相关的 hooks
+ * 
+ * 注意：这些 hooks 需要在组件中使用，而不是在页面中
+ * 在页面中应该直接使用 onShow、onHide、onReady 等生命周期钩子
+ */
+import type { PageContextValue } from './index.uvue'
+import { EventBus } from '../BlEventBus/index.uts'
+
+// Context 的 key（需要与 index.uvue 中的保持一致）
+const PAGE_CONTEXT_KEY = Symbol('BlPageContext')
+
+// 存储当前实例的上下文（用于在组件中访问）
+let currentContext: PageContextValue | null = null
+
+/**
+ * 设置当前页面上下文（由 BlPageContext 组件内部调用）
+ */
+export function setPageContext(context: PageContextValue | null): void {
+	currentContext = context
+}
+
+/**
+ * 获取页面上下文
+ */
+export function usePageContext(): PageContextValue | null {
+	return currentContext
+}
+
+/**
+ * 页面显示时的 hook
+ * 
+ * 使用方式：
+ * ```vue
+ * <script lang="uts">
+ * import { useDidShow } from '@/uni_modules/belay-unix/utils/BlPageContext/hooks.uts'
+ * 
+ * export default {
+ *   setup() {
+ *     useDidShow(() => {
+ *       console.log('页面显示了')
+ *     })
+ *   }
+ * }
+ * </script>
+ * ```
+ */
+export function useDidShow(fn: () => void): () => void {
+	const context = usePageContext()
+	
+	if (context == null) {
+		console.warn('[BlPageContext] useDidShow: PageContext not found, please wrap component with <bl-page-context>')
+		return () => {}
+	}
+	
+	// 监听 show 事件
+	context.eventBus.on('show', fn)
+	
+	// 如果已经显示过，立即执行
+	if (context.state.visible == true) {
+		fn()
+	}
+	
+	// 返回清理函数
+	return () => {
+		context.eventBus.off('show', fn)
+	}
+}
+
+/**
+ * 页面隐藏时的 hook
+ */
+export function useDidHide(fn: () => void): () => void {
+	const context = usePageContext()
+	
+	if (context == null) {
+		console.warn('[BlPageContext] useDidHide: PageContext not found, please wrap component with <bl-page-context>')
+		return () => {}
+	}
+	
+	// 监听 hide 事件
+	context.eventBus.on('hide', fn)
+	
+	// 如果已经隐藏过，立即执行
+	if (context.state.visible == false) {
+		fn()
+	}
+	
+	// 返回清理函数
+	return () => {
+		context.eventBus.off('hide', fn)
+	}
+}
+
+/**
+ * 页面准备就绪时的 hook
+ */
+export function useDidReady(fn: () => void): () => void {
+	const context = usePageContext()
+	
+	if (context == null) {
+		console.warn('[BlPageContext] useDidReady: PageContext not found, please wrap component with <bl-page-context>')
+		return () => {}
+	}
+	
+	// 监听 ready 事件
+	context.eventBus.on('ready', fn)
+	
+	// 如果已经准备就绪，立即执行
+	if (context.state.ready == true) {
+		fn()
+	}
+	
+	// 返回清理函数
+	return () => {
+		context.eventBus.off('ready', fn)
+	}
+}
+
+/**
+ * 获取路由信息
+ */
+export function useRouter() {
+	// 返回 uni-app 的路由信息
+	// 注意：在 uni-app x 中，路由信息需要通过其他方式获取
+	// 这里提供一个基础实现，实际使用时可能需要根据具体需求调整
+	try {
+		const pages = getCurrentPages()
+		if (pages != null && pages.length > 0) {
+			const currentPage = pages[pages.length - 1]
+			if (currentPage != null) {
+				return {
+					path: (currentPage as any).route as string || '',
+					query: (currentPage as any).options as Record<string, string> || {},
+					params: {} as Record<string, any>
+				}
+			}
+		}
+	} catch (e) {
+		console.warn('[BlPageContext] useRouter error:', e)
+	}
+	
+	return {
+		path: '',
+		query: {} as Record<string, string>,
+		params: {} as Record<string, any>
+	}
+}
+

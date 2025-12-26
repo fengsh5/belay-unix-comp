@@ -1,0 +1,220 @@
+/**
+ * 国际化系统（参考 Ant Design 的 ConfigProvider 方案）
+ * 
+ * 使用方式：
+ * 
+ * // 方式一：通过组件属性传递语言配置
+ * <bl-i18n-provider :locale="locale">
+ *   <your-content />
+ * </bl-i18n-provider>
+ * 
+ * // 方式二：通过全局配置方法动态切换语言
+ * import { BlI18n } from '@/uni_modules/belay-unix/utils/BlI18n/index.uts'
+ * 
+ * BlI18n.config({
+ *   locale: zhCN
+ * })
+ */
+
+// 导入 Locale 类型定义
+import type { Locale } from './locale.uts'
+export type { Locale, CommonLocale, ButtonLocale, FormLocale, MessageLocale, ComponentLocale, ShareDialogLocale } from './locale.uts'
+
+// 语言配置选项类型
+export type LocaleConfigOptions = {
+	locale?: Locale
+}
+
+// 当前全局语言配置
+// 初始化为 null，在使用前会通过 initLocale 或 config 方法设置
+let globalLocale: Locale | null = null
+
+// 语言代码到 Locale 的映射
+const localeMap: Map<string, Locale> = new Map()
+
+// 语言变更监听器
+type LocaleChangeListener = (locale: Locale) => void
+const localeChangeListeners: LocaleChangeListener[] = []
+
+/**
+ * BlI18n 类（参考 Ant Design 的 ConfigProvider）
+ * 提供全局语言配置和切换功能
+ */
+export class BlI18n {
+	/**
+	 * 配置语言（类似 antd 的 ConfigProvider.config）
+	 * @param options 语言配置选项
+	 */
+	static config(options: LocaleConfigOptions): void {
+		if (options.locale != null) {
+			globalLocale = { ...options.locale }
+
+			// 自动注册语言（如果还未注册）
+			const localeCode = globalLocale?.locale || globalLocale?.localeName
+			if (localeCode != null && typeof localeCode == 'string' && globalLocale != null) {
+				this.registerLocale(localeCode, globalLocale)
+			}
+			
+			// 通知所有监听器
+			if (globalLocale != null) {
+				localeChangeListeners.forEach(listener => {
+					listener(globalLocale!)
+				})
+			}
+			
+			// 保存到本地存储
+			try {
+				const localeCode = globalLocale?.locale || globalLocale?.localeName || 'zh-CN'
+				uni.setStorageSync('bl-locale', localeCode)
+			} catch (e) {
+				console.error('[BlI18n] 保存语言配置失败', e)
+			}
+		}
+	}
+	
+	/**
+	 * 获取当前语言配置
+	 */
+	static getLocale(): Locale {
+		if (globalLocale == null) {
+			// 返回一个空对象，但类型为 Locale（所有字段都是可选的）
+			return {} as Locale
+		}
+		return { ...globalLocale }
+	}
+	
+	/**
+	 * 注册语言包（支持外部注册自定义语言）
+	 * @param localeCode 语言代码（如 'zh-CN', 'en-US', 'ja-JP' 等）
+	 * @param locale Locale 对象
+	 */
+	static registerLocale(localeCode: string, locale: Locale): void {
+		// 确保 locale 对象包含 locale 和 localeName 字段
+		// 先展开 locale，然后设置 locale 和 localeName，确保这两个字段的值正确
+		const localeWithCode: Locale = {
+			...locale,
+			locale: localeCode,
+			localeName: localeCode
+		}
+		localeMap.set(localeCode, localeWithCode)
+		console.log(`[BlI18n] 已注册语言包: ${localeCode}`)
+	}
+	
+	/**
+	 * 获取已注册的语言代码列表
+	 */
+	static getRegisteredLocales(): string[] {
+		return Array.from(localeMap.keys())
+	}
+	
+	/**
+	 * 检查语言是否已注册
+	 * @param localeCode 语言代码
+	 */
+	static isLocaleRegistered(localeCode: string): boolean {
+		return localeMap.has(localeCode)
+	}
+	
+	/**
+	 * 根据语言代码获取 Locale 对象
+	 * @param localeCode 语言代码
+	 */
+	static getLocaleByCode(localeCode: string): Locale | null {
+		return localeMap.get(localeCode) || null
+	}
+	
+	/**
+	 * 添加语言变更监听器
+	 * @param listener 监听器函数
+	 */
+	static onLocaleChange(listener: LocaleChangeListener): void {
+		localeChangeListeners.push(listener)
+	}
+	
+	/**
+	 * 移除语言变更监听器
+	 * @param listener 监听器函数
+	 */
+	static offLocaleChange(listener: LocaleChangeListener): void {
+		const index = localeChangeListeners.indexOf(listener)
+		if (index >= 0) {
+			localeChangeListeners.splice(index, 1)
+		}
+	}
+	
+	/**
+	 * 初始化语言（从本地存储读取）
+	 */
+	static initLocale(): void {
+		try {
+			const savedLocaleCode = uni.getStorageSync('bl-locale')
+			if (savedLocaleCode != null && typeof savedLocaleCode == 'string') {
+				// 从已注册的语言中获取
+				const locale = this.getLocaleByCode(savedLocaleCode)
+				if (locale != null) {
+					globalLocale = locale
+				}
+			}
+		} catch (e) {
+			console.error('[BlI18n] 读取语言配置失败', e)
+		}
+	}
+}
+
+/**
+ * 翻译文本
+ * @param key 翻译键，支持点号分隔的路径（如 'common.ok'）
+ * @param params 参数对象，用于替换占位符
+ * @param defaultValue 默认值
+ */
+export function t(key: string, params?: Record<string, string | number>, defaultValue?: string): string {
+	// 从全局 Locale 获取
+	if (globalLocale != null && Object.keys(globalLocale).length > 0) {
+		const value = getNestedValue(globalLocale, key)
+		if (value != null && typeof value == 'string') {
+			return replaceParams(value, params)
+		}
+	}
+	
+	// 如果找不到，返回默认值或 key
+		return defaultValue || key
+	}
+	
+/**
+ * 从嵌套对象中获取值
+ */
+function getNestedValue(obj: any, path: string): any {
+	const keys = path.split('.')
+	let value: any = obj
+	
+	for (let i = 0; i < keys.length; i++) {
+		const k = keys[i]
+		if (value == null || typeof value != 'object') {
+			return null
+		}
+		value = value[k]
+	}
+	
+	return value
+}
+
+/**
+ * 替换参数占位符
+ */
+function replaceParams(text: string, params?: Record<string, string | number>): string {
+	if (params == null) {
+		return text
+	}
+	
+	let result = text
+	for (const paramKey in params) {
+		const paramValue = String(params[paramKey])
+		result = result.replace(new RegExp(`\\{\\{${paramKey}\\}\\}`, 'g'), paramValue)
+	}
+	
+	return result
+}
+
+// 导出默认语言资源初始化函数
+export { initDefaultLocales, loadDefaultLocales } from './default-locales.uts'
+export { loadLocaleFromFile } from './load-locale.uts'

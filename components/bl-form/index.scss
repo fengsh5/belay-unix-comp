@@ -1,0 +1,84 @@
+/**
+ * BlForm 组件样式
+ * 参考 Ant Design Form 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-form {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* ==================== 表单布局 ==================== */
+
+/* 水平布局 */
+.bl-form--horizontal {
+	.bl-form-item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+/* 垂直布局 */
+.bl-form--vertical {
+	.bl-form-item {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+/* 内联布局 */
+.bl-form--inline {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	
+	.bl-form-item {
+		margin-right: var(--bl-spacing-md, $spacing-md);
+		margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+
+/* ==================== 表单尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-form--large {
+	.bl-form-item {
+		margin-bottom: var(--bl-spacing-lg, $spacing-lg);
+	}
+}
+
+/* 默认尺寸 */
+.bl-form--default {
+	.bl-form-item {
+		margin-bottom: var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+/* 小尺寸 */
+.bl-form--small {
+	.bl-form-item {
+		margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-form--inline {
+		flex-direction: column;
+		align-items: stretch;
+		
+		.bl-form-item {
+			margin-right: 0;
+			width: 100%;
+		}
+	}
+}
+

@@ -1,0 +1,118 @@
+/**
+ * BlRadio 组件样式
+ * 参考 Ant Design Radio 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-radio__wrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+	cursor: pointer;
+	user-select: none;
+	
+	&--disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+	
+	&--reverse {
+		flex-direction: row-reverse;
+	}
+}
+
+.bl-radio {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40rpx;
+	height: 40rpx;
+	border: 4rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	background-color: var(--bl-background-color, $background-color);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	position: relative;
+	
+	&--active {
+		border-color: var(--bl-primary-color, $primary-color);
+	}
+	
+	&--disabled {
+		cursor: not-allowed;
+		border-color: var(--bl-border-color-light, $border-color-light);
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		opacity: 0.6;
+	}
+}
+
+.bl-radio__point {
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	background-color: var(--bl-primary-color, $primary-color);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&--disabled {
+		background-color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+.bl-radio__content {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	padding-left: 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	
+	&--reverse {
+		padding-right: 16rpx;
+		padding-left: 0;
+	}
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-radio--large {
+	width: 48rpx;
+	height: 48rpx;
+	
+	.bl-radio__point {
+		width: 24rpx;
+		height: 24rpx;
+	}
+	
+	.bl-radio__content {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-radio--small {
+	width: 32rpx;
+	height: 32rpx;
+	
+	.bl-radio__point {
+		width: 16rpx;
+		height: 16rpx;
+	}
+	
+	.bl-radio__content {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-radio {
+		width: 36rpx;
+		height: 36rpx;
+	}
+}
+

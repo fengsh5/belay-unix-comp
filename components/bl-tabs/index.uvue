@@ -1,0 +1,215 @@
+<template>
+	<view :class="tabsClass" :style="tabsStyle">
+		<view :class="tabsHeaderClass">
+			<view 
+				v-for="(tab, idx) in filteredTabs" 
+				:key="tab.name || idx"
+				:class="tabNavClass(idx)"
+				@click="handleTabClick(tab.name || String(idx))"
+			>
+				<view v-if="tab.icon != null" class="bl-tabs__nav-icon">
+					<slot :name="`icon-${idx}`">{{ tab.icon }}</slot>
+				</view>
+				<text class="bl-tabs__nav-title">{{ tab.title }}</text>
+			</view>
+		</view>
+		<view class="bl-tabs__body">
+			<view :class="tabPanelWrapClass" :style="tabPanelWrapStyle">
+				<slot></slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	// 标签页图标类型
+	type TabIcon = string | number | null | undefined
+
+	// 标签页配置类型
+	type TabConfig = {
+		name?: string
+		title: string
+		disabled?: boolean
+		icon?: TabIcon
+	}
+
+	export default {
+		name: 'BlTabs',
+		props: {
+			/**
+			 * 内边距
+			 */
+			padding: {
+				type: [String, Number],
+				default: '5px'
+			},
+			/**
+			 * 当前激活的 key
+			 */
+			activeKey: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 切换动画
+			 */
+			animate: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * tab 标题溢出时滚动
+			 */
+			scrollable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				active: '',
+				tabs: [] as TabConfig[],
+				matchedIndex: 0,
+				matchedKey: ''
+			}
+		},
+		provide() {
+			return {
+				tabs: {
+					padding: this.padding,
+					register: (idx: number, tabProps: TabConfig) => {
+						const tabs = this.tabs.slice(0)
+						tabs[idx] = tabProps
+						this.tabs = tabs
+					}
+				}
+			}
+		},
+		emits: ['activeKeyChange'],
+		computed: {
+			tabsClass(): string {
+				return 'bl-tabs'
+			},
+			tabsStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			tabsHeaderClass(): string {
+				const classes: string[] = ['bl-tabs__header']
+				if (this.scrollable) {
+					classes.push('bl-tabs__header--scrollable')
+				}
+				return classes.join(' ')
+			},
+			filteredTabs(): TabConfig[] {
+				return this.tabs.filter(tab => tab != null)
+			},
+			tabPanelWrapClass(): string {
+				const classes: string[] = ['bl-tabs__panel-wrap']
+				if (this.animate) {
+					classes.push('bl-tabs__panel-wrap--animate')
+				}
+				return classes.join(' ')
+			},
+			tabPanelWrapStyle(): string {
+				return `transform: translateX(-${this.matchedIndex * 100}%)`
+			}
+		},
+		watch: {
+			activeKey(newVal: string) {
+				if (newVal != null && newVal != '' && newVal != this.active) {
+					this.active = newVal
+					this.updateMatched()
+				}
+			},
+			filteredTabs() {
+				this.updateMatched()
+			}
+		},
+		mounted() {
+			this.updateMatched()
+		},
+		methods: {
+			updateMatched(): void {
+				if (this.filteredTabs.length == 0) {
+					this.matchedIndex = 0
+					this.matchedKey = ''
+					return
+				}
+				
+				const getFirstValuable = (): [number, string] => {
+					const firstIdx = this.filteredTabs.findIndex(tab => tab != null)
+					if (firstIdx == -1) {
+						return [0, '']
+					}
+					const firstTab = this.filteredTabs[firstIdx]
+					const key: string = firstTab.name != null ? firstTab.name : String(firstIdx)
+					return [firstIdx, key]
+				}
+				
+				if (this.active == null || this.active == '') {
+					const [idx, key] = getFirstValuable()
+					this.matchedIndex = idx
+					this.matchedKey = key
+					return
+				}
+				
+				const index = this.filteredTabs.findIndex((tab, idx) => {
+					return tab.name == this.active || (tab.name == null && String(idx) == this.active)
+				})
+				
+				if (index != -1) {
+					this.matchedIndex = index
+					this.matchedKey = String(this.active)
+				} else {
+					const [idx, key] = getFirstValuable()
+					this.matchedIndex = idx
+					this.matchedKey = key
+				}
+			},
+			tabNavClass(idx: number): string {
+				const classes: string[] = ['bl-tabs__nav']
+				const key = this.filteredTabs[idx].name != null ? this.filteredTabs[idx].name : String(idx)
+				const isActive = key == this.matchedKey
+				const tab = this.filteredTabs[idx]
+				
+				if (this.scrollable) {
+					classes.push('bl-tabs__nav--scrollable')
+				}
+				if (tab.disabled) {
+					classes.push('bl-tabs__nav--disabled')
+				}
+				if (isActive) {
+					classes.push('bl-tabs__nav--active')
+				}
+				return classes.join(' ')
+			},
+			handleTabClick(key: string): void {
+				const tab = this.filteredTabs.find((t, idx) => {
+					return t.name == key || (t.name == null && String(idx) == key)
+				})
+				
+				if (tab != null && !tab.disabled) {
+					this.active = key
+					this.updateMatched()
+					this.$emit('activeKeyChange', key)
+				}
+			}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

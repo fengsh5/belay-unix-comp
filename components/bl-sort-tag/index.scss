@@ -1,0 +1,99 @@
+/**
+ * BlSortTag 组件样式
+ * 参考 Ant Design Table 排序标签设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-sorttag {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 8rpx 16rpx;
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+	
+	&:not(.bl-sorttag--disabled):active {
+		opacity: 0.8;
+	}
+}
+
+.bl-sorttag__text {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	font-size: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+.bl-sorttag__icons {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-sorttag__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--bl-font-size-xs, $font-size-xs);
+	line-height: 1;
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+	transition: color 0.3s;
+	
+	&--up {
+		margin-bottom: 2rpx;
+	}
+	
+	&--down {
+		margin-top: 2rpx;
+	}
+	
+	&--active {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* ==================== 排序状态 ==================== */
+
+/* 升序状态 */
+.bl-sorttag--asc {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	color: var(--bl-primary-color, $primary-color);
+}
+
+/* 降序状态 */
+.bl-sorttag--desc {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	color: var(--bl-primary-color, $primary-color);
+}
+
+/* 禁用状态 */
+.bl-sorttag--disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-sorttag {
+		padding: 6rpx 12rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

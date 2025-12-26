@@ -1,0 +1,29 @@
+/**
+ * BlThemeRoot 组件样式
+ * 用于应用根主题样式
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-themeroot {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.bl-themeroot--light,
+.bl-theme-root--light {
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-themeroot--dark,
+.bl-theme-root--dark {
+	/* 使用统一的 CSS 变量名，通过 BlThemeProvider 或 BlTheme 工具设置值 */
+	background-color: var(--bl-background-color, #1d1e1f);
+	color: var(--bl-text-color, #e5eaf3);
+}
+

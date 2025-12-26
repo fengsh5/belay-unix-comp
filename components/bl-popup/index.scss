@@ -1,0 +1,129 @@
+/**
+ * BlPopup 组件样式
+ * 参考 Ant Design Drawer 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-popup__content {
+	position: fixed;
+	background-color: var(--bl-background-color, $background-color);
+	z-index: var(--bl-z-index-modal, $z-index-modal);
+	transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+}
+
+/* ==================== 弹出位置 ==================== */
+
+/* 顶部弹出 */
+.bl-popup__content--top {
+	top: 0;
+	left: 0;
+	width: 100%;
+	transform: translateY(-100%);
+	
+	&.bl-popup__content--visible {
+		transform: translateY(0);
+	}
+	
+	&.bl-popup__content--round {
+		border-radius: 0 0 var(--bl-border-radius-large, $border-radius-large) var(--bl-border-radius-large, $border-radius-large);
+	}
+}
+
+/* 底部弹出 */
+.bl-popup__content--bottom {
+	bottom: 0;
+	left: 0;
+	top: auto;
+	width: 100%;
+	transform: translateY(100%);
+	
+	&.bl-popup__content--visible {
+		transform: translateY(0);
+	}
+	
+	&.bl-popup__content--round {
+		border-radius: var(--bl-border-radius-large, $border-radius-large) var(--bl-border-radius-large, $border-radius-large) 0 0;
+	}
+}
+
+/* 左侧弹出 */
+.bl-popup__content--left {
+	top: 0;
+	left: 0;
+	height: 100%;
+	transform: translateX(-100%);
+	
+	&.bl-popup__content--visible {
+		transform: translateX(0);
+	}
+	
+	&.bl-popup__content--round {
+		border-radius: 0 var(--bl-border-radius-large, $border-radius-large) var(--bl-border-radius-large, $border-radius-large) 0;
+	}
+}
+
+/* 右侧弹出 */
+.bl-popup__content--right {
+	top: 0;
+	right: 0;
+	height: 100%;
+	transform: translateX(100%);
+	
+	&.bl-popup__content--visible {
+		transform: translateX(0);
+	}
+	
+	&.bl-popup__content--round {
+		border-radius: var(--bl-border-radius-large, $border-radius-large) 0 0 var(--bl-border-radius-large, $border-radius-large);
+	}
+}
+
+/* 居中弹出 */
+.bl-popup__content--center {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.8);
+	opacity: 0;
+	max-width: 90%;
+	max-height: 90%;
+	
+	&.bl-popup__content--visible {
+		transform: translate(-50%, -50%) scale(1);
+		opacity: 1;
+	}
+	
+	&.bl-popup__content--round {
+		border-radius: var(--bl-border-radius-large, $border-radius-large);
+	}
+}
+
+/* ==================== 弹出层尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-popup__content--large {
+	padding: var(--bl-spacing-lg, $spacing-lg);
+}
+
+/* 默认尺寸 */
+.bl-popup__content--default {
+	padding: var(--bl-spacing-md, $spacing-md);
+}
+
+/* 小尺寸 */
+.bl-popup__content--small {
+	padding: var(--bl-spacing-sm, $spacing-sm);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-popup__content {
+		max-width: 100%;
+		max-height: 100%;
+	}
+}
+

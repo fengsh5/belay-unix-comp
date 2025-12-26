@@ -1,0 +1,208 @@
+<template>
+	<picker
+		:class="pickerClass"
+		:style="pickerStyle"
+		mode="multiSelector"
+		:value="selectedIndex"
+		:range="range"
+		:range-key="rangeKey"
+		:disabled="disabled"
+		@change="handleChange"
+		@columnchange="handleColumnChange"
+		@cancel="handleCancel"
+	>
+		<slot>
+			<view class="bl-pickermultiselector__trigger">
+				<text class="bl-pickermultiselector__text">{{ displayText }}</text>
+				<bl-icon v-if="showArrow" name="arrow-down" class="bl-pickermultiselector__arrow"></bl-icon>
+			</view>
+		</slot>
+	</picker>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlPickerMultiSelector',
+		props: {
+			/**
+			 * 当前选中的值，数组形式
+			 */
+			value: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 选项数组，二维数组
+			 */
+			range: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当 range 是一个 Object Array 时，通过 range-key 来指定 Object 中 key 的值作为选择器显示内容
+			 */
+			rangeKey: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 占位符
+			 */
+			placeholder: {
+				type: String,
+				default: '请选择'
+			},
+			/**
+			 * 是否显示箭头
+			 */
+			showArrow: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 显示文本格式化函数
+			 */
+			formatter: {
+				type: Function,
+				default: null
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'columnChange', 'cancel'],
+		computed: {
+			pickerClass(): string {
+				const classes: string[] = ['bl-pickermultiselector']
+				if (this.disabled) {
+					classes.push('bl-pickermultiselector--disabled')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			pickerStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			selectedIndex(): number[] {
+				if (this.value == null || this.value.length == 0) {
+					return this.range.map(() => 0)
+				}
+				const indices: number[] = []
+				for (let i = 0; i < this.range.length; i++) {
+					const column = this.range[i] as any[]
+					const val = i < this.value.length ? this.value[i] : null
+					let foundIndex = 0
+					
+					for (let j = 0; j < column.length; j++) {
+						const item = column[j]
+						if (this.rangeKey != '' && typeof item === 'object' && item != null) {
+							if ((item as any)[this.rangeKey] == val) {
+								foundIndex = j
+								break
+							}
+						} else if (item == val) {
+							foundIndex = j
+							break
+						}
+					}
+					indices.push(foundIndex)
+				}
+				return indices
+			},
+			displayText(): string {
+				if (this.selectedIndex.length == 0 || this.value.length == 0) {
+					return this.placeholder
+				}
+				
+				const texts: string[] = []
+				for (let i = 0; i < this.selectedIndex.length; i++) {
+					const index = this.selectedIndex[i]
+					const column = this.range[i] as any[]
+					if (index >= 0 && index < column.length) {
+						const item = column[index]
+						let text = ''
+						if (this.rangeKey != '' && typeof item === 'object' && item != null) {
+							text = String((item as any)[this.rangeKey] || '')
+						} else {
+							text = String(item || '')
+						}
+						texts.push(text)
+					}
+				}
+				
+				let result = texts.join(' ')
+				if (this.formatter != null && typeof this.formatter === 'function') {
+					result = this.formatter(result, this.value, this.selectedIndex)
+				}
+				return result || this.placeholder
+			}
+		},
+		methods: {
+			handleChange(e: any): void {
+				const indices = e.detail?.value || []
+				const values: any[] = []
+				const items: any[] = []
+				
+				for (let i = 0; i < indices.length; i++) {
+					const index = indices[i] as number
+					const column = this.range[i] as any[]
+					if (index >= 0 && index < column.length) {
+						const item = column[index]
+						items.push(item)
+						if (this.rangeKey != '' && typeof item === 'object' && item != null) {
+							values.push((item as any)[this.rangeKey])
+						} else {
+							values.push(item)
+						}
+					}
+				}
+				
+				this.$emit('change', {
+					value: values,
+					index: indices,
+					items: items
+				})
+			},
+			handleColumnChange(e: any): void {
+				const column = e.detail?.column || 0
+				const index = e.detail?.value || 0
+				this.$emit('columnChange', {
+					column: column,
+					index: index
+				})
+			},
+			handleCancel(e: any): void {
+				this.$emit('cancel', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

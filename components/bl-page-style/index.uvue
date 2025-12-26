@@ -1,0 +1,51 @@
+<template>
+	<view></view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlPageStyle',
+		props: {
+			/**
+			 * 页面背景颜色
+			 */
+			backgroundColor: {
+				type: String,
+				default: '#f7f8fa'
+			},
+			/**
+			 * 导航栏标题颜色
+			 */
+			navigationBarTextStyle: {
+				type: String,
+				default: 'black' // black | white
+			},
+			/**
+			 * 导航栏背景颜色
+			 */
+			navigationBarBackgroundColor: {
+				type: String,
+				default: '#ffffff'
+			}
+		},
+		mounted() {
+			// 动态设置页面样式
+			const pages = getCurrentPages()
+			if (pages.length > 0) {
+				const currentPage = pages[pages.length - 1]
+				if (currentPage != null) {
+					// 可以通过 uni.setNavigationBarColor 等 API 设置
+					uni.setNavigationBarColor({
+						frontColor: this.navigationBarTextStyle === 'white' ? '#ffffff' : '#000000',
+						backgroundColor: this.navigationBarBackgroundColor
+					})
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

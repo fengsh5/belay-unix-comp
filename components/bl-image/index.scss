@@ -1,0 +1,106 @@
+/**
+ * BlImage 组件样式
+ * 参考 Ant Design Image 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-image {
+	box-sizing: border-box;
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	vertical-align: middle;
+	
+	&--fade {
+		animation: fadeIn 0.3s ease-in-out;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* ==================== 图片类型 ==================== */
+
+/* 圆形图片 */
+.bl-image--round {
+	border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	overflow: hidden;
+}
+
+/* 圆角图片 */
+.bl-image--rounded {
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+}
+
+/* 方形图片 */
+.bl-image--square {
+	border-radius: 0;
+}
+
+/* ==================== 图片尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-image--large {
+	width: 320rpx;
+	height: 320rpx;
+}
+
+/* 默认尺寸 */
+.bl-image--default {
+	width: 200rpx;
+	height: 200rpx;
+}
+
+/* 小尺寸 */
+.bl-image--small {
+	width: 120rpx;
+	height: 120rpx;
+}
+
+/* ==================== 图片状态 ==================== */
+
+/* 加载中 */
+.bl-image--loading {
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* 加载失败 */
+.bl-image--error {
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-image--large {
+		width: 280rpx;
+		height: 280rpx;
+	}
+	
+	.bl-image--default {
+		width: 180rpx;
+		height: 180rpx;
+	}
+	
+	.bl-image--small {
+		width: 100rpx;
+		height: 100rpx;
+	}
+}
+

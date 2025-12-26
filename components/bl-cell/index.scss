@@ -1,0 +1,120 @@
+/**
+ * BlCell 组件样式
+ * 参考 Ant Design List 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-cell {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-background-color, $background-color);
+	border-bottom: 2rpx solid var(--bl-border-color-lighter, $border-color-lighter);
+	box-sizing: border-box;
+	transition: background-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&--no-padding {
+		padding: 0;
+	}
+	
+	&--link {
+		cursor: pointer;
+		
+		&:active {
+			background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		}
+	}
+}
+
+.bl-cell__title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-shrink: 0;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-cell__icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+}
+
+.bl-cell__value {
+	flex: 1;
+	text-align: right;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	word-break: break-all;
+}
+
+.bl-cell__right-icon {
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+}
+
+/* ==================== 单元格类型 ==================== */
+
+/* 带边框的单元格 */
+.bl-cell--bordered {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+/* 无边框单元格 */
+.bl-cell--borderless {
+	border-bottom: none;
+}
+
+/* ==================== 单元格尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-cell--large {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	
+	.bl-cell__title {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+	
+	.bl-cell__value {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-cell--small {
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	
+	.bl-cell__title {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+	
+	.bl-cell__value {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-cell {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

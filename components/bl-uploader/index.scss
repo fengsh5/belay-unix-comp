@@ -1,0 +1,173 @@
+/**
+ * BlUploader 组件样式
+ * 参考 Ant Design Upload 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-uploader {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+	box-sizing: border-box;
+}
+
+.bl-uploader__item {
+	position: relative;
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.bl-uploader__preview {
+	width: 100%;
+	height: 100%;
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+}
+
+.bl-uploader__delete {
+	position: absolute;
+	top: -8rpx;
+	right: -8rpx;
+	width: 32rpx;
+	height: 32rpx;
+	background-color: var(--bl-error-color, $error-color);
+	border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 1;
+	box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.12);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&:active {
+		transform: scale(0.9);
+	}
+}
+
+.bl-uploader__delete-icon {
+	color: var(--bl-white-color, $white-color);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+.bl-uploader__mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--bl-border-radius, $border-radius);
+	z-index: 1;
+}
+
+.bl-uploader__upload {
+	width: 160rpx;
+	height: 160rpx;
+	border: 2rpx dashed var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+	
+	&:active {
+		border-color: var(--bl-primary-color, $primary-color);
+		background-color: var(--bl-primary-color-4, $primary-color-4);
+	}
+}
+
+.bl-uploader__upload-icon {
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+	font-size: 48rpx;
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-uploader__upload-text {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+	text-align: center;
+}
+
+/* ==================== 上传器尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-uploader--large {
+	.bl-uploader__item {
+		width: 200rpx;
+		height: 200rpx;
+	}
+	
+	.bl-uploader__upload {
+		width: 200rpx;
+		height: 200rpx;
+	}
+	
+	.bl-uploader__upload-icon {
+		font-size: 56rpx;
+	}
+}
+
+/* 小尺寸 */
+.bl-uploader--small {
+	.bl-uploader__item {
+		width: 120rpx;
+		height: 120rpx;
+	}
+	
+	.bl-uploader__upload {
+		width: 120rpx;
+		height: 120rpx;
+	}
+	
+	.bl-uploader__upload-icon {
+		font-size: 40rpx;
+	}
+}
+
+/* ==================== 上传器状态 ==================== */
+
+/* 禁用状态 */
+.bl-uploader--disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	
+	.bl-uploader__upload {
+		cursor: not-allowed;
+		
+		&:active {
+			border-color: var(--bl-border-color, $border-color);
+			background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		}
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-uploader__item {
+		width: 140rpx;
+		height: 140rpx;
+	}
+	
+	.bl-uploader__upload {
+		width: 140rpx;
+		height: 140rpx;
+	}
+}
+

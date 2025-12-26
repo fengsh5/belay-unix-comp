@@ -1,0 +1,178 @@
+<template>
+	<view :class="noticeBarClass" :style="noticeBarStyle" @click="handleClick">
+		<bl-icon 
+			v-if="icon != null && icon != ''" 
+			:name="icon" 
+			class="bl-noticebar__icon"
+			:color="iconColor"
+		></bl-icon>
+		<scroll-view 
+			class="bl-noticebar__content"
+			:scroll-x="scrollable"
+			:scroll-with-animation="scrollWithAnimation"
+			:enable-flex="false"
+		>
+			<text class="bl-noticebar__text" :style="textStyle">
+				<slot>{{ text }}</slot>
+			</text>
+		</scroll-view>
+		<bl-icon 
+			v-if="closable" 
+			name="close" 
+			class="bl-noticebar__close"
+			@click.stop="handleClose"
+		></bl-icon>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlNoticeBar',
+		props: {
+			/**
+			 * 通知栏文本
+			 */
+			text: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否可滚动
+			 */
+			scrollable: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 滚动时是否使用动画
+			 */
+			scrollWithAnimation: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 左侧图标
+			 */
+			icon: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 左侧图标颜色
+			 */
+			iconColor: {
+				type: String,
+				default: '#ff9500'
+			},
+			/**
+			 * 是否显示关闭按钮
+			 */
+			closable: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 文本颜色
+			 */
+			color: {
+				type: String,
+				default: '#ed6a0c'
+			},
+			/**
+			 * 背景颜色
+			 */
+			background: {
+				type: String,
+				default: '#fffbe8'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['close', 'click'],
+		computed: {
+			noticeBarClass(): string {
+				const classes: string[] = ['bl-noticebar']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			noticeBarStyle(): string {
+				const styles: string[] = []
+				if (this.background != '') {
+					styles.push(`background-color: ${this.background}`)
+				}
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			textStyle(): string {
+				const styles: string[] = []
+				if (this.color != '') {
+					styles.push(`color: ${this.color}`)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleClick(e: any): void {
+				this.$emit('click', e)
+			},
+			handleClose(e: any): void {
+				this.$emit('close', e)
+			}
+		}
+	}
+</script>
+
+<style>
+	.bl-noticebar {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 9px 12px;
+		background-color: #fffbe8;
+		min-height: 36px;
+		box-sizing: border-box;
+	}
+	
+	.bl-noticebar__icon {
+		margin-right: 8px;
+		flex-shrink: 0;
+	}
+	
+	.bl-noticebar__content {
+		flex: 1;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	
+	.bl-noticebar__text {
+		color: #ed6a0c;
+		font-size: 13px;
+		line-height: 18px;
+	}
+	
+	.bl-noticebar__close {
+		margin-left: 8px;
+		flex-shrink: 0;
+	}
+</style>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

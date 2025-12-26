@@ -1,0 +1,293 @@
+<template>
+	<picker
+		:class="pickerClass"
+		:style="pickerStyle"
+		mode="multiSelector"
+		:value="selectedIndex"
+		:range="range"
+		:range-key="rangeKey"
+		:disabled="disabled"
+		@change="handleChange"
+		@columnchange="handleColumnChange"
+		@cancel="handleCancel"
+	>
+		<slot>
+			<view class="bl-pickercascaderselector__trigger">
+				<text class="bl-pickercascaderselector__text">{{ displayText }}</text>
+				<bl-icon v-if="showArrow" name="arrow-down" class="bl-pickercascaderselector__arrow"></bl-icon>
+			</view>
+		</slot>
+	</picker>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlPickerCascaderSelector',
+		props: {
+			/**
+			 * 当前选中的值，数组形式
+			 */
+			value: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 级联数据
+			 */
+			options: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 子级字段名
+			 */
+			childrenKey: {
+				type: String,
+				default: 'children'
+			},
+			/**
+			 * 显示字段名
+			 */
+			labelKey: {
+				type: String,
+				default: 'label'
+			},
+			/**
+			 * 值字段名
+			 */
+			valueKey: {
+				type: String,
+				default: 'value'
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 占位符
+			 */
+			placeholder: {
+				type: String,
+				default: '请选择'
+			},
+			/**
+			 * 是否显示箭头
+			 */
+			showArrow: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 显示文本格式化函数
+			 */
+			formatter: {
+				type: Function,
+				default: null
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				cascaderRange: [] as any[][],
+				cascaderValue: [] as any[]
+			}
+		},
+		emits: ['change', 'columnChange', 'cancel'],
+		computed: {
+			pickerClass(): string {
+				const classes: string[] = ['bl-pickercascaderselector']
+				if (this.disabled) {
+					classes.push('bl-pickercascaderselector--disabled')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			pickerStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			range(): any[][] {
+				return this.cascaderRange
+			},
+			rangeKey(): string {
+				return this.labelKey
+			},
+			selectedIndex(): number[] {
+				const indices: number[] = []
+				for (let i = 0; i < this.cascaderRange.length; i++) {
+					const column = this.cascaderRange[i]
+					const val = i < this.cascaderValue.length ? this.cascaderValue[i] : null
+					let foundIndex = 0
+					
+					for (let j = 0; j < column.length; j++) {
+						const item = column[j]
+						const itemValue = (item as any)[this.valueKey]
+						if (itemValue == val) {
+							foundIndex = j
+							break
+						}
+					}
+					indices.push(foundIndex)
+				}
+				return indices
+			},
+			displayText(): string {
+				if (this.cascaderValue.length == 0) {
+					return this.placeholder
+				}
+				
+				const texts: string[] = []
+				for (let i = 0; i < this.cascaderValue.length; i++) {
+					const val = this.cascaderValue[i]
+					const column = this.cascaderRange[i]
+					if (column != null && column.length > 0) {
+						for (const item of column) {
+							const itemValue = (item as any)[this.valueKey]
+							if (itemValue == val) {
+								texts.push((item as any)[this.labelKey])
+								break
+							}
+						}
+					}
+				}
+				
+				let result = texts.join(' / ')
+				if (this.formatter != null && typeof this.formatter === 'function') {
+					result = this.formatter(result, this.cascaderValue)
+				}
+				return result || this.placeholder
+			}
+		},
+		watch: {
+			options: {
+				handler() {
+					this.buildCascaderData()
+				},
+				immediate: true
+			},
+			value: {
+				handler() {
+					this.buildCascaderData()
+				},
+				immediate: true
+			}
+		},
+		methods: {
+			buildCascaderData(): void {
+				const range: any[][] = []
+				const values: any[] = this.value || []
+				
+				// 构建第一列
+				const firstColumn: any[] = []
+				for (const option of this.options) {
+					firstColumn.push(option)
+				}
+				range.push(firstColumn)
+				
+				// 根据当前值构建后续列
+				let currentOptions = this.options
+				for (let i = 0; i < values.length; i++) {
+					const val = values[i]
+					let found = false
+					
+					for (const option of currentOptions) {
+						const optionValue = (option as any)[this.valueKey]
+						if (optionValue == val) {
+							const children = (option as any)[this.childrenKey]
+							if (children != null && Array.isArray(children) && children.length > 0) {
+								range.push(children)
+								currentOptions = children
+								found = true
+								break
+							}
+						}
+					}
+					
+					if (!found) {
+						break
+					}
+				}
+				
+				this.cascaderRange = range
+				this.cascaderValue = values.slice()
+			},
+			updateColumns(column: number, index: number): void {
+				const newRange: any[][] = this.cascaderRange.slice(0, column + 1)
+				const newValues: any[] = this.cascaderValue.slice(0, column)
+				
+				// 获取选中的项
+				const selectedItem = this.cascaderRange[column][index]
+				newValues.push((selectedItem as any)[this.valueKey])
+				
+				// 获取子级
+				const children = (selectedItem as any)[this.childrenKey]
+				if (children != null && Array.isArray(children) && children.length > 0) {
+					newRange.push(children)
+				}
+				
+				this.cascaderRange = newRange
+				this.cascaderValue = newValues
+			},
+			handleChange(e: any): void {
+				const indices = e.detail?.value || []
+				const values: any[] = []
+				const items: any[] = []
+				
+				for (let i = 0; i < indices.length; i++) {
+					const index = indices[i] as number
+					const column = this.cascaderRange[i]
+					if (index >= 0 && index < column.length) {
+						const item = column[index]
+						items.push(item)
+						values.push((item as any)[this.valueKey])
+					}
+				}
+				
+				this.cascaderValue = values
+				this.$emit('change', {
+					value: values,
+					index: indices,
+					items: items
+				})
+			},
+			handleColumnChange(e: any): void {
+				const column = e.detail?.column || 0
+				const index = e.detail?.value || 0
+				this.updateColumns(column, index)
+				this.$emit('columnChange', {
+					column: column,
+					index: index
+				})
+			},
+			handleCancel(e: any): void {
+				this.$emit('cancel', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

@@ -1,0 +1,170 @@
+/**
+ * BlPagination 组件样式
+ * 参考 Ant Design Pagination 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-pagination {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-pagination__item {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 64rpx;
+	height: 64rpx;
+	padding: 0 var(--bl-spacing-sm, $spacing-sm);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	transition: all 0.3s;
+	box-sizing: border-box;
+	
+	&:active:not(.bl-pagination__item--disabled):not(.bl-pagination__item--active) {
+		opacity: 0.8;
+		transform: scale(0.95);
+	}
+}
+
+.bl-pagination__item--active {
+	background-color: var(--bl-primary-color, $primary-color);
+	border-color: var(--bl-primary-color, $primary-color);
+	color: var(--bl-text-color-inverse, #fff);
+	font-weight: 500;
+}
+
+.bl-pagination__item--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-pagination__item--ellipsis {
+	border: none;
+	background-color: transparent;
+	cursor: default;
+	
+	&:active {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.bl-pagination__prev,
+.bl-pagination__next {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 64rpx;
+	height: 64rpx;
+	padding: 0 var(--bl-spacing-sm, $spacing-sm);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+	cursor: pointer;
+	transition: all 0.3s;
+	box-sizing: border-box;
+	
+	&:active:not(.bl-pagination__prev--disabled):not(.bl-pagination__next--disabled) {
+		opacity: 0.8;
+		transform: scale(0.95);
+	}
+}
+
+.bl-pagination__prev--disabled,
+.bl-pagination__next--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-pagination__total {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-pagination__size-changer {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-pagination__quick-jumper {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	display: inline-flex;
+	align-items: center;
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-pagination__quick-jumper-input {
+	width: 80rpx;
+	height: 64rpx;
+	padding: 0 var(--bl-spacing-xs, $spacing-xs);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	text-align: center;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	box-sizing: border-box;
+}
+
+/* ==================== 尺寸 ==================== */
+
+/* 默认尺寸 */
+.bl-pagination--default {
+	.bl-pagination__item,
+	.bl-pagination__prev,
+	.bl-pagination__next {
+		min-width: 64rpx;
+		height: 64rpx;
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+	
+	.bl-pagination__quick-jumper-input {
+		width: 80rpx;
+		height: 64rpx;
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+.bl-pagination--small {
+	.bl-pagination__item,
+	.bl-pagination__prev,
+	.bl-pagination__next {
+		min-width: 56rpx;
+		height: 56rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+	
+	.bl-pagination__quick-jumper-input {
+		width: 70rpx;
+		height: 56rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 简单模式 ==================== */
+.bl-pagination--simple {
+	.bl-pagination__item {
+		display: none;
+	}
+	
+	.bl-pagination__prev,
+	.bl-pagination__next {
+		margin: 0 var(--bl-spacing-xs, $spacing-xs);
+	}
+}

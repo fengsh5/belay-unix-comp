@@ -1,0 +1,9 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^bl-tree-node$": "@/uni_modules/belay-unix/components/bl-tree/node.uvue",
+      "^bl-(.+)$": "@/uni_modules/belay-unix/components/bl-$1/index.uvue"
+    }
+  }
+}

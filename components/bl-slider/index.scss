@@ -1,0 +1,43 @@
+/**
+ * BlSlider 组件样式
+ * 参考 Ant Design Slider 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-slider {
+	width: 100%;
+	box-sizing: border-box;
+	padding: var(--bl-spacing-sm, $spacing-sm) 0;
+}
+
+/* ==================== 滑块状态 ==================== */
+
+/* 禁用状态 */
+.bl-slider--disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* ==================== 滑块尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-slider--large {
+	padding: var(--bl-spacing-md, $spacing-md) 0;
+}
+
+/* 小尺寸 */
+.bl-slider--small {
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-slider {
+		padding: var(--bl-spacing-xs, $spacing-xs) 0;
+	}
+}
+

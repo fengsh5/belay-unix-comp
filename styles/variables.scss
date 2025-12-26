@@ -1,0 +1,416 @@
+/**
+ * Belay-Unix 组件库 SCSS 变量文件
+ * 
+ * 此文件是组件库主题的单一数据源（Single Source of Truth）
+ * 包含：
+ * 1. uni-app 标准变量
+ * 2. 组件库扩展变量
+ * 3. 主题定义（浅色主题 $theme-light 和深色主题 $theme-dark）
+ * 
+ * 注意：
+ * - 默认主题变量从 $theme-light 中获取
+ * - 运行时主题切换通过 CSS 变量实现（参考 BlTheme 工具）
+ * - SCSS 变量作为 CSS 变量的默认值（fallback），确保在未设置 CSS 变量时也能正常显示
+ * - 在 mixins 和编译时样式中使用 SCSS 变量
+ * - 在组件样式中优先使用 CSS 变量（var(--bl-xxx)），SCSS 变量作为后备
+ * 
+ * 使用方式：
+ * 在项目的 scss 文件中：
+ * @import '@/uni_modules/belay-unix/styles/variables.scss';
+ * 
+ * 或者在使用 uni-app 的 vue 文件中：
+ * <style lang="scss">
+ *   @import '@/uni_modules/belay-unix/styles/variables.scss';
+ *   .my-class {
+ *     // 优先使用 CSS 变量（运行时），SCSS 变量作为后备（编译时）
+ *     color: var(--bl-text-color, $text-color);
+ *     background-color: var(--bl-background-color, $background-color);
+ *   }
+ * </style>
+ * 
+ * 运行时主题切换：
+ * 使用 BlTheme 工具进行运行时主题切换，参考：
+ * @/uni_modules/belay-unix/utils/BlTheme/README.md
+ */
+
+/* ==================== uni-app 标准变量 ==================== */
+/* 
+ * 尝试引用 uni.scss 中的变量（如果可用）
+ * 如果 uni.scss 不可用，则使用下方定义的标准变量作为后备
+ */
+// @import '@/uni.scss' !optional; // 尝试引用 uni.scss（如果项目中有）
+// 注意：在文档网站环境中，此导入已被注释，因为 uni.scss 可能不存在
+
+/* 颜色变量 */
+
+/* 行为相关颜色 */
+/* 如果 uni.scss 已定义，这些变量会被覆盖；否则使用以下默认值 */
+$uni-color-primary: #007aff !default;
+$uni-color-success: #4cd964 !default;
+$uni-color-warning: #f0ad4e !default;
+$uni-color-error: #dd524d !default;
+
+/* 文字基本颜色 */
+$uni-text-color: #333 !default; // 基本色
+$uni-text-color-inverse: #fff !default; // 反色
+$uni-text-color-grey: #999 !default; // 辅助灰色，如加载更多的提示信息
+$uni-text-color-placeholder: #808080 !default;
+$uni-text-color-disable: #c0c0c0 !default;
+
+/* 背景颜色 */
+$uni-bg-color: #ffffff !default;
+$uni-bg-color-grey: #f8f8f8 !default;
+$uni-bg-color-hover: #f1f1f1 !default; // 点击状态颜色
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4) !default; // 遮罩颜色
+
+/* 边框颜色 */
+$uni-border-color: #c8c7cc !default;
+
+/* 尺寸变量 */
+
+/* 文字尺寸 */
+$uni-font-size-sm: 24rpx !default;
+$uni-font-size-base: 28rpx !default;
+$uni-font-size-lg: 32rpx !default;
+
+/* 图片尺寸 */
+$uni-img-size-sm: 40rpx !default;
+$uni-img-size-base: 52rpx !default;
+$uni-img-size-lg: 80rpx !default;
+
+/* Border Radius */
+$uni-border-radius-sm: 4rpx !default;
+$uni-border-radius-base: 6rpx !default;
+$uni-border-radius-large: 12rpx !default;
+$uni-border-radius-circle: 50% !default;
+
+/* 水平间距 */
+$uni-spacing-row-sm: 20rpx !default;
+$uni-spacing-row-base: 30rpx !default;
+$uni-spacing-row-lg: 40rpx !default;
+
+/* 垂直间距 */
+$uni-spacing-col-sm: 8rpx !default;
+$uni-spacing-col-base: 16rpx !default;
+$uni-spacing-col-lg: 24rpx !default;
+
+/* 透明度 */
+$uni-opacity-disabled: 0.3 !default; // 组件禁用态的透明度
+
+/* 文章场景相关 */
+$uni-color-title: #2C405A !default; // 文章标题颜色
+$uni-font-size-title: 40rpx !default;
+$uni-color-subtitle: #555555 !default; // 二级标题颜色
+$uni-font-size-subtitle: 36rpx !default;
+$uni-color-paragraph: #3F536E !default; // 文章段落颜色
+$uni-font-size-paragraph: 30rpx !default;
+
+/* ==================== 组件库扩展变量 ==================== */
+/* 注意：以下变量从默认主题（浅色主题）中获取，作为 CSS 变量的默认值 */
+
+/* ==================== 主题定义 ==================== */
+/* 浅色主题（默认） */
+$theme-light: (
+	// 主色调
+	primary-color: #409eff,
+	primary-color-1: #66b1ff,
+	primary-color-2: #85c1ff,
+	primary-color-3: #a6d3ff,
+	primary-color-4: #c6e2ff,
+	secondary-color: #909399,
+	
+	// 功能色
+	success-color: #67c23a,
+	success-color-1: #85ce61,
+	success-color-2: #a4da89,
+	success-color-3: #c2e7b0,
+	success-color-4: #e1f5d8,
+	
+	error-color: #f56c6c,
+	error-color-1: #f78989,
+	error-color-2: #f9a7a7,
+	error-color-3: #fbc4c4,
+	error-color-4: #fde2e2,
+	
+	warning-color: #e6a23c,
+	warning-color-1: #eab563,
+	warning-color-2: #eec88a,
+	warning-color-3: #f2dab1,
+	warning-color-4: #f6ecd8,
+	
+	info-color: #909399,
+	info-color-1: #a6a9ad,
+	info-color-2: #bcbec2,
+	info-color-3: #d3d4d6,
+	info-color-4: #e9e9eb,
+	
+	// 基础色
+	black-color: #000000,
+	white-color: #ffffff,
+	
+	// 灰度颜色
+	gray-1: #303133,
+	gray-2: #606266,
+	gray-3: #909399,
+	gray-4: #c0c4cc,
+	gray-5: #dcdfe6,
+	gray-6: #e4e7ed,
+	
+	// 背景色
+	background-color: #ffffff,
+	background-color-secondary: #f5f7fa,
+	
+	// 文字颜色
+	text-color: #303133,
+	text-color-secondary: #606266,
+	text-color-tertiary: #909399,
+	text-color-disabled: #c0c4cc,
+	text-color-placeholder: #c0c4cc,
+	
+	// 边框颜色
+	border-color: #dcdfe6,
+	border-color-light: #e4e7ed,
+	border-color-lighter: #ebeef5,
+	border-color-extra-light: #f2f6fc,
+	border-color-split: #ebeef5, // 分割线颜色
+	
+	// 圆角
+	border-radius: 8rpx,
+	border-radius-small: 4rpx,
+	border-radius-large: 16rpx,
+	border-radius-round: 40rpx,
+	border-radius-circle: 50%,
+	
+	// 间距
+	spacing-xs: 8rpx,
+	spacing-sm: 16rpx,
+	spacing-base: 32rpx, // 别名，与 spacing-md 相同
+	spacing-md: 32rpx,
+	spacing-lg: 48rpx,
+	spacing-xl: 64rpx,
+	
+	// 字体大小
+	font-size-xs: 20rpx,
+	font-size-sm: 24rpx,
+	font-size-base: 28rpx,
+	font-size-lg: 32rpx,
+	font-size-xl: 36rpx,
+	font-size-xxl: 40rpx,
+	
+	// 行高
+	line-height-base: 1.5,
+	line-height-sm: 1.2,
+	line-height-lg: 1.8,
+	
+	// z-index
+	z-index-base: 1,
+	z-index-dropdown: 1000,
+	z-index-sticky: 1020,
+	z-index-fixed: 1030,
+	z-index-modal: 1040,
+	z-index-tooltip: 1050
+);
+
+/* 深色主题 */
+$theme-dark: (
+	// 主色调
+	primary-color: #66b1ff,
+	primary-color-1: #85c1ff,
+	primary-color-2: #a6d3ff,
+	primary-color-3: #c6e2ff,
+	primary-color-4: #d9ecff,
+	secondary-color: #a6a9ad,
+	
+	// 功能色
+	success-color: #85ce61,
+	success-color-1: #95d471,
+	success-color-2: #a4da89,
+	success-color-3: #b4e0a1,
+	success-color-4: #c3e6b9,
+	
+	error-color: #f78989,
+	error-color-1: #f89a9a,
+	error-color-2: #f9abab,
+	error-color-3: #fabcbc,
+	error-color-4: #fbcdcd,
+	
+	warning-color: #eab563,
+	warning-color-1: #ecbc73,
+	warning-color-2: #eec88a,
+	warning-color-3: #f0d4a1,
+	warning-color-4: #f2e0b8,
+	
+	info-color: #a6a9ad,
+	info-color-1: #b0b3b7,
+	info-color-2: #babdc1,
+	info-color-3: #c4c7cb,
+	info-color-4: #ced1d5,
+	
+	// 基础色
+	black-color: #ffffff,
+	white-color: #000000,
+	
+	// 灰度颜色
+	gray-1: #e5eaf3,
+	gray-2: #cfd3dc,
+	gray-3: #a8adb5,
+	gray-4: #6c6e72,
+	gray-5: #4c4d4f,
+	gray-6: #2d2d2d,
+	
+	// 背景色
+	background-color: #1d1e1f,
+	background-color-secondary: #252526,
+	
+	// 文字颜色
+	text-color: #e5eaf3,
+	text-color-secondary: #cfd3dc,
+	text-color-tertiary: #a8adb5,
+	text-color-disabled: #6c6e72,
+	text-color-placeholder: #6c6e72,
+	
+	// 边框颜色
+	border-color: #4c4d4f,
+	border-color-light: #3d3e40,
+	border-color-lighter: #2d2d2d,
+	border-color-extra-light: #252526,
+	border-color-split: #2d2d2d, // 分割线颜色
+	
+	// 圆角（深色主题与浅色主题相同）
+	border-radius: 8rpx,
+	border-radius-small: 4rpx,
+	border-radius-large: 16rpx,
+	border-radius-round: 40rpx,
+	border-radius-circle: 50%,
+	
+	// 间距（深色主题与浅色主题相同）
+	spacing-xs: 8rpx,
+	spacing-sm: 16rpx,
+	spacing-base: 32rpx, // 别名，与 spacing-md 相同
+	spacing-md: 32rpx,
+	spacing-lg: 48rpx,
+	spacing-xl: 64rpx,
+	
+	// 字体大小（深色主题与浅色主题相同）
+	font-size-xs: 20rpx,
+	font-size-sm: 24rpx,
+	font-size-base: 28rpx,
+	font-size-lg: 32rpx,
+	font-size-xl: 36rpx,
+	font-size-xxl: 40rpx,
+	
+	// 行高（深色主题与浅色主题相同）
+	line-height-base: 1.5,
+	line-height-sm: 1.2,
+	line-height-lg: 1.8,
+	
+	// z-index（深色主题与浅色主题相同）
+	z-index-base: 1,
+	z-index-dropdown: 1000,
+	z-index-sticky: 1020,
+	z-index-fixed: 1030,
+	z-index-modal: 1040,
+	z-index-tooltip: 1050
+);
+
+/* 当前主题（默认为浅色主题） */
+$current-theme: $theme-light !default;
+
+/* 主题变量映射函数 */
+@function theme($key) {
+	@return map-get($current-theme, $key);
+}
+
+/* 应用主题的 mixin */
+@mixin apply-theme($theme-map) {
+	$current-theme: $theme-map !global;
+}
+
+/* 默认主题变量（从浅色主题获取，作为 CSS 变量的默认值） */
+$primary-color: map-get($theme-light, primary-color);
+$primary-color-1: map-get($theme-light, primary-color-1);
+$primary-color-2: map-get($theme-light, primary-color-2);
+$primary-color-3: map-get($theme-light, primary-color-3);
+$primary-color-4: map-get($theme-light, primary-color-4);
+$secondary-color: map-get($theme-light, secondary-color);
+
+$success-color: map-get($theme-light, success-color);
+$success-color-1: map-get($theme-light, success-color-1);
+$success-color-2: map-get($theme-light, success-color-2);
+$success-color-3: map-get($theme-light, success-color-3);
+$success-color-4: map-get($theme-light, success-color-4);
+
+$error-color: map-get($theme-light, error-color);
+$error-color-1: map-get($theme-light, error-color-1);
+$error-color-2: map-get($theme-light, error-color-2);
+$error-color-3: map-get($theme-light, error-color-3);
+$error-color-4: map-get($theme-light, error-color-4);
+
+$warning-color: map-get($theme-light, warning-color);
+$warning-color-1: map-get($theme-light, warning-color-1);
+$warning-color-2: map-get($theme-light, warning-color-2);
+$warning-color-3: map-get($theme-light, warning-color-3);
+$warning-color-4: map-get($theme-light, warning-color-4);
+
+$info-color: map-get($theme-light, info-color);
+$info-color-1: map-get($theme-light, info-color-1);
+$info-color-2: map-get($theme-light, info-color-2);
+$info-color-3: map-get($theme-light, info-color-3);
+$info-color-4: map-get($theme-light, info-color-4);
+
+$black-color: map-get($theme-light, black-color);
+$white-color: map-get($theme-light, white-color);
+
+$gray-1: map-get($theme-light, gray-1);
+$gray-2: map-get($theme-light, gray-2);
+$gray-3: map-get($theme-light, gray-3);
+$gray-4: map-get($theme-light, gray-4);
+$gray-5: map-get($theme-light, gray-5);
+$gray-6: map-get($theme-light, gray-6);
+
+$background-color: map-get($theme-light, background-color);
+$background-color-secondary: map-get($theme-light, background-color-secondary);
+
+$text-color: map-get($theme-light, text-color);
+$text-color-secondary: map-get($theme-light, text-color-secondary);
+$text-color-tertiary: map-get($theme-light, text-color-tertiary);
+$text-color-disabled: map-get($theme-light, text-color-disabled);
+$text-color-placeholder: map-get($theme-light, text-color-placeholder);
+
+$border-color: map-get($theme-light, border-color);
+$border-color-light: map-get($theme-light, border-color-light);
+$border-color-lighter: map-get($theme-light, border-color-lighter);
+$border-color-extra-light: map-get($theme-light, border-color-extra-light);
+$border-color-split: map-get($theme-light, border-color-split);
+
+$border-radius: map-get($theme-light, border-radius);
+$border-radius-small: map-get($theme-light, border-radius-small);
+$border-radius-large: map-get($theme-light, border-radius-large);
+$border-radius-round: map-get($theme-light, border-radius-round);
+$border-radius-circle: map-get($theme-light, border-radius-circle);
+
+$spacing-xs: map-get($theme-light, spacing-xs);
+$spacing-sm: map-get($theme-light, spacing-sm);
+$spacing-base: map-get($theme-light, spacing-base);
+$spacing-md: map-get($theme-light, spacing-md);
+$spacing-lg: map-get($theme-light, spacing-lg);
+$spacing-xl: map-get($theme-light, spacing-xl);
+
+$font-size-xs: map-get($theme-light, font-size-xs);
+$font-size-sm: map-get($theme-light, font-size-sm);
+$font-size-base: map-get($theme-light, font-size-base);
+$font-size-lg: map-get($theme-light, font-size-lg);
+$font-size-xl: map-get($theme-light, font-size-xl);
+$font-size-xxl: map-get($theme-light, font-size-xxl);
+
+$line-height-base: map-get($theme-light, line-height-base);
+$line-height-sm: map-get($theme-light, line-height-sm);
+$line-height-lg: map-get($theme-light, line-height-lg);
+
+$z-index-base: map-get($theme-light, z-index-base);
+$z-index-dropdown: map-get($theme-light, z-index-dropdown);
+$z-index-sticky: map-get($theme-light, z-index-sticky);
+$z-index-fixed: map-get($theme-light, z-index-fixed);
+$z-index-modal: map-get($theme-light, z-index-modal);
+$z-index-tooltip: map-get($theme-light, z-index-tooltip);
+

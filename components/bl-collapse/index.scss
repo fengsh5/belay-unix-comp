@@ -1,0 +1,101 @@
+/**
+ * BlCollapse 组件样式
+ * 参考 Ant Design Collapse 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-collapse {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+}
+
+.bl-collapse--bordered {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+/* ==================== 面板项 ==================== */
+.bl-collapse__panel {
+	display: flex;
+	flex-direction: column;
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.bl-collapse__panel--active {
+	.bl-collapse__header {
+		.bl-collapse__arrow {
+			transform: rotate(90deg);
+		}
+	}
+}
+
+.bl-collapse__panel--disabled {
+	opacity: 0.4;
+	
+	.bl-collapse__header {
+		cursor: not-allowed;
+	}
+}
+
+.bl-collapse__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	cursor: pointer;
+	transition: background-color 0.3s;
+	
+	&:active:not(.bl-collapse__header--disabled) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-collapse__header--disabled {
+	cursor: not-allowed;
+}
+
+.bl-collapse__arrow {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: transform 0.3s;
+	transform: rotate(0deg);
+}
+
+.bl-collapse__title {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	font-weight: 500;
+}
+
+.bl-collapse__content {
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height 0.3s ease-out;
+}
+
+.bl-collapse__content--active {
+	max-height: 2000rpx;
+}
+
+.bl-collapse__body {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+

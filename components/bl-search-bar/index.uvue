@@ -1,0 +1,183 @@
+<template>
+	<view :class="containerClass" :style="containerStyle">
+		<view v-if="before != null" class="bl-search-bar__before">
+			<slot name="before">{{ before }}</slot>
+		</view>
+		<view class="bl-search-bar__box">
+			<view v-if="searchIcon != null" class="bl-search-bar__search-icon">
+				<slot name="searchIcon">{{ searchIcon }}</slot>
+			</view>
+			<bl-icon v-else icon="search" color="#ababab" :size="32"></bl-icon>
+			<bl-input
+				:class="inputClass"
+				:value="value"
+				:placeholder="placeholder"
+				:style="inputStyle"
+				@input="handleChange"
+				@confirm="handleConfirm"
+			></bl-input>
+			<view v-if="clearable && value != null && value != ''" class="bl-search-bar__cancel" @click.stop="handleClear">
+				<bl-icon icon="cross-circle-fill" color="rgba(0, 0, 0, 0.5)" :size="32"></bl-icon>
+			</view>
+		</view>
+		<view v-if="after != null" class="bl-search-bar__after">
+			<slot name="after">{{ after }}</slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { t } from '../../utils/BlI18n/index.uts'
+	
+	// 事件类型定义
+	type SearchBarEvent = {
+		detail?: {
+			value?: string
+		}
+		[key: string]: any
+	}
+	
+	export default {
+		name: 'BlSearchBar',
+		props: {
+			/**
+			 * 当前值
+			 */
+			value: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 占位符
+			 */
+			placeholder: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 搜索框外左侧插槽
+			 */
+			before: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 搜索框外右侧插槽
+			 */
+			after: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 自定义搜索图标
+			 */
+			searchIcon: {
+				type: String,
+				default: null
+			},
+			/**
+			 * 清空按钮
+			 */
+			clearable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 文字对齐方式
+			 */
+			align: {
+				type: String,
+				default: 'left' // left | center | right
+			},
+			/**
+			 * 防抖时间，单位ms
+			 */
+			debounceTime: {
+				type: Number,
+				default: 1000
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				searchTimer: null as number | null
+			}
+		},
+		emits: ['change', 'search', 'clear'],
+		computed: {
+			containerClass(): string {
+				return 'bl-search-bar'
+			},
+			containerStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			inputClass(): string {
+				return 'bl-search-bar__input'
+			},
+			inputStyle(): string {
+				const styles: string[] = []
+				styles.push(`text-align: ${this.align}`)
+				styles.push('flex: 1')
+				styles.push('color: var(--bl-text-color)')
+				styles.push('margin-left: var(--bl-spacing-sm)')
+				styles.push('line-height: var(--bl-line-height-sm)')
+				return styles.join('; ')
+			},
+			placeholderValue(): string {
+				return this.placeholder != null && this.placeholder != '' ? this.placeholder : t('comp.search')
+			}
+		},
+		methods: {
+			/**
+			 * 防抖搜索
+			 */
+			debounceSearch(value: string): void {
+				if (this.searchTimer != null) {
+					clearTimeout(this.searchTimer)
+				}
+				this.searchTimer = setTimeout(() => {
+					this.$emit('search', value)
+					this.searchTimer = null
+				}, this.debounceTime)
+			},
+			handleChange(evt: SearchBarEvent): void {
+				const value = evt.detail?.value || evt.detail || ''
+				this.$emit('change', value)
+				this.debounceSearch(value)
+			},
+			handleConfirm(evt: SearchBarEvent): void {
+				const value = evt.detail?.value || evt.detail || ''
+				if (this.searchTimer != null) {
+					clearTimeout(this.searchTimer)
+					this.searchTimer = null
+				}
+				this.$emit('search', value)
+			},
+			handleClear(): void {
+				this.$emit('clear')
+				this.$emit('change', '')
+			}
+		},
+		beforeUnmount() {
+			if (this.searchTimer != null) {
+				clearTimeout(this.searchTimer)
+				this.searchTimer = null
+			}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

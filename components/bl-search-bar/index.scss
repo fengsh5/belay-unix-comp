@@ -1,0 +1,109 @@
+/**
+ * BlSearchBar 组件样式
+ * 参考 Ant Design Input.Search 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-search-bar {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-background-color, $background-color);
+	box-sizing: border-box;
+}
+
+.bl-search-bar__before {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+}
+
+.bl-search-bar__box {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex: 1;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	box-sizing: border-box;
+}
+
+.bl-search-bar__search-icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+}
+
+.bl-search-bar__input {
+	flex: 1;
+	border: none;
+	background-color: transparent;
+	outline: none;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	color: var(--bl-text-color, $text-color);
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+.bl-search-bar__cancel {
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+.bl-search-bar__after {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+}
+
+/* ==================== 搜索栏尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-search-bar--large {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	
+	.bl-search-bar__box {
+		padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	}
+	
+	.bl-search-bar__input {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-search-bar--small {
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	
+	.bl-search-bar__box {
+		padding: 4rpx var(--bl-spacing-xs, $spacing-xs);
+	}
+	
+	.bl-search-bar__input {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-search-bar {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

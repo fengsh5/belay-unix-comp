@@ -1,0 +1,14 @@
+/**
+ * BlPortal 组件样式
+ * 用于将内容渲染到指定位置
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-portal {
+	/* Portal 组件通常不需要样式，内容会渲染到指定位置 */
+}
+

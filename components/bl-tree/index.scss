@@ -1,0 +1,107 @@
+/**
+ * BlTree 组件样式
+ * 参考 Ant Design Tree 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tree {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-tree__node {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-tree__node-content {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+	min-height: 48rpx;
+}
+
+.bl-tree__node-switcher {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32rpx;
+	height: 32rpx;
+	cursor: pointer;
+	transition: transform 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+.bl-tree__node-switcher--open {
+	transform: rotate(90deg);
+}
+
+.bl-tree__node-switcher--noop {
+	width: 32rpx;
+	cursor: default;
+}
+
+.bl-tree__node-checkbox {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+}
+
+.bl-tree__node-icon {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-tree__node-title {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	
+	&:active:not(.bl-tree__node-title--disabled) {
+		opacity: 0.6;
+	}
+}
+
+.bl-tree__node-title--selected {
+	color: var(--bl-primary-color, $primary-color);
+	font-weight: 500;
+}
+
+.bl-tree__node-title--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-tree__node-children {
+	margin-left: var(--bl-spacing-lg, $spacing-lg);
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height 0.3s ease-out;
+}
+
+.bl-tree__node--open .bl-tree__node-children {
+	max-height: 2000rpx;
+}
+
+/* ==================== 连接线样式 ==================== */
+.bl-tree--show-line {
+	.bl-tree__node-children {
+		border-left: 2rpx solid var(--bl-border-color, $border-color);
+		padding-left: var(--bl-spacing-md, $spacing-md);
+		margin-left: var(--bl-spacing-md, $spacing-md);
+	}
+}
+

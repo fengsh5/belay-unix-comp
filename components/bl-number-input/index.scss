@@ -1,0 +1,177 @@
+/**
+ * BlNumberInput 组件样式
+ * 参考 Ant Design InputNumber 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-numberinput {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.bl-numberinput__button {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+	
+	&:not(.bl-numberinput__button--disabled):active {
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		border-color: var(--bl-primary-color, $primary-color);
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+.bl-numberinput__button--minus {
+	border-radius: var(--bl-border-radius, $border-radius) 0 0 var(--bl-border-radius, $border-radius);
+	border-right: none;
+}
+
+.bl-numberinput__button--plus {
+	border-radius: 0 var(--bl-border-radius, $border-radius) var(--bl-border-radius, $border-radius) 0;
+	border-left: none;
+}
+
+.bl-numberinput__button--disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	
+	&:active {
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		border-color: var(--bl-border-color, $border-color);
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+.bl-numberinput__button-text {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1;
+	font-weight: 500;
+}
+
+.bl-numberinput__input {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-left: none;
+	border-right: none;
+	padding: 0 var(--bl-spacing-xs, $spacing-xs);
+	height: 100%;
+	text-align: center;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	color: var(--bl-text-color, $text-color);
+	background-color: var(--bl-background-color, $background-color);
+	box-sizing: border-box;
+	outline: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&:focus {
+		border-color: var(--bl-primary-color, $primary-color);
+		box-shadow: 0 0 0 4rpx var(--bl-primary-color-4, $primary-color-4);
+	}
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+	
+	&[disabled] {
+		cursor: not-allowed;
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+/* ==================== 数字输入框状态 ==================== */
+
+/* 禁用状态 */
+.bl-numberinput--disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	
+	.bl-numberinput__button {
+		cursor: not-allowed;
+	}
+	
+	.bl-numberinput__input {
+		cursor: not-allowed;
+	}
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-numberinput--large {
+	.bl-numberinput__button {
+		width: 56rpx;
+		height: 56rpx;
+	}
+	
+	.bl-numberinput__input {
+		height: 56rpx;
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+	
+	.bl-numberinput__button-text {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 默认尺寸 */
+.bl-numberinput--default {
+	.bl-numberinput__button {
+		width: 48rpx;
+		height: 48rpx;
+	}
+	
+	.bl-numberinput__input {
+		height: 48rpx;
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+	
+	.bl-numberinput__button-text {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* 小尺寸 */
+.bl-numberinput--small {
+	.bl-numberinput__button {
+		width: 40rpx;
+		height: 40rpx;
+	}
+	
+	.bl-numberinput__input {
+		height: 40rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+	
+	.bl-numberinput__button-text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-numberinput__button {
+		width: 44rpx;
+		height: 44rpx;
+	}
+	
+	.bl-numberinput__input {
+		height: 44rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

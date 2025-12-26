@@ -1,0 +1,295 @@
+<template>
+	<view>
+		<!-- 分享好友组件（仅在弹窗显示时渲染） -->
+		<bl-share-app-message 
+			v-if="visible && shareable && shareAppMessage != null && !hideShareAppMessageComponent"
+			:payload="shareAppMessage"
+		></bl-share-app-message>
+		
+		<!-- 弹窗 -->
+		<bl-popup 
+			:visible="visible" 
+			@close="handleClose"
+			:overlay-closable="true"
+		>
+			<view class="bl-share-dialog" :style="containerStyle">
+				<!-- 背景遮罩 -->
+				<view class="bl-share-dialog__background" @click="handleClose"></view>
+				
+				<!-- 内容容器 -->
+				<view class="bl-share-dialog__container" @click.stop="handlePrevent">
+					<!-- 海报区域 -->
+					<view v-if="posterShareable" class="bl-share-dialog__poster" @click.stop="handlePrevent">
+						<bl-share-poster 
+							v-if="visible && memoizedPoster != null"
+							:value="memoizedPoster"
+							@image-ready="handleImageReady"
+						></bl-share-poster>
+						<bl-spinner v-if="posterShareable && !posterImg"></bl-spinner>
+					</view>
+					
+					<!-- 操作按钮 -->
+					<view class="bl-share-dialog__actions" :class="{ 'bl-share-dialog__actions--center': shareable && !posterShareable }">
+						<!-- 分享好友按钮 -->
+						<view v-if="shareable" class="bl-share-dialog__action" @click="handleShareAppMessage">
+							<image class="bl-share-dialog__action-img" src="/static/share-send.png"></image>
+							<text class="bl-share-dialog__action-name">{{ t('comp.shareDialog.share') }}</text>
+						</view>
+						
+						<!-- 保存海报按钮 -->
+						<view v-if="posterShareable" class="bl-share-dialog__action" @click="handleSavePoster">
+							<image class="bl-share-dialog__action-img" src="/static/share-save.png"></image>
+							<text class="bl-share-dialog__action-name">{{ saveButtonText }}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</bl-popup>
+		
+		<!-- 触发元素（通过 slot 传入） -->
+		<view @click="handleTriggerClick">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { t } from '../../utils/BlI18n/index.uts'
+	
+	type BlPosterDescription = {
+		background?: string
+		[key: string]: any
+	}
+
+	type ShareAppMessageReturn = {
+		title?: string
+		path?: string
+		imageUrl?: string
+		[key: string]: any
+	}
+	
+	export default {
+		name: 'BlShareDialog',
+		props: {
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			
+			/**
+			 * 设置分享好友，返回数据同微信 onShareAppMessage
+			 * 设置为 null 表示不支持分享, 默认分享当前页面
+			 * 如果传入 undefined（默认） 则表示，由页面自己接管分享
+			 */
+			shareAppMessage: {
+				type: [Object, Function],
+				default: null
+			},
+			
+			/**
+			 * 分享好友时，如果没有传递图片，平台将使用当前页面的截图。
+			 * page 截原始界面, 即不包含海报弹窗。这个需要平台支持延迟分享，当前仅微信小程序支持
+			 * cover 包含海报弹窗。默认
+			 */
+			screenShot: {
+				type: String,
+				default: 'cover' // 'page' | 'cover'
+			},
+			
+			/**
+			 * 海报渲染描述, 你也可以传入一个函数，进行完全的控制
+			 * 如果不传递，则开启渲染海报分享
+			 */
+			poster: {
+				type: [Object, Function],
+				default: null
+			},
+			
+			/**
+			 * 显示弹窗之前调用，如果返回 false, 则禁止弹窗
+			 */
+			onBeforeOpen: {
+				type: Function,
+				default: null
+			}
+		},
+		data() {
+			return {
+				visible: false,
+				posterImg: null as string | null,
+				hideShareAppMessageComponent: true
+			}
+		},
+		computed: {
+			shareable(): boolean {
+				return this.shareAppMessage != null
+			},
+			posterShareable(): boolean {
+				return this.poster != null
+			},
+			memoizedPoster(): BlPosterDescription | null {
+				// 只有在弹窗显示时才更新 poster，避免不必要的请求和重新渲染
+				if (!this.visible) {
+					return null
+				}
+				if (typeof this.poster == 'function') {
+					// 如果是函数，需要异步处理，这里简化处理
+					return null
+				}
+				return this.poster as BlPosterDescription | null
+			},
+			containerStyle(): string {
+				// 为了在不同尺寸的屏幕下都能完整显示，需要进行缩放
+				const systemInfo = uni.getSystemInfoSync()
+				const windowWidth = systemInfo.windowWidth as number
+				const windowHeight = systemInfo.windowHeight as number
+				const ratio = windowHeight / windowWidth
+				const DEFAULT_RATIO = 500 / 260
+				
+				let scale = 1
+				if (ratio < DEFAULT_RATIO) {
+					scale = ratio / DEFAULT_RATIO
+				}
+				
+				return `transform: scale(${scale})`
+			},
+			saveButtonText(): string {
+				// #ifdef H5
+				return t('comp.shareDialog.screenShot')
+				// #endif
+				// #ifndef H5
+				return t('comp.shareDialog.save')
+				// #endif
+			}
+		},
+		watch: {
+			visible(newVal: boolean) {
+				if (!newVal) {
+					this.posterImg = null
+				}
+			}
+		},
+		methods: {
+			handleClose(): void {
+				this.visible = false
+			},
+			handlePrevent(): void {
+				// 阻止事件冒泡
+			},
+			async handleTriggerClick(): Promise<void> {
+				if (this.disabled) {
+					return
+				}
+				
+				// 检查是否可以分享
+				const shareable = this.shareAppMessage != null
+				const posterShareable = this.poster != null
+				if (!shareable && !posterShareable) {
+					return
+				}
+				
+				// 调用 onBeforeOpen
+				try {
+					if (this.onBeforeOpen != null) {
+						const shouldOpen = await this.onBeforeOpen()
+						if (shouldOpen == false) {
+							return
+						}
+					}
+				} catch (e) {
+					const error = e as Error | { message?: string }
+					const errorMsg = error instanceof Error ? error.message : (error.message || '打开失败')
+					console.error('[BlShareDialog] onBeforeOpen error:', errorMsg)
+					uni.showToast({
+						title: errorMsg,
+						icon: 'none'
+					})
+					return
+				}
+				
+				this.visible = true
+				
+				// 延迟显示分享组件
+				if (this.shareable && this.shareAppMessage != null) {
+					this.hideShareAppMessageComponent = false
+				}
+			},
+			handleImageReady(img: string): void {
+				this.posterImg = img
+			},
+			async handleSavePoster(): Promise<void> {
+				if (this.posterImg == null) {
+					uni.showToast({
+						title: t('comp.shareDialog.retry'),
+						icon: 'none'
+					})
+					return
+				}
+				
+				// #ifdef H5
+				uni.showToast({
+					title: t('comp.shareDialog.screenShot'),
+					icon: 'none'
+				})
+				// #endif
+				
+				// #ifndef H5
+				// 保存图片到相册
+				try {
+					uni.saveImageToPhotosAlbum({
+						filePath: this.posterImg,
+						success: () => {
+							uni.showToast({
+								title: t('comp.shareDialog.saveSuccess'),
+								icon: 'success'
+							})
+							this.handleClose()
+						},
+						fail: (err: { errMsg?: string }) => {
+							const errorMsg = err.errMsg || t('comp.shareDialog.saveFailed')
+							uni.showToast({
+								title: errorMsg,
+								icon: 'none'
+							})
+							console.error('[BlShareDialog] saveImageToPhotosAlbum fail:', errorMsg)
+						}
+					})
+				} catch (e) {
+					const error = e as Error | { message?: string }
+					const errorMsg = error instanceof Error ? error.message : (error.message || t('comp.shareDialog.saveFailed'))
+					uni.showToast({
+						title: errorMsg,
+						icon: 'none'
+					})
+					console.error('[BlShareDialog] savePoster error:', errorMsg)
+				}
+				// #endif
+			},
+			async handleShareAppMessage(): Promise<void> {
+				// 延迟，让小程序可以截图到海报
+				if (this.screenShot == 'cover') {
+					await new Promise(resolve => setTimeout(resolve, 1000))
+				}
+				
+				this.handleClose()
+			}
+		},
+		onUnmounted() {
+			// 延迟关闭分享组件
+			if (this.hideShareAppMessageComponent == false) {
+				setTimeout(() => {
+					this.hideShareAppMessageComponent = true
+				}, 1000)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

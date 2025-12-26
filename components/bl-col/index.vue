@@ -1,0 +1,93 @@
+<template>
+	<view :class="colClass" :style="colStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+/**
+ * BlCol 列布局组件
+ * 支持 Vue 2 和 Vue 3
+ */
+const SPAN_UNIT = 100 / 24
+
+export default {
+	name: 'BlCol',
+	inject: {
+		row: {
+			default: null
+		}
+	},
+	props: {
+		/**
+		 * 占用比例（24栅格）
+		 */
+		span: {
+			type: Number,
+			default: 24
+		},
+		/**
+		 * 偏移位置
+		 */
+		offset: {
+			type: Number,
+			default: 0
+		},
+		/**
+		 * 自定义样式
+		 */
+		customStyle: {
+			type: String,
+			default: ''
+		}
+	},
+	computed: {
+		colClass() {
+			return 'bl-col'
+		},
+		colStyle() {
+			const styles = []
+			
+			if (this.row) {
+				if (this.row.gutterHorizontal != null) {
+					const gutterValue = typeof this.row.gutterHorizontal === 'number' 
+						? `${this.row.gutterHorizontal}px` 
+						: this.row.gutterHorizontal
+					styles.push(`padding-left: ${gutterValue}`)
+					styles.push(`padding-right: ${gutterValue}`)
+				}
+				
+				if (this.row.gutterVertical != null) {
+					const gutterValue = typeof this.row.gutterVertical === 'number' 
+						? `${this.row.gutterVertical}px` 
+						: this.row.gutterVertical
+					styles.push(`margin-top: ${gutterValue}`)
+				}
+			}
+			
+			if (this.span != null) {
+				const spanPercent = this.span * SPAN_UNIT
+				styles.push(`flex-basis: ${spanPercent}%`)
+				styles.push(`max-width: ${spanPercent}%`)
+			}
+			
+			if (this.offset != null && this.offset > 0) {
+				const offsetPercent = this.offset * SPAN_UNIT
+				styles.push(`margin-left: ${offsetPercent}%`)
+			}
+			
+			if (this.customStyle) {
+				styles.push(this.customStyle)
+			}
+			
+			return styles.join('; ')
+		}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

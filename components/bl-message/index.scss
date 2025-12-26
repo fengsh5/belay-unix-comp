@@ -1,0 +1,154 @@
+/**
+ * BlMessage 组件样式
+ * 参考 Ant Design Message 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 消息容器 ==================== */
+.bl-message {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+	pointer-events: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: var(--bl-spacing-md, $spacing-md);
+	box-sizing: border-box;
+}
+
+/* ==================== 消息项 ==================== */
+.bl-message__item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-lg, $spacing-lg);
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	min-width: 200rpx;
+	max-width: 80%;
+	pointer-events: auto;
+	box-sizing: border-box;
+	animation: bl-message-slide-down 0.3s ease-out;
+}
+
+@keyframes bl-message-slide-down {
+	from {
+		opacity: 0;
+		transform: translateY(-100%);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.bl-message__item--fade-out {
+	animation: bl-message-fade-out 0.3s ease-in forwards;
+}
+
+@keyframes bl-message-fade-out {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-50%);
+	}
+}
+
+.bl-message__icon {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+}
+
+.bl-message__content {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	word-break: break-word;
+}
+
+/* ==================== 消息类型 ==================== */
+
+/* 成功类型 */
+.bl-message__item--success {
+	background-color: var(--bl-success-color-1, $success-color-1);
+	border: 2rpx solid var(--bl-success-color-3, $success-color-3);
+	
+	.bl-message__icon {
+		color: var(--bl-success-color, $success-color);
+	}
+	
+	.bl-message__content {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 错误类型 */
+.bl-message__item--error {
+	background-color: var(--bl-error-color-1, $error-color-1);
+	border: 2rpx solid var(--bl-error-color-3, $error-color-3);
+	
+	.bl-message__icon {
+		color: var(--bl-error-color, $error-color);
+	}
+	
+	.bl-message__content {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* 信息类型 */
+.bl-message__item--info {
+	background-color: var(--bl-primary-color-1, $primary-color-1);
+	border: 2rpx solid var(--bl-primary-color-3, $primary-color-3);
+	
+	.bl-message__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	.bl-message__content {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 警告类型 */
+.bl-message__item--warning {
+	background-color: var(--bl-warning-color-1, $warning-color-1);
+	border: 2rpx solid var(--bl-warning-color-3, $warning-color-3);
+	
+	.bl-message__icon {
+		color: var(--bl-warning-color, $warning-color);
+	}
+	
+	.bl-message__content {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* 加载类型 */
+.bl-message__item--loading {
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	
+	.bl-message__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	.bl-message__content {
+		color: var(--bl-text-color, $text-color);
+	}
+}
+

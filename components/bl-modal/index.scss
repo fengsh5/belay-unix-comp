@@ -1,0 +1,89 @@
+/**
+ * BlModal 组件样式
+ * 参考 Ant Design Modal 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: var(--bl-z-index-modal, $z-index-modal);
+	display: none;
+	
+	&--show {
+		display: block;
+	}
+}
+
+.bl-modal__overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.45);
+	opacity: 0;
+	transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&--show {
+		opacity: 1;
+	}
+}
+
+.bl-modal__content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.8);
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.15);
+	opacity: 0;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	max-width: 90%;
+	max-height: 90%;
+	overflow: auto;
+	box-sizing: border-box;
+	
+	&--show {
+		transform: translate(-50%, -50%) scale(1);
+		opacity: 1;
+	}
+}
+
+/* ==================== 模态框尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-modal__content--large {
+	width: 800rpx;
+	padding: var(--bl-spacing-lg, $spacing-lg);
+}
+
+/* 默认尺寸 */
+.bl-modal__content--default {
+	width: 600rpx;
+	padding: var(--bl-spacing-md, $spacing-md);
+}
+
+/* 小尺寸 */
+.bl-modal__content--small {
+	width: 400rpx;
+	padding: var(--bl-spacing-sm, $spacing-sm);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-modal__content {
+		width: 90%;
+		max-width: 90%;
+		padding: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

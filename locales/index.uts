@@ -1,0 +1,7 @@
+/**
+ * 语言包统一导出
+ * 参考 Ant Design 的语言包导入方式
+ */
+
+export { zhCN } from './zh-CN.uts'
+export { enUS } from './en-US.uts'

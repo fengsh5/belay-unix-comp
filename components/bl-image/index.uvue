@@ -1,0 +1,128 @@
+<template>
+	<image 
+		:class="imageClass" 
+		:style="imageStyle"
+		:src="src"
+		:mode="mode"
+		:lazy-load="lazyLoad"
+		:fade-show="fadeShow"
+		:webp="webp"
+		:show-menu-by-longpress="showMenuByLongpress"
+		:draggable="draggable"
+		:referrer-policy="referrerPolicy"
+		@error="handleError"
+		@load="handleLoad"
+		@click="handleClick"
+	></image>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlImage',
+		props: {
+			/**
+			 * 图片资源地址
+			 */
+			src: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 图片裁剪、缩放的模式
+			 */
+			mode: {
+				type: String,
+				default: 'scaleToFill' // scaleToFill | aspectFit | aspectFill | widthFix | heightFix | top | bottom | center | left | right | top left | top right | bottom left | bottom right
+			},
+			/**
+			 * 图片懒加载，在即将进入一定范围（上下三屏）时才开始加载
+			 */
+			lazyLoad: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否开启淡入效果
+			 */
+			fadeShow: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否开启 WebP 格式支持
+			 */
+			webp: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否开启长按图片显示识别小程序码菜单
+			 */
+			showMenuByLongpress: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否允许拖拽
+			 */
+			draggable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 图片的引用地址策略
+			 */
+			referrerPolicy: {
+				type: String,
+				default: 'no-referrer'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['error', 'load', 'click'],
+		computed: {
+			imageClass(): string {
+				const classes: string[] = ['bl-image']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			imageStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleError(e: any): void {
+				this.$emit('error', e)
+			},
+			handleLoad(e: any): void {
+				this.$emit('load', e)
+			},
+			handleClick(e: any): void {
+				this.$emit('click', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

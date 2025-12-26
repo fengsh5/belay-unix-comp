@@ -1,0 +1,42 @@
+/**
+ * BlVideo 组件样式
+ * 参考 Ant Design 视频组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-video {
+	width: 100%;
+	box-sizing: border-box;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border-radius: var(--bl-border-radius, $border-radius);
+	overflow: hidden;
+}
+
+/* ==================== 视频尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-video--large {
+	height: 600rpx;
+}
+
+/* 默认尺寸 */
+.bl-video--default {
+	height: 400rpx;
+}
+
+/* 小尺寸 */
+.bl-video--small {
+	height: 300rpx;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-video--default {
+		height: 360rpx;
+	}
+}
+

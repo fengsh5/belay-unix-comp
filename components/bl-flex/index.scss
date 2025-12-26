@@ -1,0 +1,104 @@
+/**
+ * BlFlex 组件样式
+ * 参考 Ant Design Flex 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-flex {
+	display: flex;
+	box-sizing: border-box;
+}
+
+/* ==================== 方向 ==================== */
+.bl-flex--row {
+	flex-direction: row;
+}
+
+.bl-flex--column {
+	flex-direction: column;
+}
+
+.bl-flex--row-reverse {
+	flex-direction: row-reverse;
+}
+
+.bl-flex--column-reverse {
+	flex-direction: column-reverse;
+}
+
+/* ==================== 主轴对齐 ==================== */
+.bl-flex--justify-start {
+	justify-content: flex-start;
+}
+
+.bl-flex--justify-end {
+	justify-content: flex-end;
+}
+
+.bl-flex--justify-center {
+	justify-content: center;
+}
+
+.bl-flex--justify-space-around {
+	justify-content: space-around;
+}
+
+.bl-flex--justify-space-between {
+	justify-content: space-between;
+}
+
+.bl-flex--justify-space-evenly {
+	justify-content: space-evenly;
+}
+
+/* ==================== 交叉轴对齐 ==================== */
+.bl-flex--align-start {
+	align-items: flex-start;
+}
+
+.bl-flex--align-end {
+	align-items: flex-end;
+}
+
+.bl-flex--align-center {
+	align-items: center;
+}
+
+.bl-flex--align-baseline {
+	align-items: baseline;
+}
+
+.bl-flex--align-stretch {
+	align-items: stretch;
+}
+
+/* ==================== 换行 ==================== */
+.bl-flex--wrap {
+	flex-wrap: wrap;
+}
+
+.bl-flex--nowrap {
+	flex-wrap: nowrap;
+}
+
+.bl-flex--wrap-reverse {
+	flex-wrap: wrap-reverse;
+}
+
+/* ==================== 间距 ==================== */
+.bl-flex--gap-small {
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-flex--gap-middle {
+	gap: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-flex--gap-large {
+	gap: var(--bl-spacing-lg, $spacing-lg);
+}
+

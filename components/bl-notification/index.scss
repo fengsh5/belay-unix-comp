@@ -1,0 +1,156 @@
+/**
+ * BlNotification 组件样式
+ * 参考 Ant Design Notification 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 通知容器 ==================== */
+.bl-notification {
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 9999;
+	pointer-events: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	padding: var(--bl-spacing-md, $spacing-md);
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+/* ==================== 通知项 ==================== */
+.bl-notification__item {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 600rpx;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	padding: var(--bl-spacing-lg, $spacing-lg);
+	pointer-events: auto;
+	box-sizing: border-box;
+	animation: bl-notification-slide-in 0.3s ease-out;
+	border-left: 8rpx solid var(--bl-primary-color, $primary-color);
+}
+
+@keyframes bl-notification-slide-in {
+	from {
+		opacity: 0;
+		transform: translateX(100%);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.bl-notification__item--fade-out {
+	animation: bl-notification-fade-out 0.3s ease-in forwards;
+}
+
+@keyframes bl-notification-fade-out {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateX(100%);
+	}
+}
+
+.bl-notification__header {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-notification__icon {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	margin-top: 4rpx;
+}
+
+.bl-notification__content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-notification__message {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1.5715;
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-notification__description {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+	word-break: break-word;
+}
+
+.bl-notification__close {
+	position: absolute;
+	top: var(--bl-spacing-sm, $spacing-sm);
+	right: var(--bl-spacing-sm, $spacing-sm);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== 通知类型 ==================== */
+
+/* 成功类型 */
+.bl-notification__item--success {
+	border-left-color: var(--bl-success-color, $success-color);
+	
+	.bl-notification__icon {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 错误类型 */
+.bl-notification__item--error {
+	border-left-color: var(--bl-error-color, $error-color);
+	
+	.bl-notification__icon {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* 信息类型 */
+.bl-notification__item--info {
+	border-left-color: var(--bl-primary-color, $primary-color);
+	
+	.bl-notification__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 警告类型 */
+.bl-notification__item--warning {
+	border-left-color: var(--bl-warning-color, $warning-color);
+	
+	.bl-notification__icon {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+

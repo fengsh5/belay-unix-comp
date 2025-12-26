@@ -1,0 +1,23 @@
+/**
+ * BlErrorCapture 组件样式
+ * 错误捕获组件
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-errorcapture {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-errorcapture {
+		/* 移动端特定样式 */
+	}
+}
+

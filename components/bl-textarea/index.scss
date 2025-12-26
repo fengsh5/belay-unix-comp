@@ -1,0 +1,112 @@
+/**
+ * BlTextarea 组件样式
+ * 参考 Ant Design Input.TextArea 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-textarea {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+	min-height: 200rpx;
+	padding: 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	color: var(--bl-text-color, $text-color);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	outline: none;
+	resize: none;
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+	
+	&:focus {
+		border-color: var(--bl-primary-color, $primary-color);
+		box-shadow: 0 0 0 4rpx var(--bl-primary-color-4, $primary-color-4);
+	}
+}
+
+/* ==================== 文本域尺寸 ==================== */
+
+/* 大尺寸 (large) */
+.bl-textarea--large {
+	min-height: 240rpx;
+	padding: 20rpx;
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+}
+
+/* 默认尺寸 (default) */
+.bl-textarea--default {
+	min-height: 200rpx;
+	padding: 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+}
+
+/* 小尺寸 (small) */
+.bl-textarea--small {
+	min-height: 160rpx;
+	padding: 12rpx;
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+/* ==================== 文本域状态 ==================== */
+
+/* 禁用状态 */
+.bl-textarea--disabled {
+	cursor: not-allowed;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+	border-color: var(--bl-border-color-light, $border-color-light);
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+/* 错误状态 */
+.bl-textarea--error {
+	border-color: var(--bl-error-color, $error-color);
+	
+	&:focus {
+		border-color: var(--bl-error-color, $error-color);
+		box-shadow: 0 0 0 4rpx var(--bl-error-color-4, $error-color-4);
+	}
+}
+
+/* 警告状态 */
+.bl-textarea--warning {
+	border-color: var(--bl-warning-color, $warning-color);
+	
+	&:focus {
+		border-color: var(--bl-warning-color, $warning-color);
+		box-shadow: 0 0 0 4rpx var(--bl-warning-color-4, $warning-color-4);
+	}
+}
+
+/* 成功状态 */
+.bl-textarea--success {
+	border-color: var(--bl-success-color, $success-color);
+	
+	&:focus {
+		border-color: var(--bl-success-color, $success-color);
+		box-shadow: 0 0 0 4rpx var(--bl-success-color-4, $success-color-4);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-textarea {
+		min-height: 180rpx;
+		padding: 14rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

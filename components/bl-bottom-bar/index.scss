@@ -1,0 +1,60 @@
+/**
+ * BlBottomBar 组件样式
+ * 底部栏组件
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-bottombar {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	background-color: var(--bl-background-color, $background-color);
+	box-sizing: border-box;
+	box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.bl-bottombar--fixed {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: var(--bl-z-index-fixed, $z-index-fixed);
+}
+
+.bl-bottombar--safe-area {
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ==================== 底部栏尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-bottombar--large {
+	min-height: 112rpx;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+}
+
+/* 默认尺寸 */
+.bl-bottombar--default {
+	min-height: 96rpx;
+	padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-md, $spacing-md);
+}
+
+/* 小尺寸 */
+.bl-bottombar--small {
+	min-height: 80rpx;
+	padding: 4rpx var(--bl-spacing-sm, $spacing-sm);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-bottombar {
+		min-height: 88rpx;
+	}
+}
+

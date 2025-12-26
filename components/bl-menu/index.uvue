@@ -1,0 +1,201 @@
+<template>
+	<view 
+		:class="['bl-menu', `bl-menu--${mode}`, theme != 'light' ? `bl-menu--${theme}` : '']"
+		:style="menuStyle"
+	>
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlMenu',
+		props: {
+			/**
+			 * 当前选中的菜单项 key
+			 */
+			selectedKeys: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 默认选中的菜单项 key
+			 */
+			defaultSelectedKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前打开的 SubMenu key
+			 */
+			openKeys: {
+				type: Array,
+				default: null
+			},
+			/**
+			 * 默认打开的 SubMenu key
+			 */
+			defaultOpenKeys: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 菜单模式
+			 */
+			mode: {
+				type: String,
+				default: 'vertical'
+			},
+			/**
+			 * 菜单主题
+			 */
+			theme: {
+				type: String,
+				default: 'light'
+			},
+			/**
+			 * 是否允许选中多个菜单项
+			 */
+			multiple: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否允许取消选中
+			 */
+			allowDeselect: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['select', 'openChange', 'update:selectedKeys', 'update:openKeys'],
+		data() {
+			return {
+				internalSelectedKeys: [] as Array<string | number>,
+				internalOpenKeys: [] as Array<string | number>
+			}
+		},
+		provide() {
+			return {
+				menu: this
+			}
+		},
+		computed: {
+			currentSelectedKeys(): Array<string | number> {
+				return this.selectedKeys != null ? (this.selectedKeys as Array<string | number>) : this.internalSelectedKeys
+			},
+			currentOpenKeys(): Array<string | number> {
+				return this.openKeys != null ? (this.openKeys as Array<string | number>) : this.internalOpenKeys
+			},
+			menuStyle(): string {
+				return this.customStyle || ''
+			}
+		},
+		created() {
+			if (this.selectedKeys == null) {
+				this.internalSelectedKeys = (this.defaultSelectedKeys || []) as Array<string | number>
+			}
+			if (this.openKeys == null) {
+				this.internalOpenKeys = (this.defaultOpenKeys || []) as Array<string | number>
+			}
+		},
+		methods: {
+			handleSelect(key: string | number): void {
+				if (this.disabled) {
+					return
+				}
+				
+				let newKeys: Array<string | number>
+				const index = this.currentSelectedKeys.indexOf(key)
+				
+				if (this.multiple) {
+					// 多选模式
+					if (index >= 0) {
+						if (this.allowDeselect) {
+							newKeys = [...this.currentSelectedKeys]
+							newKeys.splice(index, 1)
+						} else {
+							newKeys = this.currentSelectedKeys
+						}
+					} else {
+						newKeys = [...this.currentSelectedKeys, key]
+					}
+				} else {
+					// 单选模式
+					if (index >= 0 && this.allowDeselect) {
+						newKeys = []
+					} else {
+						newKeys = [key]
+					}
+				}
+				
+				if (this.selectedKeys == null) {
+					this.internalSelectedKeys = newKeys
+				}
+				this.$emit('update:selectedKeys', newKeys)
+				this.$emit('select', newKeys)
+			},
+			handleOpenChange(key: string | number, open: boolean): void {
+				if (this.disabled) {
+					return
+				}
+				
+				let newOpenKeys: Array<string | number>
+				const index = this.currentOpenKeys.indexOf(key)
+				
+				if (open) {
+					if (index < 0) {
+						newOpenKeys = [...this.currentOpenKeys, key]
+					} else {
+						newOpenKeys = this.currentOpenKeys
+					}
+				} else {
+					if (index >= 0) {
+						newOpenKeys = [...this.currentOpenKeys]
+						newOpenKeys.splice(index, 1)
+					} else {
+						newOpenKeys = this.currentOpenKeys
+					}
+				}
+				
+				if (this.openKeys == null) {
+					this.internalOpenKeys = newOpenKeys
+				}
+				this.$emit('update:openKeys', newOpenKeys)
+				this.$emit('openChange', newOpenKeys)
+			},
+			isSelected(key: string | number): boolean {
+				return this.currentSelectedKeys.indexOf(key) >= 0
+			},
+			isOpen(key: string | number): boolean {
+				return this.currentOpenKeys.indexOf(key) >= 0
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

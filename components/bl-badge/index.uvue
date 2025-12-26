@@ -1,0 +1,127 @@
+<template>
+	<view class="bl-badge" :style="badgeStyle">
+		<slot></slot>
+		<view 
+			v-if="showBadge" 
+			:class="badgeContentClass"
+			:style="badgeContentStyle"
+		>
+			<text v-if="displayValue != null && displayValue != ''" class="bl-badge__text">
+				{{ displayValue }}
+			</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlBadge',
+		props: {
+			/**
+			 * 徽章显示值，为空时显示红点
+			 */
+			value: {
+				type: [String, Number],
+				default: ''
+			},
+			/**
+			 * 徽章显示的最大值，超过时显示 value+
+			 */
+			max: {
+				type: Number,
+				default: 99
+			},
+			/**
+			 * 是否为红点模式（不显示数字）
+			 */
+			dot: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 徽章颜色
+			 */
+			color: {
+				type: String,
+				default: '#ff3b30'
+			},
+			/**
+			 * 徽章位置偏移量
+			 */
+			offset: {
+				type: Array,
+				default: () => [0, 0]
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			badgeStyle(): string {
+				const styles: string[] = ['position: relative']
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			showBadge(): boolean {
+				return this.dot || (this.value != null && this.value != '' && this.value != 0)
+			},
+			displayValue(): string {
+				if (this.dot) {
+					return ''
+				}
+				if (this.value == null || this.value == '') {
+					return ''
+				}
+				const numValue = typeof this.value === 'number' ? this.value : Number(this.value)
+				if (isNaN(numValue)) {
+					return String(this.value)
+				}
+				if (numValue > this.max) {
+					return `${this.max}+`
+				}
+				return String(numValue)
+			},
+			badgeContentClass(): string {
+				const classes: string[] = ['bl-badge__content']
+				if (this.dot) {
+					classes.push('bl-badge__content--dot')
+				} else if (this.displayValue != null && this.displayValue != '') {
+					classes.push('bl-badge__content--text')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			badgeContentStyle(): string {
+				const styles: string[] = []
+				styles.push(`background-color: ${this.color}`)
+				if (this.offset != null && this.offset.length >= 2) {
+					const right = this.offset[0]
+					const top = this.offset[1]
+					styles.push(`right: ${right}px`)
+					styles.push(`top: ${top}px`)
+				}
+				return styles.join('; ')
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

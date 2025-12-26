@@ -1,0 +1,80 @@
+/**
+ * BlCustomNavigationBar 组件样式
+ * 参考 Ant Design Layout Header 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-customnavigationbar {
+	position: relative;
+	width: 100%;
+	height: 88rpx;
+	background-color: var(--bl-background-color, $background-color);
+	box-sizing: border-box;
+}
+
+.bl-customnavigationbar--fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	padding-top: env(safe-area-inset-top);
+}
+
+.bl-customnavigationbar__content {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	height: 100%;
+	padding: 0 var(--bl-spacing-md, $spacing-md);
+	box-sizing: border-box;
+}
+
+.bl-customnavigationbar__back {
+	width: 64rpx;
+	height: 64rpx;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	cursor: pointer;
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.7;
+	}
+}
+
+.bl-customnavigationbar__back-icon {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+}
+
+.bl-customnavigationbar__center {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.bl-customnavigationbar__title {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-customnavigationbar__right {
+	min-width: 64rpx;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+}
+

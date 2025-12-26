@@ -1,0 +1,66 @@
+/**
+ * BlAutoComplete 组件样式
+ * 参考 Ant Design AutoComplete 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-autocomplete {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+.bl-autocomplete__input {
+	width: 100%;
+}
+
+.bl-autocomplete__dropdown {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	max-height: 400rpx;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+.bl-autocomplete__option {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	cursor: pointer;
+	transition: background-color 0.3s;
+	
+	&:active {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-autocomplete__option--selected {
+	background-color: var(--bl-primary-color-1, $primary-color-1);
+	color: var(--bl-primary-color, $primary-color);
+}
+
+.bl-autocomplete__option--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-autocomplete__option-label {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+

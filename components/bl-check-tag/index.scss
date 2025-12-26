@@ -1,0 +1,90 @@
+/**
+ * BlCheckTag 组件样式
+ * 参考 Ant Design Tag.CheckableTag 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-checktag {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding: 8rpx 24rpx;
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+	
+	&:not(.bl-checktag--disabled):active {
+		opacity: 0.8;
+	}
+}
+
+.bl-checktag__text {
+	font-size: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+/* ==================== 标签尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-checktag--large,
+.bl-check-tag--large {
+	padding: 12rpx 32rpx;
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+}
+
+/* 中等尺寸（默认） */
+.bl-checktag--medium,
+.bl-checktag--middle,
+.bl-check-tag--medium,
+.bl-check-tag--middle {
+	padding: 8rpx 24rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+}
+
+/* 小尺寸 */
+.bl-checktag--small,
+.bl-check-tag--small {
+	padding: 4rpx 16rpx;
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+/* ==================== 标签状态 ==================== */
+
+/* 选中状态 */
+.bl-checktag--checked {
+	border-color: var(--bl-primary-color, $primary-color);
+	background-color: var(--bl-primary-color, $primary-color);
+	color: var(--bl-white-color, $white-color);
+}
+
+/* 禁用状态 */
+.bl-checktag--disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-checktag {
+		padding: 6rpx 20rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

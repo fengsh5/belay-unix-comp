@@ -1,0 +1,104 @@
+/**
+ * BlFormItem 表单项组件样式
+ * 参考 Ant Design Form.Item 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-form-item {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* ==================== 标签样式 ==================== */
+.bl-form-item__label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-shrink: 0;
+	padding-right: var(--bl-spacing-md, $spacing-md);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	color: var(--bl-text-color, $text-color);
+	text-align: right;
+	line-height: 1.5;
+	box-sizing: border-box;
+}
+
+.bl-form-item__required {
+	color: var(--bl-danger-color, $danger-color);
+	margin-left: 4px;
+	font-size: var(--bl-font-size-base, $font-size-base);
+}
+
+/* ==================== 内容区域 ==================== */
+.bl-form-item__content {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+/* ==================== 错误状态 ==================== */
+.bl-form-item--error {
+	.bl-form-item__label {
+		color: var(--bl-danger-color, $danger-color);
+	}
+}
+
+.bl-form-item__error {
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+	width: 100%;
+}
+
+.bl-form-item__error-text {
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	color: var(--bl-danger-color, $danger-color);
+	line-height: 1.5;
+}
+
+/* ==================== 垂直布局 ==================== */
+.bl-form--vertical {
+	.bl-form-item {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.bl-form-item__label {
+		width: 100%;
+		text-align: left;
+		padding-right: 0;
+		padding-bottom: var(--bl-spacing-xs, $spacing-xs);
+	}
+}
+
+/* ==================== 内联布局 ==================== */
+.bl-form--inline {
+	.bl-form-item {
+		margin-right: var(--bl-spacing-md, $spacing-md);
+		margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+	.bl-form-item {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.bl-form-item__label {
+		width: 100%;
+		text-align: left;
+		padding-right: 0;
+		padding-bottom: var(--bl-spacing-xs, $spacing-xs);
+	}
+}
+

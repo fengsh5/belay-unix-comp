@@ -1,0 +1,48 @@
+/**
+ * BlTabbar 组件样式
+ * 参考 Ant Design TabBar 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tabbar {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	background-color: var(--bl-background-color, $background-color);
+	border-top: 2rpx solid var(--bl-border-color-lighter, $border-color-lighter);
+	box-sizing: border-box;
+	box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+/* ==================== 标签栏尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-tabbar--large {
+	min-height: 112rpx;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+}
+
+/* 默认尺寸 */
+.bl-tabbar--default {
+	min-height: 96rpx;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+}
+
+/* 小尺寸 */
+.bl-tabbar--small {
+	min-height: 80rpx;
+	padding: 4rpx 0;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-tabbar {
+		min-height: 88rpx;
+	}
+}
+

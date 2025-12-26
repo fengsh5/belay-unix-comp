@@ -1,0 +1,128 @@
+/**
+ * BlCalendar 组件样式
+ * 参考 Ant Design Calendar 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-calendar {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bl-background-color, $background-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	overflow: hidden;
+}
+
+.bl-calendar__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-calendar__header-title {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-calendar__header-actions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+
+.bl-calendar__body {
+	padding: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-calendar__weekdays {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+}
+
+.bl-calendar__weekday {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+	font-weight: 500;
+}
+
+.bl-calendar__days {
+	display: flex;
+	flex-direction: column;
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-calendar__week {
+	display: flex;
+	flex-direction: row;
+	gap: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-calendar__day {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 80rpx;
+	border-radius: var(--bl-border-radius, $border-radius);
+	cursor: pointer;
+	transition: all 0.3s;
+	
+	&:active:not(.bl-calendar__day--disabled):not(.bl-calendar__day--selected) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-calendar__day--other-month {
+	color: var(--bl-text-color-disabled, #bfbfbf);
+}
+
+.bl-calendar__day--today {
+	border: 2rpx solid var(--bl-primary-color, $primary-color);
+}
+
+.bl-calendar__day--selected {
+	background-color: var(--bl-primary-color, $primary-color);
+	color: var(--bl-text-color-inverse, #fff);
+	font-weight: 500;
+}
+
+.bl-calendar__day--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-calendar__day-number {
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+/* ==================== 日历模式 ==================== */
+
+/* 月视图模式 (month) - 默认 */
+.bl-calendar--month {
+	/* 月视图是默认模式，使用基础样式 */
+}
+
+/* 年视图模式 (year) */
+.bl-calendar--year {
+	/* 年视图模式样式 */
+	.bl-calendar__body {
+		/* 年视图可能需要不同的布局 */
+	}
+}
+

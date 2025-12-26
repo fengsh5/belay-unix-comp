@@ -1,0 +1,112 @@
+<template>
+	<view 
+		:class="['bl-menu__item', isSelected ? 'bl-menu__item--selected' : '', disabled || menuDisabled ? 'bl-menu__item--disabled' : '', danger ? 'bl-menu__item--danger' : '']"
+		:style="itemStyle"
+		@click="handleClick"
+	>
+		<view v-if="icon || $slots.icon" class="bl-menu__item-icon">
+			<slot name="icon">
+				<bl-icon 
+					v-if="icon"
+					:name="icon" 
+					:size="24"
+					:color="isSelected ? 'var(--bl-primary-color, #1890ff)' : 'var(--bl-text-color-secondary, #8c8c8c)'"
+				></bl-icon>
+			</slot>
+		</view>
+		<view class="bl-menu__item-content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlMenuItem',
+		props: {
+			/**
+			 * 菜单项 key
+			 */
+			key: {
+				type: [String, Number],
+				required: true
+			},
+			/**
+			 * 菜单项图标
+			 */
+			icon: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否危险
+			 */
+			danger: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		inject: {
+			menu: {
+				type: Object,
+				default: null
+			}
+		},
+		computed: {
+			isSelected(): boolean {
+				const self: any = this
+				const menu = self.menu
+				const key = self.key
+				return menu ? menu.isSelected(key) : false
+			},
+			menuDisabled(): boolean {
+				const self: any = this
+				const menu = self.menu
+				return menu ? menu.disabled : false
+			},
+			itemStyle(): string {
+				const self: any = this
+				const customStyle = self.customStyle
+				return customStyle || ''
+			}
+		},
+		methods: {
+			handleClick(): void {
+				const self: any = this
+				if (self.disabled || self.menuDisabled) {
+					return
+				}
+				if (self.menu) {
+					self.menu.handleSelect(self.key)
+				}
+				self.$emit('click')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

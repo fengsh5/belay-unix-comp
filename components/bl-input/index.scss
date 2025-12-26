@@ -1,0 +1,147 @@
+/**
+ * BlInput 组件样式
+ * 参考 Ant Design Input 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-input {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+	height: 64rpx;
+	padding: 8rpx 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	color: var(--bl-text-color, $text-color);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	outline: none;
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+	
+	&:focus {
+		border-color: var(--bl-primary-color, $primary-color);
+		box-shadow: 0 0 0 4rpx var(--bl-primary-color-4, $primary-color-4);
+	}
+}
+
+/* ==================== 输入框尺寸 ==================== */
+
+/* 大尺寸 (large) */
+.bl-input--large {
+	height: 88rpx;
+	padding: 12rpx 20rpx;
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+}
+
+/* 默认尺寸 (default) */
+.bl-input--default {
+	height: 64rpx;
+	padding: 8rpx 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+}
+
+/* 小尺寸 (small) */
+.bl-input--small {
+	height: 48rpx;
+	padding: 4rpx 12rpx;
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+}
+
+/* ==================== 输入框状态 ==================== */
+
+/* 禁用状态 */
+.bl-input--disabled {
+	cursor: not-allowed;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+	border-color: var(--bl-border-color-light, $border-color-light);
+	
+	&::placeholder {
+		color: var(--bl-text-color-disabled, $text-color-disabled);
+	}
+}
+
+/* 错误状态 */
+.bl-input--error {
+	border-color: var(--bl-error-color, $error-color);
+	
+	&:focus {
+		border-color: var(--bl-error-color, $error-color);
+		box-shadow: 0 0 0 4rpx var(--bl-error-color-4, $error-color-4);
+	}
+}
+
+/* 警告状态 */
+.bl-input--warning {
+	border-color: var(--bl-warning-color, $warning-color);
+	
+	&:focus {
+		border-color: var(--bl-warning-color, $warning-color);
+		box-shadow: 0 0 0 4rpx var(--bl-warning-color-4, $warning-color-4);
+	}
+}
+
+/* 成功状态 */
+.bl-input--success {
+	border-color: var(--bl-success-color, $success-color);
+	
+	&:focus {
+		border-color: var(--bl-success-color, $success-color);
+		box-shadow: 0 0 0 4rpx var(--bl-success-color-4, $success-color-4);
+	}
+}
+
+/* ==================== 输入框类型 ==================== */
+
+/* 带前缀后缀的输入框 */
+.bl-input-wrapper {
+	display: inline-flex;
+	width: 100%;
+	align-items: center;
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	&:focus-within {
+		border-color: var(--bl-primary-color, $primary-color);
+		box-shadow: 0 0 0 4rpx var(--bl-primary-color-4, $primary-color-4);
+	}
+	
+	.bl-input {
+		border: none;
+		box-shadow: none;
+		
+		&:focus {
+			box-shadow: none;
+		}
+	}
+}
+
+.bl-input-prefix {
+	padding-left: 16rpx;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+}
+
+.bl-input-suffix {
+	padding-right: 16rpx;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-input {
+		height: 56rpx;
+		padding: 6rpx 14rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

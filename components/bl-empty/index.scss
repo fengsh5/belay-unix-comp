@@ -1,0 +1,123 @@
+/**
+ * BlEmpty 组件样式
+ * 参考 Ant Design Empty 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: var(--bl-spacing-xl, $spacing-xl) var(--bl-spacing-md, $spacing-md);
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.bl-empty__image {
+	width: 320rpx;
+	height: 320rpx;
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-empty__desc {
+	margin-top: var(--bl-spacing-sm, $spacing-sm);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	text-align: center;
+}
+
+.bl-empty__detail {
+	margin-top: var(--bl-spacing-sm, $spacing-sm);
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	text-align: center;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.bl-empty__retry {
+	margin-top: var(--bl-spacing-md, $spacing-md);
+	display: inline-block;
+}
+
+/* ==================== 空状态类型 ==================== */
+
+/* 默认类型 */
+.bl-empty--default {
+	/* 默认类型使用基础样式 */
+}
+
+/* 空状态类型 */
+.bl-empty--empty {
+	/* empty 类型使用基础样式 */
+}
+
+/* 自定义类型 */
+.bl-empty--custom {
+	/* custom 类型使用基础样式 */
+}
+
+/* 错误类型 */
+.bl-empty--error {
+	.bl-empty__desc {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* 网络错误类型 */
+.bl-empty--network {
+	.bl-empty__desc {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* 搜索类型 */
+.bl-empty--search {
+	.bl-empty__desc {
+		color: var(--bl-text-color-secondary, $text-color-secondary);
+	}
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-empty--large {
+	.bl-empty__image {
+		width: 400rpx;
+		height: 400rpx;
+	}
+	
+	.bl-empty__desc {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-empty--small {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-sm, $spacing-sm);
+	
+	.bl-empty__image {
+		width: 240rpx;
+		height: 240rpx;
+	}
+	
+	.bl-empty__desc {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-empty__image {
+		width: 280rpx;
+		height: 280rpx;
+	}
+}
+

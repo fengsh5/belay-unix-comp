@@ -1,0 +1,69 @@
+<template>
+	<view :class="loadingClass" :style="loadingStyle">
+		<view v-if="icon != null" class="bl-loading__icon">
+			<slot name="icon">{{ icon }}</slot>
+		</view>
+		<bl-spinner v-else :custom-style="spinStyle" :class="spinClassName"></bl-spinner>
+		<text v-if="message != null && message != ''" class="bl-loading__message">{{ message }}</text>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlLoading',
+		props: {
+			/**
+			 * 自定义图标的插槽
+			 */
+			icon: {
+				type: String,
+				default: null
+			},
+			/**
+			 * loading描述的插槽
+			 */
+			message: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 默认loading的style
+			 */
+			spinStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 默认loading的className
+			 */
+			spinClassName: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			loadingClass(): string {
+				return 'bl-loading'
+			},
+			loadingStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

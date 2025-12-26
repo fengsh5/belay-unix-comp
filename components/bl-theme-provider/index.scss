@@ -1,0 +1,16 @@
+/**
+ * BlThemeProvider 组件样式
+ * 用于提供主题上下文
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-theme-provider {
+	/* 主题变量通过内联样式动态设置 */
+	/* 子组件可以通过 var(--bl-xxx) 使用主题变量 */
+	box-sizing: border-box;
+}
+

@@ -1,0 +1,39 @@
+/**
+ * BlRadioGroup 组件样式
+ * 参考 Ant Design Radio.Group 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-radio-group {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* ==================== 组布局 ==================== */
+
+/* 水平布局 */
+.bl-radio-group--horizontal {
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: var(--bl-spacing-md, $spacing-md);
+}
+
+/* 垂直布局（默认） */
+.bl-radio-group--vertical {
+	flex-direction: column;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-radio-group {
+		gap: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

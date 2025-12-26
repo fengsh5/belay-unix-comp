@@ -1,0 +1,100 @@
+/**
+ * BlTreeSelect 组件样式
+ * 参考 Ant Design TreeSelect 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-treeselect {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+.bl-treeselect__selector {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	cursor: pointer;
+	transition: all 0.3s;
+	
+	&:active:not(.bl-treeselect__selector--disabled) {
+		border-color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+.bl-treeselect__selector--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-treeselect__selector-content {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	min-height: 40rpx;
+	display: flex;
+	align-items: center;
+}
+
+.bl-treeselect__selector-placeholder {
+	color: var(--bl-text-color-placeholder, $text-color-placeholder);
+}
+
+.bl-treeselect__selector-arrow {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	transition: transform 0.3s;
+}
+
+.bl-treeselect__selector--open .bl-treeselect__selector-arrow {
+	transform: rotate(180deg);
+}
+
+.bl-treeselect__selector-clear {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+.bl-treeselect__dropdown {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	max-height: 600rpx;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+.bl-treeselect__search {
+	padding: var(--bl-spacing-sm, $spacing-sm);
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-treeselect__tree {
+	padding: var(--bl-spacing-sm, $spacing-sm);
+}
+

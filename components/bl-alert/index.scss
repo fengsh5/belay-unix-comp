@@ -1,0 +1,175 @@
+/**
+ * BlAlert 组件样式
+ * 参考 Ant Design Alert 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-alert {
+	display: flex;
+	flex-direction: column;
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	background-color: var(--bl-background-color, $background-color);
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	box-sizing: border-box;
+	position: relative;
+}
+
+.bl-alert__content {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+.bl-alert__icon {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	margin-top: 2rpx;
+}
+
+.bl-alert__message {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-alert__message-text {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	font-weight: 500;
+}
+
+.bl-alert__description {
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+}
+
+.bl-alert__close {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== Alert 类型 ==================== */
+
+/* 成功类型 */
+.bl-alert--success {
+	background-color: var(--bl-success-color-1, $success-color-1);
+	border-color: var(--bl-success-color-3, $success-color-3);
+	
+	.bl-alert__icon {
+		color: var(--bl-success-color, $success-color);
+	}
+	
+	.bl-alert__message-text {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 信息类型 */
+.bl-alert--info {
+	background-color: var(--bl-primary-color-1, $primary-color-1);
+	border-color: var(--bl-primary-color-3, $primary-color-3);
+	
+	.bl-alert__icon {
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	.bl-alert__message-text {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 警告类型 */
+.bl-alert--warning {
+	background-color: var(--bl-warning-color-1, $warning-color-1);
+	border-color: var(--bl-warning-color-3, $warning-color-3);
+	
+	.bl-alert__icon {
+		color: var(--bl-warning-color, $warning-color);
+	}
+	
+	.bl-alert__message-text {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* 错误类型 */
+.bl-alert--error {
+	background-color: var(--bl-error-color-1, $error-color-1);
+	border-color: var(--bl-error-color-3, $error-color-3);
+	
+	.bl-alert__icon {
+		color: var(--bl-error-color, $error-color);
+	}
+	
+	.bl-alert__message-text {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* ==================== Alert 尺寸 ==================== */
+
+/* 默认尺寸 */
+.bl-alert--default {
+	padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-lg, $spacing-lg);
+	
+	.bl-alert__message-text {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+	
+	.bl-alert__description {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* 小尺寸 */
+.bl-alert--small {
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	
+	.bl-alert__message-text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+	
+	.bl-alert__description {
+		font-size: var(--bl-font-size-xs, $font-size-xs);
+	}
+}
+
+/* 大尺寸 */
+.bl-alert--large {
+	padding: var(--bl-spacing-lg, $spacing-lg) var(--bl-spacing-xl, $spacing-xl);
+	
+	.bl-alert__message-text {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+	
+	.bl-alert__description {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* ==================== 无图标样式 ==================== */
+.bl-alert--no-icon {
+	.bl-alert__icon {
+		display: none;
+	}
+}
+

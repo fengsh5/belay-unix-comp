@@ -1,0 +1,60 @@
+/**
+ * BlCheckerPopup 组件样式
+ * 参考 Ant Design Popover 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-checkerpopup__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--bl-spacing-md, $spacing-md);
+	border-bottom: 2rpx solid var(--bl-border-color-split, $border-color-split);
+}
+
+.bl-checkerpopup__title {
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	color: var(--bl-text-color, $text-color);
+}
+
+.bl-checkerpopup__close {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	cursor: pointer;
+	transition: color 0.3s;
+	
+	&:active {
+		color: var(--bl-text-color, $text-color);
+	}
+}
+
+.bl-checkerpopup__content {
+	max-height: 800rpx;
+	overflow-y: auto;
+}
+
+.bl-checkerpopup__footer {
+	padding: var(--bl-spacing-md, $spacing-md);
+	border-top: 2rpx solid var(--bl-border-color-split, $border-color-split);
+}
+
+/* ==================== 选择器类型 ==================== */
+
+/* 复选框类型 */
+.bl-checkerpopup--checkbox,
+.bl-checker-popup--checkbox {
+	/* checkbox 类型使用基础样式 */
+}
+
+/* 单选框类型 */
+.bl-checkerpopup--radio,
+.bl-checker-popup--radio {
+	/* radio 类型使用基础样式 */
+}
+

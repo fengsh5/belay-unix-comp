@@ -1,0 +1,80 @@
+<template>
+	<view 
+		:class="['bl-descriptions', bordered ? 'bl-descriptions--bordered' : '', size !== 'default' ? `bl-descriptions--${size}` : '']"
+		:style="descriptionsStyle"
+	>
+		<view v-if="title || $slots.title" class="bl-descriptions__title">
+			<slot name="title">{{ title }}</slot>
+		</view>
+		<view class="bl-descriptions__table">
+			<view class="bl-descriptions__row">
+				<slot></slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlDescriptions',
+		props: {
+			/**
+			 * 标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否显示边框
+			 */
+			bordered: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 一行显示多少列
+			 */
+			column: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 尺寸
+			 */
+			size: {
+				type: String,
+				default: 'default'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		provide() {
+			return {
+				descriptions: this
+			}
+		},
+		computed: {
+			descriptionsStyle() {
+				return this.customStyle || ''
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

@@ -1,0 +1,159 @@
+/**
+ * BlTable 组件样式
+ * 参考 Ant Design Table 组件设计（移动端简化版）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: var(--bl-background-color, $background-color);
+}
+
+.bl-table--bordered {
+	border: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-table__header {
+	background-color: var(--bl-table-header-bg, #fafafa);
+}
+
+.bl-table__header-cell {
+	padding: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1.5715;
+	text-align: left;
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-table__header-cell--center {
+	text-align: center;
+}
+
+.bl-table__header-cell--right {
+	text-align: right;
+}
+
+.bl-table__body {
+	
+}
+
+.bl-table__row {
+	transition: background-color 0.3s;
+	
+	&:active:not(.bl-table__row--disabled) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-table__row--striped {
+	background-color: var(--bl-table-striped-bg, rgba(0, 0, 0, 0.02));
+}
+
+.bl-table__row--disabled {
+	opacity: 0.4;
+}
+
+.bl-table__cell {
+	padding: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	text-align: left;
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-table__cell--center {
+	text-align: center;
+}
+
+.bl-table__cell--right {
+	text-align: right;
+}
+
+.bl-table--bordered .bl-table__cell {
+	border-right: 2rpx solid var(--bl-border-color, $border-color);
+	
+	&:last-child {
+		border-right: none;
+	}
+}
+
+/* ==================== 尺寸 ==================== */
+
+/* 默认尺寸 */
+.bl-table--default {
+	.bl-table__header-cell,
+	.bl-table__cell {
+		padding: var(--bl-spacing-md, $spacing-md);
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+.bl-table--small {
+	.bl-table__header-cell,
+	.bl-table__cell {
+		padding: var(--bl-spacing-sm, $spacing-sm);
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+.bl-table--middle {
+	.bl-table__header-cell,
+	.bl-table__cell {
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+/* ==================== 移动端优化 ==================== */
+/* 移动端表格通常采用卡片式布局 */
+.bl-table--mobile {
+	.bl-table__header {
+		display: none;
+	}
+	
+	.bl-table__body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--bl-spacing-md, $spacing-md);
+	}
+	
+	.bl-table__row {
+		display: flex;
+		flex-direction: column;
+		background-color: var(--bl-background-color, $background-color);
+		border: 2rpx solid var(--bl-border-color, $border-color);
+		border-radius: var(--bl-border-radius, $border-radius);
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+	
+	.bl-table__cell {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+		padding: var(--bl-spacing-sm, $spacing-sm) 0;
+		
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+	
+	.bl-table__cell-label {
+		font-weight: 500;
+		color: var(--bl-text-color-secondary, $text-color-secondary);
+		margin-right: var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	.bl-table__cell-value {
+		flex: 1;
+		text-align: right;
+	}
+}
+

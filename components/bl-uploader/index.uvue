@@ -1,0 +1,167 @@
+<template>
+	<view :class="uploaderClass" :style="uploaderStyle">
+		<view 
+			v-for="(file, index) in fileList" 
+			:key="index"
+			class="bl-uploader__item"
+		>
+			<bl-image
+				v-if="file.url != null && file.url != ''"
+				:src="file.url"
+				mode="aspectFill"
+				class="bl-uploader__preview"
+				@click="handlePreview(index)"
+			></bl-image>
+			<view 
+				v-if="deletable"
+				class="bl-uploader__delete"
+				@click.stop="handleDelete(index)"
+			>
+				<bl-icon name="close" class="bl-uploader__delete-icon"></bl-icon>
+			</view>
+			<view v-if="file.status == 'uploading'" class="bl-uploader__mask">
+				<bl-loading :message="''"></bl-loading>
+			</view>
+		</view>
+		<view 
+			v-if="fileList.length < maxCount"
+			class="bl-uploader__upload"
+			@click="handleChoose"
+		>
+			<slot name="upload">
+				<bl-icon name="plus" class="bl-uploader__upload-icon"></bl-icon>
+				<text v-if="uploadText != null && uploadText != ''" class="bl-uploader__upload-text">
+					{{ uploadText }}
+				</text>
+			</slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	type UploadFile = {
+		url: string
+		status?: 'ready' | 'uploading' | 'success' | 'fail'
+		message?: string
+	}
+	
+	export default {
+		name: 'BlUploader',
+		props: {
+			/**
+			 * 文件列表
+			 */
+			fileList: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 最多可以选择的图片张数
+			 */
+			maxCount: {
+				type: Number,
+				default: 9
+			},
+			/**
+			 * 是否显示删除按钮
+			 */
+			deletable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 上传提示文本
+			 */
+			uploadText: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 图片预览大小
+			 */
+			size: {
+				type: [Number, String],
+				default: 160
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['afterRead', 'delete', 'preview'],
+		computed: {
+			uploaderClass(): string {
+				const classes: string[] = ['bl-uploader']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			uploaderStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleChoose(): void {
+				// 选择图片
+				uni.chooseImage({
+					count: this.maxCount - this.fileList.length,
+					success: (res) => {
+						const files = res.tempFiles.map((file) => {
+							return {
+								url: file.path,
+								status: 'ready' as const
+							}
+						})
+						this.$emit('afterRead', files)
+					},
+					fail: (err) => {
+						console.error('[BlUploader] chooseImage error:', err)
+					}
+				})
+			},
+			handleDelete(index: number): void {
+				this.$emit('delete', {
+					index: index,
+					file: this.fileList[index]
+				})
+			},
+			handlePreview(index: number): void {
+				const urls: string[] = []
+				for (const file of this.fileList) {
+					const fileObj = file as UploadFile
+					if (fileObj.url != null && fileObj.url != '') {
+						urls.push(fileObj.url)
+					}
+				}
+				uni.previewImage({
+					current: urls[index] || 0,
+					urls: urls
+				})
+				this.$emit('preview', {
+					index: index,
+					file: this.fileList[index]
+				})
+			}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

@@ -1,0 +1,178 @@
+<template>
+	<view 
+		:class="wrapperClass"
+		:style="wrapperStyle"
+		@click="handleClick"
+	>
+		<view 
+			:class="checkboxClass"
+			:style="checkboxStyle"
+		>
+			<bl-icon v-if="isChecked" icon="check" :color="iconColor"></bl-icon>
+		</view>
+		<view :class="contentClass" :style="contentStyle">
+			<slot>{{ label }}</slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlCheckbox',
+		props: {
+			/**
+			 * 选中状态
+			 */
+			checked: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 选中颜色
+			 */
+			color: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 只支持BlCheckboxGroup中使用
+			 */
+			value: {
+				type: [String, Number],
+				default: null
+			},
+			/**
+			 * 改变文本位置
+			 */
+			reverse: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 文本
+			 */
+			label: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * label的颜色是否可变
+			 */
+			labelColorVariable: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 圆形模式
+			 */
+			round: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 设置大小
+			 */
+			width: {
+				type: [String, Number],
+				default: null
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change'],
+		computed: {
+			wrapperClass(): string {
+				const classes: string[] = ['bl-checkbox__wrapper']
+				if (this.disabled) {
+					classes.push('bl-checkbox__wrapper--disabled')
+				}
+				if (this.reverse) {
+					classes.push('bl-checkbox__wrapper--reverse')
+				}
+				return classes.join(' ')
+			},
+			wrapperStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			checkboxClass(): string {
+				const classes: string[] = ['bl-checkbox']
+				if (this.isChecked) {
+					classes.push('bl-checkbox--active')
+				}
+				if (this.disabled) {
+					classes.push('bl-checkbox--disabled')
+				}
+				if (this.round) {
+					classes.push('bl-checkbox--round')
+				}
+				return classes.join(' ')
+			},
+			checkboxStyle(): string {
+				const styles: string[] = []
+				if (this.isChecked && !this.disabled) {
+					styles.push(`background: ${this.colorValue}`)
+					styles.push(`border-color: ${this.colorValue}`)
+				}
+				if (this.width != null) {
+					const widthValue = typeof this.width === 'number' ? `${this.width}px` : this.width as string
+					styles.push(`width: ${widthValue}`)
+					styles.push(`height: ${widthValue}`)
+				}
+				return styles.join('; ')
+			},
+			contentClass(): string {
+				const classes: string[] = ['bl-checkbox__content']
+				if (this.reverse) {
+					classes.push('bl-checkbox__content--reverse')
+				}
+				return classes.join(' ')
+			},
+			contentStyle(): string {
+				const styles: string[] = []
+				if (this.labelColorVariable && this.isChecked) {
+					styles.push(`color: ${this.colorValue}`)
+				}
+				return styles.join('; ')
+			},
+			isChecked(): boolean {
+				// 如果是在 group 中，需要通过 provide/inject 获取
+				// 这里简化处理，实际使用时需要从父组件获取
+				return this.checked
+			},
+			colorValue(): string {
+				return this.color != null && this.color != '' ? this.color : 'var(--bl-primary-color)'
+			},
+			iconColor(): string {
+				return this.disabled ? 'var(--bl-text-color-tertiary)' : 'var(--bl-white-color)'
+			}
+		},
+		methods: {
+			handleClick(): void {
+				if (!this.disabled) {
+					this.$emit('change', { detail: { checked: !this.isChecked } })
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

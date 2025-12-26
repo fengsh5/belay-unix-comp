@@ -1,0 +1,54 @@
+/**
+ * BlView 组件样式
+ * 基础视图组件
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-view {
+	box-sizing: border-box;
+	display: block;
+}
+
+/* ==================== 视图类型 ==================== */
+
+/* Flex 布局 */
+.bl-view--flex {
+	display: flex;
+}
+
+.bl-view--flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.bl-view--flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+/* 内联 Flex */
+.bl-view--inline-flex {
+	display: inline-flex;
+}
+
+/* 块级元素 */
+.bl-view--block {
+	display: block;
+}
+
+/* 内联块级元素 */
+.bl-view--inline-block {
+	display: inline-block;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-view {
+		/* 移动端特定样式 */
+	}
+}
+

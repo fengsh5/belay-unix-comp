@@ -1,0 +1,50 @@
+/**
+ * BlStatistic 组件样式
+ * 参考 Ant Design Statistic 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-statistic {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-statistic__title {
+	margin-bottom: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-statistic__content {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	flex-wrap: wrap;
+}
+
+.bl-statistic__prefix {
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-statistic__value {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-xxl, $font-size-xxl);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-statistic__suffix {
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+

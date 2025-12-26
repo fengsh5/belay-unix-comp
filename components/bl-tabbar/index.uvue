@@ -1,0 +1,85 @@
+<template>
+	<bl-bottom-bar :class="tabbarClass" :style="tabbarStyle" :fixed="fixed" :safe-area-bottom="safeAreaBottom">
+		<slot></slot>
+	</bl-bottom-bar>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlTabbar',
+		props: {
+			/**
+			 * 当前选中的标签索引
+			 */
+			value: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否固定在底部
+			 */
+			fixed: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示底部安全区域
+			 */
+			safeAreaBottom: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 背景颜色
+			 */
+			backgroundColor: {
+				type: String,
+				default: '#fff'
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change'],
+		computed: {
+			tabbarClass(): string {
+				const classes: string[] = ['bl-tabbar']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			tabbarStyle(): string {
+				const styles: string[] = []
+				if (this.backgroundColor != '') {
+					styles.push(`background-color: ${this.backgroundColor}`)
+				}
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleChange(index: number): void {
+				this.$emit('change', index)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

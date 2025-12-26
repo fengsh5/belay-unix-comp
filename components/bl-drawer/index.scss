@@ -1,0 +1,152 @@
+/**
+ * BlDrawer 组件样式
+ * 参考 Ant Design Drawer 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-drawer {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	pointer-events: none;
+}
+
+.bl-drawer__mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.45);
+	opacity: 0;
+	transition: opacity 0.3s;
+	pointer-events: auto;
+}
+
+.bl-drawer__mask--visible {
+	opacity: 1;
+}
+
+.bl-drawer__content {
+	position: absolute;
+	background-color: var(--bl-background-color, $background-color);
+	box-shadow: -2rpx 0 8rpx rgba(0, 0, 0, 0.15);
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	transition: transform 0.3s;
+	pointer-events: auto;
+}
+
+/* ==================== 位置样式 ==================== */
+
+/* 左侧 */
+.bl-drawer__content--left {
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 80%;
+	max-width: 600rpx;
+	transform: translateX(-100%);
+}
+
+.bl-drawer--visible .bl-drawer__content--left {
+	transform: translateX(0);
+}
+
+/* 右侧 */
+.bl-drawer__content--right {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 80%;
+	max-width: 600rpx;
+	transform: translateX(100%);
+}
+
+.bl-drawer--visible .bl-drawer__content--right {
+	transform: translateX(0);
+}
+
+/* 顶部 */
+.bl-drawer__content--top {
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 50%;
+	max-height: 800rpx;
+	transform: translateY(-100%);
+}
+
+.bl-drawer--visible .bl-drawer__content--top {
+	transform: translateY(0);
+}
+
+/* 底部 */
+.bl-drawer__content--bottom {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 50%;
+	max-height: 800rpx;
+	transform: translateY(100%);
+}
+
+.bl-drawer--visible .bl-drawer__content--bottom {
+	transform: translateY(0);
+}
+
+/* ==================== 头部样式 ==================== */
+.bl-drawer__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--bl-spacing-lg, $spacing-lg);
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+	flex-shrink: 0;
+}
+
+.bl-drawer__title {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-drawer__extra {
+	margin-right: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-drawer__close {
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	transition: opacity 0.3s;
+	
+	&:active {
+		opacity: 0.6;
+	}
+}
+
+/* ==================== 内容样式 ==================== */
+.bl-drawer__body {
+	flex: 1;
+	overflow-y: auto;
+	padding: var(--bl-spacing-lg, $spacing-lg);
+}
+
+/* ==================== 无标题样式 ==================== */
+.bl-drawer__header--no-title {
+	border-bottom: none;
+	padding: var(--bl-spacing-md, $spacing-md);
+}

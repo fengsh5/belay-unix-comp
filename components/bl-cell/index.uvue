@@ -1,0 +1,150 @@
+<template>
+	<view 
+		:class="cellClass" 
+		:style="cellStyle"
+		@click="handleClick"
+	>
+		<view v-if="title != null && title != ''" class="bl-cell__title">
+			<bl-icon 
+				v-if="icon != null && icon != ''" 
+				:name="icon" 
+				class="bl-cell__icon"
+				:color="iconColor"
+			></bl-icon>
+			<text>{{ title }}</text>
+		</view>
+		<view class="bl-cell__value">
+			<slot name="value">
+				<text v-if="value != null && value != ''" :style="valueStyle">{{ value }}</text>
+			</slot>
+		</view>
+		<view v-if="isLink || arrow" class="bl-cell__right-icon">
+			<bl-icon name="arrow-right" :color="arrowColor"></bl-icon>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlCell',
+		props: {
+			/**
+			 * 左侧标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 右侧内容
+			 */
+			value: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 左侧图标
+			 */
+			icon: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 左侧图标颜色
+			 */
+			iconColor: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否显示右侧箭头
+			 */
+			arrow: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否为链接（点击跳转）
+			 */
+			isLink: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 箭头颜色
+			 */
+			arrowColor: {
+				type: String,
+				default: '#969799'
+			},
+			/**
+			 * 右侧内容颜色
+			 */
+			valueColor: {
+				type: String,
+				default: '#969799'
+			},
+			/**
+			 * 是否使用内边距
+			 */
+			padding: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['click'],
+		computed: {
+			cellClass(): string {
+				const classes: string[] = ['bl-cell']
+				if (this.isLink || this.arrow) {
+					classes.push('bl-cell--link')
+				}
+				if (!this.padding) {
+					classes.push('bl-cell--no-padding')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			cellStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			valueStyle(): string {
+				const styles: string[] = []
+				if (this.valueColor != '') {
+					styles.push(`color: ${this.valueColor}`)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleClick(e: any): void {
+				this.$emit('click', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

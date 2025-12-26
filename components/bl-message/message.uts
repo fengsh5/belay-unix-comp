@@ -1,0 +1,221 @@
+/**
+ * BlMessage 工具类
+ * 参考 Ant Design Message 组件 API
+ * 
+ * 移动端全局提示组件，支持静态方法调用
+ */
+
+// uni 事件总线接口（用于 $emit）
+type UniEventBus = {
+	$emit: (eventName: string, data?: any) => void
+	$on?: (eventName: string, callback: (data?: any) => void) => void
+	$off?: (eventName: string, callback?: (data?: any) => void) => void
+	$once?: (eventName: string, callback: (data?: any) => void) => void
+}
+
+// uni 对象类型定义（部分常用 API）
+// 注意：完整的类型定义应该在 types/uni.d.uts 中
+type UniObject = UniEventBus & {
+	showToast?: (options: {
+		title: string
+		icon?: 'success' | 'error' | 'loading' | 'none'
+		duration?: number
+		mask?: boolean
+		image?: string
+		position?: 'top' | 'center' | 'bottom'
+	}) => void
+	[key: string]: ((...args: any[]) => any) | any
+}
+
+// 声明全局 uni 对象
+// 注意：uni 是 uni-app x 运行时提供的全局对象
+declare const uni: UniObject
+
+type MessageType = 'success' | 'error' | 'info' | 'warning' | 'loading'
+
+type MessageConfig = {
+	content: string
+	type?: MessageType | null
+	duration?: number | null
+	icon?: string | null
+	customStyle?: string | null
+	onClose?: (() => void) | null
+}
+
+type MessageInstance = {
+	close: () => void
+}
+
+/**
+ * 消息项数据
+ */
+type MessageItem = {
+	id: string
+	config: MessageConfig
+	instance: MessageInstance
+}
+
+/**
+ * 消息管理器
+ */
+class MessageManager {
+	private messages: MessageItem[] = []
+	private messageIdCounter: number = 0
+	
+	/**
+	 * 显示消息
+	 */
+	open(config: MessageConfig): MessageInstance {
+		const id = `message-${++this.messageIdCounter}`
+		const duration = config.duration != null ? config.duration : 3000
+		
+		const instance: MessageInstance = {
+			close: () => {
+				this.close(id)
+			}
+		}
+		
+		const item: MessageItem = {
+			id,
+			config,
+			instance
+		}
+		
+		this.messages.push(item)
+		this.render()
+		
+		// 自动关闭
+		if (duration > 0) {
+			setTimeout(() => {
+				this.close(id)
+			}, duration)
+		}
+		
+		return instance
+	}
+	
+	/**
+	 * 关闭消息
+	 */
+	close(id: string): void {
+		const index = this.messages.findIndex(item => item.id == id)
+		if (index >= 0) {
+			const item = this.messages[index]
+			if (item.config.onClose) {
+				item.config.onClose()
+			}
+			this.messages.splice(index, 1)
+			this.render()
+		}
+	}
+	
+	/**
+	 * 关闭所有消息
+	 */
+	destroyAll(): void {
+		this.messages.forEach(item => {
+			if (item.config.onClose) {
+				item.config.onClose()
+			}
+		})
+		this.messages = []
+		this.render()
+	}
+	
+	/**
+	 * 渲染消息
+	 */
+	private render(): void {
+		// 在 uni-app 中，需要通过全局事件或页面实例来更新 UI
+		// 这里触发一个自定义事件，由页面监听并渲染
+		uni.$emit('bl-message-update', this.messages.map(item => ({
+			id: item.id,
+			config: item.config
+		})))
+	}
+}
+
+/**
+ * 全局消息管理器实例
+ */
+const messageManager = new MessageManager()
+
+/**
+ * BlMessage 静态方法类
+ */
+export class BlMessage {
+	/**
+	 * 显示消息
+	 */
+	static open(config: MessageConfig): MessageInstance {
+		return messageManager.open(config)
+	}
+	
+	/**
+	 * 显示成功消息
+	 */
+	static success(content: string, duration?: number, onClose?: () => void): MessageInstance {
+		return this.open({
+			content,
+			type: 'success',
+			duration,
+			onClose
+		})
+	}
+	
+	/**
+	 * 显示错误消息
+	 */
+	static error(content: string, duration?: number, onClose?: () => void): MessageInstance {
+		return this.open({
+			content,
+			type: 'error',
+			duration,
+			onClose
+		})
+	}
+	
+	/**
+	 * 显示信息消息
+	 */
+	static info(content: string, duration?: number, onClose?: () => void): MessageInstance {
+		return this.open({
+			content,
+			type: 'info',
+			duration,
+			onClose
+		})
+	}
+	
+	/**
+	 * 显示警告消息
+	 */
+	static warning(content: string, duration?: number, onClose?: () => void): MessageInstance {
+		return this.open({
+			content,
+			type: 'warning',
+			duration,
+			onClose
+		})
+	}
+	
+	/**
+	 * 显示加载消息
+	 */
+	static loading(content: string, duration?: number, onClose?: () => void): MessageInstance {
+		return this.open({
+			content,
+			type: 'loading',
+			duration,
+			onClose
+		})
+	}
+	
+	/**
+	 * 关闭所有消息
+	 */
+	static destroyAll(): void {
+		messageManager.destroyAll()
+	}
+}
+

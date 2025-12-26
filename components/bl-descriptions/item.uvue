@@ -1,0 +1,83 @@
+<template>
+	<view 
+		:class="['bl-descriptions__item', bordered ? 'bl-descriptions__item--bordered' : '']"
+		:style="itemStyle"
+	>
+		<view class="bl-descriptions__item-label" :style="labelStyle">
+			<slot name="label">{{ label }}</slot>
+		</view>
+		<view class="bl-descriptions__item-content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlDescriptionsItem',
+		props: {
+			/**
+			 * 标签
+			 */
+			label: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 标签列数
+			 */
+			labelSpan: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 内容列数
+			 */
+			contentSpan: {
+				type: Number,
+				default: 1
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		inject: {
+			descriptions: {
+				type: Object,
+				default: null
+			}
+		},
+		computed: {
+			bordered(): boolean {
+				const self: any = this
+				const descriptions = self.descriptions
+				return descriptions ? descriptions.bordered : false
+			},
+			itemStyle(): string {
+				const self: any = this
+				const customStyle = self.customStyle
+				return customStyle || ''
+			},
+			labelStyle(): string {
+				// 可以根据 labelSpan 和 contentSpan 设置样式
+				return ''
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

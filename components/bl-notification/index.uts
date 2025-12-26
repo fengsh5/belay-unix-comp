@@ -1,0 +1,6 @@
+/**
+ * BlNotification 组件统一导出
+ */
+
+export { default as BlNotification } from './notification.uts'
+

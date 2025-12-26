@@ -1,0 +1,153 @@
+/**
+ * BlProgress 组件样式
+ * 参考 Ant Design Progress 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-progress {
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.bl-progress__outer {
+	flex: 1;
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+	overflow: hidden;
+	position: relative;
+}
+
+.bl-progress__inner {
+	background-color: var(--bl-primary-color, $primary-color);
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+	transition: width 0.6s ease;
+	height: 100%;
+}
+
+.bl-progress__text {
+	margin-left: var(--bl-spacing-sm, $spacing-sm);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	white-space: nowrap;
+	min-width: 80rpx;
+	text-align: right;
+}
+
+.bl-progress__content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	color: var(--bl-text-color, $text-color);
+	line-height: 1.5715;
+	white-space: nowrap;
+}
+
+/* ==================== 进度条类型 ==================== */
+
+/* 线性进度条（默认） */
+.bl-progress--line {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+/* 圆形进度条 */
+.bl-progress--circle {
+	display: inline-flex;
+	position: relative;
+}
+
+/* 仪表盘进度条 */
+.bl-progress--dashboard {
+	display: inline-flex;
+	position: relative;
+}
+
+/* ==================== 进度条状态 ==================== */
+
+/* 成功状态 */
+.bl-progress--success {
+	.bl-progress__inner {
+		background-color: var(--bl-success-color, $success-color);
+	}
+	
+	.bl-progress__text {
+		color: var(--bl-success-color, $success-color);
+	}
+}
+
+/* 异常状态 */
+.bl-progress--exception {
+	.bl-progress__inner {
+		background-color: var(--bl-error-color, $error-color);
+	}
+	
+	.bl-progress__text {
+		color: var(--bl-error-color, $error-color);
+	}
+}
+
+/* 警告状态 */
+.bl-progress--warning {
+	.bl-progress__inner {
+		background-color: var(--bl-warning-color, $warning-color);
+	}
+	
+	.bl-progress__text {
+		color: var(--bl-warning-color, $warning-color);
+	}
+}
+
+/* ==================== 进度条尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-progress--large {
+	.bl-progress__outer {
+		height: 12rpx;
+	}
+	
+	.bl-progress__text {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 默认尺寸 */
+.bl-progress--default {
+	.bl-progress__outer {
+		height: 8rpx;
+	}
+	
+	.bl-progress__text {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* 小尺寸 */
+.bl-progress--small {
+	.bl-progress__outer {
+		height: 4rpx;
+	}
+	
+	.bl-progress__text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-progress__text {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+		min-width: 60rpx;
+	}
+}
+

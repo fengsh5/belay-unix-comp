@@ -1,0 +1,70 @@
+<template>
+	<view 
+		:class="viewClass" 
+		:style="viewStyle"
+		@click="handleClick"
+		@touchstart="handleTouchStart"
+		@touchend="handleTouchEnd"
+		@touchmove="handleTouchMove"
+	>
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlView',
+		props: {
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['click', 'touchStart', 'touchEnd', 'touchMove'],
+		computed: {
+			viewClass(): string {
+				const classes: string[] = ['bl-view']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			viewStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleClick(e: any): void {
+				this.$emit('click', e)
+			},
+			handleTouchStart(e: any): void {
+				this.$emit('touchStart', e)
+			},
+			handleTouchEnd(e: any): void {
+				this.$emit('touchEnd', e)
+			},
+			handleTouchMove(e: any): void {
+				this.$emit('touchMove', e)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

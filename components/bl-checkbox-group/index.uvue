@@ -1,0 +1,70 @@
+<template>
+	<view :class="groupClass" :style="groupStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlCheckboxGroup',
+		props: {
+			/**
+			 * 选中值
+			 */
+			value: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 选中颜色
+			 */
+			color: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		provide() {
+			return {
+				checkboxGroup: {
+					value: this.value,
+					disabled: this.disabled,
+					color: this.color,
+					multiple: true
+				}
+			}
+		},
+		emits: ['change'],
+		computed: {
+			groupClass(): string {
+				return 'bl-checkbox-group'
+			},
+			groupStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>
+

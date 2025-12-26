@@ -1,0 +1,81 @@
+<template>
+	<view :class="pageClass" :style="pageStyle">
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlPage',
+		props: {
+			/**
+			 * 背景颜色
+			 */
+			backgroundColor: {
+				type: String,
+				default: '#f7f8fa'
+			},
+			/**
+			 * 是否显示导航栏
+			 */
+			showNavBar: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 是否显示底部安全区域
+			 */
+			safeAreaBottom: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			pageClass(): string {
+				const classes: string[] = ['bl-page']
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			pageStyle(): string {
+				const styles: string[] = []
+				styles.push(`background-color: ${this.backgroundColor}`)
+				styles.push('width: 100%')
+				styles.push('height: 100%')
+				// 使用系统信息获取屏幕高度，替代vh单位
+				try {
+					const systemInfo = uni.getSystemInfoSync()
+					const windowHeight = systemInfo.windowHeight || systemInfo.screenHeight
+					styles.push(`min-height: ${windowHeight}px`)
+				} catch (e: any) {
+					// 降级处理
+					styles.push('min-height: 100%')
+				}
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

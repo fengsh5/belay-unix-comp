@@ -1,0 +1,194 @@
+/**
+ * BlNotification 工具类
+ * 参考 Ant Design Notification 组件 API
+ * 
+ * 移动端通知提醒框组件，支持静态方法调用
+ */
+
+/**
+ * 通知项数据
+ */
+type NotificationItem = {
+	id: string
+	config: any
+	instance: any
+}
+
+/**
+ * 通知管理器
+ */
+class NotificationManager {
+	private notifications: NotificationItem[] = []
+	private notificationIdCounter: number = 0
+	
+	/**
+	 * 显示通知
+	 */
+	open(config: any): any {
+		const id = `notification-${++this.notificationIdCounter}`
+		const duration = config.duration != null ? config.duration : 4500
+		
+		const instance: any = {
+			close: () => {
+				this.close(id)
+			}
+		}
+		
+		const item: NotificationItem = {
+			id,
+			config,
+			instance
+		}
+		
+		this.notifications.push(item)
+		this.render()
+		
+		// 自动关闭
+		if (duration > 0) {
+			setTimeout(() => {
+				this.close(id)
+			}, duration)
+		}
+		
+		return instance
+	}
+	
+	/**
+	 * 关闭通知
+	 */
+	close(id: string): void {
+		const index = this.notifications.findIndex(item => item.id == id)
+		if (index >= 0) {
+			const item = this.notifications[index]
+			if (item.config.onClose) {
+				item.config.onClose()
+			}
+			this.notifications.splice(index, 1)
+			this.render()
+		}
+	}
+	
+	/**
+	 * 关闭所有通知
+	 */
+	destroyAll(): void {
+		this.notifications.forEach(item => {
+			if (item.config.onClose) {
+				item.config.onClose()
+			}
+		})
+		this.notifications = []
+		this.render()
+	}
+	
+	/**
+	 * 渲染通知
+	 */
+	private render(): void {
+		uni.$emit('bl-notification-update', this.notifications.map(item => ({
+			id: item.id,
+			config: item.config
+		})))
+	}
+	
+	/**
+	 * 初始化事件监听
+	 */
+	init(): void {
+		uni.$on('bl-notification-close-internal', (id: string) => {
+			this.close(id)
+		})
+	}
+}
+
+/**
+ * 全局通知管理器实例
+ */
+const notificationManager = new NotificationManager()
+
+// 初始化事件监听
+notificationManager.init()
+
+/**
+ * BlNotification 静态方法类
+ */
+export class BlNotification {
+	/**
+	 * 显示通知
+	 */
+	static open(config: any): any {
+		return notificationManager.open(config)
+	}
+	
+	/**
+	 * 显示成功通知
+	 */
+	static success(config: any | string): any {
+		if (typeof config == 'string') {
+			return this.open({
+				message: config,
+				type: 'success'
+			})
+		}
+		return this.open({
+			...config,
+			type: 'success'
+		})
+	}
+	
+	/**
+	 * 显示错误通知
+	 */
+	static error(config: any | string): any {
+		if (typeof config == 'string') {
+			return this.open({
+				message: config,
+				type: 'error'
+			})
+		}
+		return this.open({
+			...config,
+			type: 'error'
+		})
+	}
+	
+	/**
+	 * 显示信息通知
+	 */
+	static info(config: any | string): any {
+		if (typeof config == 'string') {
+			return this.open({
+				message: config,
+				type: 'info'
+			})
+		}
+		return this.open({
+			...config,
+			type: 'info'
+		})
+	}
+	
+	/**
+	 * 显示警告通知
+	 */
+	static warning(config: any | string): any {
+		if (typeof config == 'string') {
+			return this.open({
+				message: config,
+				type: 'warning'
+			})
+		}
+		return this.open({
+			...config,
+			type: 'warning'
+		})
+	}
+	
+	/**
+	 * 关闭所有通知
+	 */
+	static destroyAll(): void {
+		notificationManager.destroyAll()
+	}
+}
+

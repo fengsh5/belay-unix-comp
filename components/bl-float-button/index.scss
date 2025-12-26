@@ -1,0 +1,78 @@
+/**
+ * BlFloatButton 组件样式
+ * 参考 Ant Design FloatButton 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-float-button {
+	position: fixed;
+	right: var(--bl-spacing-lg, $spacing-lg);
+	bottom: var(--bl-spacing-lg, $spacing-lg);
+	z-index: 999;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bl-primary-color, $primary-color);
+	color: var(--bl-text-color-inverse, #fff);
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+	transition: all 0.3s;
+	box-sizing: border-box;
+	
+	&:active:not(.bl-float-button--disabled) {
+		opacity: 0.8;
+		transform: scale(0.95);
+	}
+}
+
+.bl-float-button--circle {
+	border-radius: 50%;
+}
+
+.bl-float-button--square {
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+}
+
+.bl-float-button--default {
+	width: 88rpx;
+	height: 88rpx;
+}
+
+.bl-float-button--large {
+	width: 112rpx;
+	height: 112rpx;
+}
+
+.bl-float-button--small {
+	width: 64rpx;
+	height: 64rpx;
+}
+
+.bl-float-button--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-float-button__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bl-float-button__description {
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+	font-size: var(--bl-font-size-xs, $font-size-xs);
+	line-height: 1.5715;
+	text-align: center;
+}
+
+/* ==================== 类型样式 ==================== */
+.bl-float-button--primary {
+	background-color: var(--bl-primary-color, $primary-color);
+}
+

@@ -1,0 +1,166 @@
+<template>
+	<view 
+		:class="segmentedClass" 
+		:style="segmentedStyle"
+	>
+		<view 
+			v-for="(option, index) in normalizedOptions" 
+			:key="index"
+			:class="['bl-segmented__item', option.value === currentValue ? 'bl-segmented__item--selected' : '', option.disabled ? 'bl-segmented__item--disabled' : '']"
+			@click="handleClick(option)"
+		>
+			<view v-if="option.icon" class="bl-segmented__item-icon">
+				<bl-icon 
+					:name="option.icon" 
+					:size="iconSize"
+					:color="option.value === currentValue ? 'var(--bl-primary-color, #1890ff)' : 'var(--bl-text-color, #000000d9)'"
+				></bl-icon>
+			</view>
+			<text class="bl-segmented__item-label">{{ option.label }}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'BlSegmented',
+		props: {
+			/**
+			 * 当前选中的值
+			 */
+			value: {
+				type: [String, Number],
+				default: null
+			},
+			/**
+			 * 默认选中的值
+			 */
+			defaultValue: {
+				type: [String, Number],
+				default: null
+			},
+			/**
+			 * 选项数据
+			 */
+			options: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 尺寸
+			 */
+			size: {
+				type: String,
+				default: 'middle'
+			},
+			/**
+			 * 是否块级元素
+			 */
+			block: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				internalValue: null
+			}
+		},
+		computed: {
+			currentValue() {
+				return this.value != null ? this.value : this.internalValue
+			},
+			segmentedClass() {
+				const classes = ['bl-segmented']
+				if (this.size && this.size !== 'middle') {
+					classes.push(`bl-segmented--${this.size}`)
+				}
+				if (this.block) {
+					classes.push('bl-segmented--block')
+				}
+				if (this.customClass) {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			segmentedStyle() {
+				return this.customStyle || ''
+			},
+			iconSize() {
+				if (this.size === 'small') {
+					return 28
+				}
+				if (this.size === 'large') {
+					return 40
+				}
+				return 32
+			},
+			normalizedOptions() {
+				if (!this.options || this.options.length === 0) {
+					return []
+				}
+				
+				return this.options.map(option => {
+					if (typeof option === 'string' || typeof option === 'number') {
+						return {
+							label: String(option),
+							value: option,
+							disabled: this.disabled
+						}
+					} else {
+						return {
+							label: option.label || '',
+							value: option.value,
+							disabled: option.disabled || this.disabled || false,
+							icon: option.icon
+						}
+					}
+				})
+			}
+		},
+		created() {
+			if (this.value == null && this.defaultValue != null) {
+				this.internalValue = this.defaultValue
+			}
+		},
+		methods: {
+			handleClick(option) {
+				if (option.disabled) {
+					return
+				}
+				
+				if (this.value == null) {
+					this.internalValue = option.value
+				}
+				this.$emit('update:value', option.value)
+				this.$emit('change', option.value)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

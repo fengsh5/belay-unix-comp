@@ -1,0 +1,113 @@
+/**
+ * BlSkeleton 组件样式
+ * 参考 Ant Design Skeleton 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-skeleton {
+	display: flex;
+	flex-direction: column;
+	padding: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-skeleton__header {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-skeleton__avatar {
+	flex-shrink: 0;
+	background-color: var(--bl-skeleton-color, #f2f2f2);
+	margin-right: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-skeleton__avatar--circle {
+	border-radius: 50%;
+}
+
+.bl-skeleton__avatar--square {
+	border-radius: var(--bl-border-radius, $border-radius);
+}
+
+.bl-skeleton__avatar--small {
+	width: 64rpx;
+	height: 64rpx;
+}
+
+.bl-skeleton__avatar--default {
+	width: 80rpx;
+	height: 80rpx;
+}
+
+.bl-skeleton__avatar--large {
+	width: 112rpx;
+	height: 112rpx;
+}
+
+.bl-skeleton__content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-skeleton__title {
+	height: 32rpx;
+	background-color: var(--bl-skeleton-color, #f2f2f2);
+	margin-bottom: var(--bl-spacing-sm, $spacing-sm);
+	border-radius: var(--bl-border-radius, $border-radius);
+}
+
+.bl-skeleton__paragraph {
+	display: flex;
+	flex-direction: column;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+}
+
+.bl-skeleton__paragraph-line {
+	height: 32rpx;
+	background-color: var(--bl-skeleton-color, #f2f2f2);
+	border-radius: var(--bl-border-radius, $border-radius);
+	
+	&:last-child {
+		width: 60%;
+	}
+}
+
+/* ==================== 动画效果 ==================== */
+.bl-skeleton--active {
+	.bl-skeleton__avatar,
+	.bl-skeleton__title,
+	.bl-skeleton__paragraph-line {
+		background: linear-gradient(
+			90deg,
+			var(--bl-skeleton-color, #f2f2f2) 25%,
+			var(--bl-skeleton-to-color, #e6e6e6) 37%,
+			var(--bl-skeleton-color, #f2f2f2) 63%
+		);
+		background-size: 400% 100%;
+		animation: bl-skeleton-loading 1.4s ease infinite;
+	}
+}
+
+@keyframes bl-skeleton-loading {
+	0% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* ==================== 圆角 ==================== */
+.bl-skeleton--round {
+	.bl-skeleton__title,
+	.bl-skeleton__paragraph-line {
+		border-radius: var(--bl-border-radius-large, $border-radius-large);
+	}
+}
+

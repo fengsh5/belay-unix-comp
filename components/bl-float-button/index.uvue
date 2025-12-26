@@ -1,0 +1,112 @@
+<template>
+	<view 
+		:class="['bl-float-button', `bl-float-button--${shape}`, `bl-float-button--${size}`, `bl-float-button--${type}`, disabled ? 'bl-float-button--disabled' : '']"
+		:style="floatButtonStyle"
+		@click="handleClick"
+	>
+		<view class="bl-float-button__icon">
+			<slot name="icon">
+				<bl-icon 
+					v-if="icon"
+					:name="icon" 
+					:size="iconSize"
+					color="var(--bl-text-color-inverse, #fff)"
+				></bl-icon>
+				<slot v-else></slot>
+			</slot>
+		</view>
+		<text v-if="description" class="bl-float-button__description">{{ description }}</text>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlFloatButton',
+		props: {
+			/**
+			 * 按钮类型
+			 */
+			type: {
+				type: String,
+				default: 'primary'
+			},
+			/**
+			 * 按钮形状
+			 */
+			shape: {
+				type: String,
+				default: 'circle'
+			},
+			/**
+			 * 按钮大小
+			 */
+			size: {
+				type: String,
+				default: 'default'
+			},
+			/**
+			 * 按钮图标
+			 */
+			icon: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 按钮描述
+			 */
+			description: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['click'],
+		computed: {
+			floatButtonStyle(): string {
+				return this.customStyle || ''
+			},
+			iconSize(): number {
+				if (this.size == 'large') {
+					return 48
+				}
+				if (this.size == 'small') {
+					return 28
+				}
+				return 40
+			}
+		},
+		methods: {
+			handleClick(): void {
+				if (this.disabled) {
+					return
+				}
+				this.$emit('click')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

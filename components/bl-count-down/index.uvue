@@ -1,0 +1,252 @@
+<template>
+	<view :class="countDownClass" :style="countDownStyle">
+		<slot v-if="renderContent != null" :data="countDownData"></slot>
+		<template v-else>
+		<view v-if="countDownData.day != '00'" :class="itemClass" :style="itemStyleValue">
+			<text>{{ countDownData.day }}</text>
+		</view>
+		<text v-if="countDownData.day != '00' && separateData.dayUnit != ''" :class="delimiterClass" :style="delimiterStyleValue">{{ separateData.dayUnit }}</text>
+			<view :class="itemClass" :style="itemStyleValue">
+				<text>{{ countDownData.hour }}</text>
+			</view>
+			<text v-if="separateData.hourUnit != ''" :class="delimiterClass" :style="delimiterStyleValue">{{ separateData.hourUnit }}</text>
+			<view :class="itemClass" :style="itemStyleValue">
+				<text>{{ countDownData.minute }}</text>
+			</view>
+			<text v-if="separateData.minuteUnit != ''" :class="delimiterClass" :style="delimiterStyleValue">{{ separateData.minuteUnit }}</text>
+			<view :class="itemClass" :style="itemStyleValue">
+				<text>{{ countDownData.second }}</text>
+			</view>
+			<text v-if="separateData.secondUnit != ''" :class="delimiterClass" :style="delimiterStyleValue">{{ separateData.secondUnit }}</text>
+		</template>
+	</view>
+</template>
+
+<script lang="uts">
+	export type CountDownData = {
+		day: string
+		hour: string
+		minute: string
+		second: string
+	}
+	
+	export default {
+		name: 'BlCountDown',
+		props: {
+			/**
+			 * 组件中item的类名
+			 */
+			itemClassName: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 组件中item的样式
+			 */
+			itemStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 组件中分割线的类名
+			 */
+			delimiterClassName: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 组件中分割线的样式
+			 */
+			delimiterStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 延时多久执行一次定时操作（单位：ms）
+			 */
+			duration: {
+				type: Number,
+				default: 1000
+			},
+			/**
+			 * 自定义分隔符
+			 */
+			separateData: {
+				type: Object,
+				default: () => ({
+					dayUnit: ' ',
+					hourUnit: ':',
+					minuteUnit: ':',
+					secondUnit: ''
+				})
+			},
+			/**
+			 * 表示 futureTime 为毫秒形式的剩余时间
+			 */
+			isRemainTime: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 目标时间
+			 */
+			futureTime: {
+				type: [Number, String, Date],
+				default: null
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			}
+		},
+		data() {
+			return {
+				countDownData: {
+					day: '00',
+					hour: '00',
+					minute: '00',
+					second: '00'
+				} as CountDownData,
+				timer: null as number | null,
+				finished: false
+			}
+		},
+		emits: ['finish'],
+		computed: {
+			countDownClass(): string {
+				return 'bl-count-down'
+			},
+			countDownStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			},
+			itemClass(): string {
+				const classes: string[] = ['bl-count-down__item']
+				if (this.itemClassName != '') {
+					classes.push(this.itemClassName)
+				}
+				return classes.join(' ')
+			},
+			itemStyleValue(): string {
+				return this.itemStyle != '' ? this.itemStyle : ''
+			},
+			delimiterClass(): string {
+				const classes: string[] = ['bl-count-down__delimiter']
+				if (this.delimiterClassName != '') {
+					classes.push(this.delimiterClassName)
+				}
+				return classes.join(' ')
+			},
+			delimiterStyleValue(): string {
+				return this.delimiterStyle != '' ? this.delimiterStyle : ''
+			}
+		},
+		watch: {
+			futureTime() {
+				this.start()
+			},
+			isRemainTime() {
+				this.start()
+			}
+		},
+		mounted() {
+			this.start()
+		},
+		beforeUnmount() {
+			this.stop()
+		},
+		methods: {
+			/**
+			 * 格式化时间
+			 */
+			formatTime(time: number): string {
+				return time < 10 ? `0${time}` : String(time)
+			},
+			/**
+			 * 计算倒计时
+			 */
+			calculate(): void {
+				if (this.futureTime == null) {
+					return
+				}
+				
+				let targetTime: number = 0
+				
+				if (this.isRemainTime) {
+					// 剩余时间（毫秒）
+					targetTime = this.futureTime as number
+				} else {
+					// 目标时间
+					if (typeof this.futureTime == 'string') {
+						targetTime = new Date(this.futureTime).getTime()
+					} else if (this.futureTime instanceof Date) {
+						targetTime = this.futureTime.getTime()
+					} else {
+						targetTime = this.futureTime as number
+					}
+				}
+				
+				const now = Date.now()
+				const diff = targetTime - now
+				
+				if (diff <= 0) {
+					this.countDownData = {
+						day: '00',
+						hour: '00',
+						minute: '00',
+						second: '00'
+					}
+					if (!this.finished) {
+						this.finished = true
+						this.$emit('finish')
+					}
+					this.stop()
+					return
+				}
+				
+				const day = Math.floor(diff / (1000 * 60 * 60 * 24))
+				const hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+				const minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+				const second = Math.floor((diff % (1000 * 60)) / 1000)
+				
+				this.countDownData = {
+					day: this.formatTime(day),
+					hour: this.formatTime(hour),
+					minute: this.formatTime(minute),
+					second: this.formatTime(second)
+				}
+			},
+			/**
+			 * 开始倒计时
+			 */
+			start(): void {
+				this.stop()
+				this.finished = false
+				this.calculate()
+				this.timer = setInterval(() => {
+					this.calculate()
+				}, this.duration)
+			},
+			/**
+			 * 停止倒计时
+			 */
+			stop(): void {
+				if (this.timer != null) {
+					clearInterval(this.timer)
+					this.timer = null
+				}
+			}
+	}
+}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

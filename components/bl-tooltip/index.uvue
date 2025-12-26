@@ -1,0 +1,150 @@
+<template>
+	<view 
+		:class="tooltipClass" 
+		:style="tooltipStyle"
+		@touchstart="handleTouchStart"
+		@touchend="handleTouchEnd"
+		@click="handleClick"
+	>
+		<slot></slot>
+		<view 
+			v-if="visible" 
+			:class="contentClass"
+			:style="contentStyle"
+		>
+			<view v-if="arrow" class="bl-tooltip__arrow"></view>
+			<slot name="title">
+				<text v-if="title">{{ title }}</text>
+			</slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlTooltip',
+		props: {
+			/**
+			 * 提示文字
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 气泡框位置
+			 */
+			placement: {
+				type: String,
+				default: 'top'
+			},
+			/**
+			 * 触发行为
+			 */
+			trigger: {
+				type: String,
+				default: 'hover'
+			},
+			/**
+			 * 是否显示箭头
+			 */
+			arrow: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 背景颜色
+			 */
+			color: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['visibleChange'],
+		data() {
+			return {
+				visible: false
+			}
+		},
+		computed: {
+			tooltipClass(): string {
+				const classes: string[] = ['bl-tooltip']
+				if (this.customClass) {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			tooltipStyle(): string {
+				return this.customStyle || ''
+			},
+			contentClass(): string {
+				const classes: string[] = ['bl-tooltip__content']
+				classes.push(`bl-tooltip__content--${this.placement}`)
+				if (this.visible) {
+					classes.push('bl-tooltip__content--visible')
+				}
+				return classes.join(' ')
+			},
+			contentStyle(): string {
+				const styles: string[] = []
+				if (this.color) {
+					styles.push(`background-color: ${this.color}`)
+					styles.push(`--bl-tooltip-bg: ${this.color}`)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleTouchStart(): void {
+				if (this.trigger == 'hover' || this.trigger == 'focus') {
+					this.show()
+				}
+			},
+			handleTouchEnd(): void {
+				if (this.trigger == 'hover' || this.trigger == 'focus') {
+					// 延迟隐藏，模拟 hover 效果
+					setTimeout(() => {
+						this.hide()
+					}, 200)
+				}
+			},
+			handleClick(): void {
+				if (this.trigger == 'click') {
+					this.visible = !this.visible
+					this.$emit('visibleChange', this.visible)
+				}
+			},
+			show(): void {
+				if (!this.visible) {
+					this.visible = true
+					this.$emit('visibleChange', true)
+				}
+			},
+			hide(): void {
+				if (this.visible) {
+					this.visible = false
+					this.$emit('visibleChange', false)
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+

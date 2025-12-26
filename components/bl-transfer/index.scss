@@ -1,0 +1,142 @@
+/**
+ * BlTransfer 组件样式
+ * 参考 Ant Design Transfer 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-transfer {
+	display: flex;
+	flex-direction: column;
+	gap: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-transfer__body {
+	display: flex;
+	flex-direction: row;
+	gap: var(--bl-spacing-md, $spacing-md);
+}
+
+.bl-transfer__list {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-large, $border-radius-large);
+	overflow: hidden;
+	background-color: var(--bl-background-color, $background-color);
+}
+
+.bl-transfer__list-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--bl-spacing-md, $spacing-md);
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+	background-color: var(--bl-background-color-light, #fafafa);
+}
+
+.bl-transfer__list-title {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-transfer__list-count {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+}
+
+.bl-transfer__list-body {
+	flex: 1;
+	overflow-y: auto;
+	max-height: 600rpx;
+}
+
+.bl-transfer__list-search {
+	padding: var(--bl-spacing-sm, $spacing-sm);
+	border-bottom: 2rpx solid var(--bl-border-color, $border-color);
+}
+
+.bl-transfer__list-content {
+	padding: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-transfer__item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	border-radius: var(--bl-border-radius, $border-radius);
+	cursor: pointer;
+	transition: all 0.3s;
+	
+	&:active:not(.bl-transfer__item--disabled):not(.bl-transfer__item--selected) {
+		background-color: var(--bl-background-color-light, #fafafa);
+	}
+}
+
+.bl-transfer__item--selected {
+	background-color: var(--bl-primary-color-1, $primary-color-1);
+}
+
+.bl-transfer__item--disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.bl-transfer__item-checkbox {
+	margin-right: var(--bl-spacing-sm, $spacing-sm);
+	flex-shrink: 0;
+}
+
+.bl-transfer__item-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-transfer__item-title {
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+.bl-transfer__item-description {
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 1.5715;
+	margin-top: var(--bl-spacing-xs, $spacing-xs);
+}
+
+.bl-transfer__operations {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: var(--bl-spacing-sm, $spacing-sm);
+	padding: var(--bl-spacing-md, $spacing-md) 0;
+}
+
+.bl-transfer__operation-btn {
+	min-width: 80rpx;
+}
+
+/* ==================== 移动端优化 ==================== */
+@media (max-width: 768px) {
+	.bl-transfer__body {
+		flex-direction: column;
+	}
+	
+	.bl-transfer__operations {
+		flex-direction: row;
+		justify-content: center;
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+}
+

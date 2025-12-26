@@ -1,0 +1,87 @@
+/**
+ * BlRate 组件样式
+ * 参考 Ant Design Rate 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-rate {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	font-size: 0;
+	line-height: 1;
+}
+
+.bl-rate__item {
+	display: inline-block;
+	position: relative;
+	margin-right: var(--bl-spacing-xs, $spacing-xs);
+	cursor: pointer;
+	transition: transform 0.2s;
+	
+	&:last-child {
+		margin-right: 0;
+	}
+	
+	&:active:not(.bl-rate__item--disabled):not(.bl-rate__item--readonly) {
+		transform: scale(0.9);
+	}
+}
+
+.bl-rate__item--disabled,
+.bl-rate__item--readonly {
+	cursor: not-allowed;
+}
+
+.bl-rate__star {
+	display: inline-block;
+	font-size: var(--bl-font-size-xl, $font-size-xl);
+	color: var(--bl-warning-color, $warning-color);
+	line-height: 1;
+	transition: color 0.2s;
+}
+
+.bl-rate__star--full {
+	color: var(--bl-warning-color, $warning-color);
+}
+
+.bl-rate__star--half {
+	position: relative;
+	
+	.bl-rate__star-front {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 50%;
+		overflow: hidden;
+		color: var(--bl-warning-color, $warning-color);
+	}
+	
+	.bl-rate__star-back {
+		color: var(--bl-rate-star-color, #f0f0f0);
+	}
+}
+
+.bl-rate__star--zero {
+	color: var(--bl-rate-star-color, #f0f0f0);
+}
+
+/* ==================== 禁用状态 ==================== */
+.bl-rate--disabled {
+	.bl-rate__star {
+		color: var(--bl-rate-star-color, #f0f0f0);
+		cursor: not-allowed;
+	}
+}
+
+/* ==================== 只读状态 ==================== */
+.bl-rate--readonly {
+	.bl-rate__item {
+		cursor: default;
+	}
+}
+

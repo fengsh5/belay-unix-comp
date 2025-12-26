@@ -1,0 +1,156 @@
+/**
+ * BlStep 组件样式
+ * 参考 Ant Design Steps 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-step {
+	position: relative;
+	color: var(--bl-text-color, $text-color);
+}
+
+/* ==================== 水平方向 ==================== */
+.bl-step--horizontal {
+	flex: 1;
+	margin-top: 40rpx;
+}
+
+.bl-step--horizontal--last {
+	position: absolute;
+	right: 16rpx;
+	width: auto;
+}
+
+/* ==================== 垂直方向 ==================== */
+.bl-step--vertical {
+	position: relative;
+}
+
+/* ==================== 描述文字 ==================== */
+.bl-step__desc {
+	display: inline-block;
+}
+
+.bl-step__desc--horizontal--other {
+	transform: translateX(-50%);
+}
+
+.bl-step__desc--vertical {
+	display: block;
+	padding-top: var(--bl-spacing-base, $spacing-base);
+}
+
+.bl-step__desc--vertical--inactive {
+	color: var(--bl-text-color-disabled, $text-color-disabled);
+}
+
+.bl-step__desc--vertical--first {
+	padding-top: 0;
+}
+
+/* ==================== 连接线 ==================== */
+.bl-step__line {
+	background-color: var(--bl-text-color-tertiary, $text-color-tertiary);
+	position: absolute;
+}
+
+.bl-step__line--horizontal {
+	display: inline-block;
+	width: 100%;
+	height: 2rpx;
+	top: -20rpx;
+	left: 0;
+}
+
+.bl-step__line--vertical {
+	display: inline-block;
+	width: 2rpx;
+	height: 100%;
+	top: 42rpx;
+	left: -26rpx;
+}
+
+.bl-step__line--vertical--first {
+	top: 22rpx;
+}
+
+/* ==================== 图标容器 ==================== */
+.bl-step__icon-box {
+	position: absolute;
+	background-color: var(--bl-background-color, $background-color);
+}
+
+.bl-step__icon-box--horizontal {
+	padding: 0 var(--bl-spacing-xs, $spacing-xs);
+	top: -20rpx;
+	transform: translate(-50%, -50%);
+}
+
+.bl-step__icon-box--horizontal--other {
+	left: 0;
+}
+
+.bl-step__icon-box--horizontal--first {
+	padding-left: 0;
+	left: 16rpx;
+}
+
+.bl-step__icon-box--horizontal--last {
+	padding-right: 0;
+	right: -18rpx;
+}
+
+.bl-step__icon-box--vertical {
+	top: 42rpx;
+	left: -26rpx;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+	text-align: center;
+	transform: translate(-50%, -50%);
+}
+
+.bl-step__icon-box--vertical--first {
+	top: 22rpx;
+	padding-top: 0;
+}
+
+.bl-step__icon-box--vertical--last {
+	padding-bottom: 0;
+}
+
+/* ==================== 圆形标志 ==================== */
+.bl-step__circle-flag {
+	display: block;
+	width: 24rpx;
+	height: 24rpx;
+	background-color: var(--bl-text-color-tertiary, $text-color-tertiary);
+	border-radius: 50%;
+}
+
+/* ==================== 图标标志 ==================== */
+.bl-step__icon-flag {
+	display: block;
+	width: 24rpx;
+	height: 24rpx;
+	border-radius: 50%;
+	background-size: 82% 90%;
+}
+
+/* ==================== 其他标志 ==================== */
+.bl-step__other-flag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 30rpx;
+	min-height: 30rpx;
+	background-color: var(--bl-text-color-tertiary, $text-color-tertiary);
+	border-radius: 50%;
+	color: var(--bl-white-color, $white-color);
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	line-height: 24rpx;
+	text-align: center;
+}
+

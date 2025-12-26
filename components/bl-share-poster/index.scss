@@ -1,0 +1,16 @@
+/**
+ * BlSharePoster 组件样式
+ * 参考 Ant Design Image 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-share-poster {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+

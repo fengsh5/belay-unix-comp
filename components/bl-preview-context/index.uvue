@@ -1,0 +1,58 @@
+<template>
+	<view></view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlPreviewContext',
+		props: {
+			/**
+			 * 图片列表
+			 */
+			urls: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前显示的图片索引
+			 */
+			current: {
+				type: Number,
+				default: 0
+			}
+		},
+		methods: {
+			/**
+			 * 预览图片
+			 */
+			preview(urls?: string[], current?: number): void {
+				const imageUrls = urls || (this.urls as string[])
+				const currentIndex = current != null ? current : this.current
+				
+				if (imageUrls.length > 0) {
+					const urlStrings = imageUrls.map(url => String(url))
+					uni.previewImage({
+						urls: urlStrings,
+						current: urlStrings[currentIndex] || urlStrings[0]
+					})
+				}
+			},
+			/**
+			 * 预览单个图片
+			 */
+			previewSingle(url: string): void {
+				if (url != null && url != '') {
+					uni.previewImage({
+						urls: [url],
+						current: url
+					})
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

@@ -1,0 +1,36 @@
+/**
+ * BlTabPanel 组件样式
+ * 参考 Ant Design Tabs.TabPane 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tab-panel {
+	width: 100%;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	padding: var(--bl-spacing-md, $spacing-md);
+}
+
+/* ==================== 面板状态 ==================== */
+
+/* 激活状态 */
+.bl-tab-panel--active {
+	display: block;
+}
+
+/* 非激活状态 */
+.bl-tab-panel:not(.bl-tab-panel--active) {
+	display: none;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-tab-panel {
+		padding: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

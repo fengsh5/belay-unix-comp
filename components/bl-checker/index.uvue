@@ -1,0 +1,125 @@
+<template>
+	<view :class="checkerClass" :style="checkerStyle" @click="handleClick">
+		<bl-checkbox
+			v-if="type === 'checkbox'"
+			:checked="checked"
+			:disabled="disabled"
+		></bl-checkbox>
+		<bl-radio
+			v-else-if="type === 'radio'"
+			:checked="checked"
+			:disabled="disabled"
+		></bl-radio>
+		<view class="bl-checker__content">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		name: 'BlChecker',
+		props: {
+			/**
+			 * 类型
+			 */
+			type: {
+				type: String,
+				default: 'checkbox' // checkbox | radio
+			},
+			/**
+			 * 是否选中
+			 */
+			checked: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 是否禁用
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 值
+			 */
+			value: {
+				type: [String, Number],
+				default: ''
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['change', 'click'],
+		computed: {
+			checkerClass(): string {
+				const classes: string[] = ['bl-checker']
+				if (this.checked) {
+					classes.push('bl-checker--checked')
+				}
+				if (this.disabled) {
+					classes.push('bl-checker--disabled')
+				}
+				if (this.customClass != '') {
+					classes.push(this.customClass)
+				}
+				return classes.join(' ')
+			},
+			checkerStyle(): string {
+				const styles: string[] = []
+				if (this.customStyle != '') {
+					styles.push(this.customStyle)
+				}
+				return styles.join('; ')
+			}
+		},
+		methods: {
+			handleClick(e: any): void {
+				if (this.disabled) {
+					return
+				}
+				this.$emit('change', !this.checked)
+				this.$emit('click', e)
+			}
+		}
+	}
+</script>
+
+<style>
+	.bl-checker {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 12px 16px;
+		background-color: #fff;
+		box-sizing: border-box;
+	}
+	
+	.bl-checker--disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	
+	.bl-checker__content {
+		flex: 1;
+		margin-left: 8px;
+	}
+</style>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

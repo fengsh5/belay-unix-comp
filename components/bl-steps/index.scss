@@ -1,0 +1,69 @@
+/**
+ * BlSteps 组件样式
+ * 参考 Ant Design Steps 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-steps {
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* ==================== 步骤条方向 ==================== */
+
+/* 水平方向 */
+.bl-steps--horizontal {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 0 var(--bl-spacing-md, $spacing-md);
+}
+
+/* 垂直方向 */
+.bl-steps--vertical {
+	display: flex;
+	flex-direction: column;
+	padding: 0 var(--bl-spacing-sm, $spacing-sm) 0 var(--bl-spacing-lg, $spacing-lg);
+}
+
+/* ==================== 步骤条尺寸 ==================== */
+
+/* 大尺寸 */
+.bl-steps--large {
+	&.bl-steps--horizontal {
+		padding: 0 var(--bl-spacing-lg, $spacing-lg);
+	}
+	
+	&.bl-steps--vertical {
+		padding: 0 var(--bl-spacing-md, $spacing-md) 0 var(--bl-spacing-xl, $spacing-xl);
+	}
+}
+
+/* 小尺寸 */
+.bl-steps--small {
+	&.bl-steps--horizontal {
+		padding: 0 var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	&.bl-steps--vertical {
+		padding: 0 var(--bl-spacing-xs, $spacing-xs) 0 var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-steps--horizontal {
+		padding: 0 var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	.bl-steps--vertical {
+		padding: 0 var(--bl-spacing-xs, $spacing-xs) 0 var(--bl-spacing-md, $spacing-md);
+	}
+}
+

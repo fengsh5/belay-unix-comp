@@ -1,0 +1,21 @@
+/**
+ * Belay-Unix 组件库 SCSS 入口文件
+ * 
+ * 导入所有样式文件，包括变量和 mixins
+ * 
+ * 使用方式：
+ * 在项目的 scss 文件中：
+ * @import '@/uni_modules/belay-unix/styles/index.scss';
+ * 
+ * 或者在使用 uni-app 的 vue 文件中：
+ * <style lang="scss">
+ *   @import '@/uni_modules/belay-unix/styles/index.scss';
+ * </style>
+ */
+
+/* 导入变量 */
+@import './variables.scss';
+
+/* 导入 mixins */
+@import './mixins.scss';
+

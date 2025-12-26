@@ -1,0 +1,48 @@
+/**
+ * BlBackTop 组件样式
+ * 参考 Ant Design BackTop 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-back-top {
+	position: fixed;
+	right: var(--bl-spacing-lg, $spacing-lg);
+	bottom: var(--bl-spacing-lg, $spacing-lg);
+	z-index: 999;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s, visibility 0.3s;
+}
+
+.bl-back-top--visible {
+	opacity: 1;
+	visibility: visible;
+}
+
+.bl-back-top__button {
+	width: 88rpx;
+	height: 88rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bl-primary-color, $primary-color);
+	border-radius: 50%;
+	box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+	transition: all 0.3s;
+	
+	&:active {
+		opacity: 0.8;
+		transform: scale(0.95);
+	}
+}
+
+.bl-back-top__icon {
+	color: var(--bl-text-color-inverse, #fff);
+}
+

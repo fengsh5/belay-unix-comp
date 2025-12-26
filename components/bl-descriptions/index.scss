@@ -1,0 +1,101 @@
+/**
+ * BlDescriptions 组件样式
+ * 参考 Ant Design Descriptions 组件设计（移动端适配）
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-descriptions {
+	display: flex;
+	flex-direction: column;
+}
+
+.bl-descriptions__title {
+	margin-bottom: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	font-weight: 500;
+	line-height: 1.5715;
+}
+
+.bl-descriptions__table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.bl-descriptions__row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.bl-descriptions__item {
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	min-width: 0;
+}
+
+.bl-descriptions__item-label {
+	flex-shrink: 0;
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	font-weight: 500;
+}
+
+.bl-descriptions__item-content {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	word-break: break-word;
+}
+
+/* ==================== 边框样式 ==================== */
+.bl-descriptions--bordered {
+	.bl-descriptions__item {
+		border: 2rpx solid var(--bl-border-color, $border-color);
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+	
+	.bl-descriptions__item-label {
+		border-right: 2rpx solid var(--bl-border-color, $border-color);
+		padding-right: var(--bl-spacing-md, $spacing-md);
+		margin-right: var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+.bl-descriptions--bordered .bl-descriptions__item:not(:last-child) {
+	border-bottom: none;
+}
+
+/* ==================== 尺寸 ==================== */
+
+/* 默认尺寸 */
+.bl-descriptions--default {
+	.bl-descriptions__item {
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+}
+
+.bl-descriptions--small {
+	.bl-descriptions__item {
+		padding: var(--bl-spacing-sm, $spacing-sm);
+	}
+	
+	.bl-descriptions__item-label,
+	.bl-descriptions__item-content {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+.bl-descriptions--middle {
+	.bl-descriptions__item {
+		padding: var(--bl-spacing-md, $spacing-md);
+	}
+}
+

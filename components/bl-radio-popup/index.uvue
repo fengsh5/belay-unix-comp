@@ -1,0 +1,101 @@
+<template>
+	<bl-popup
+		:visible="visible"
+		:overlay-closable="overlayClosable"
+		position="bottom"
+		:round="round"
+		@close="handleClose"
+	>
+		<view class="bl-radiopopup__header" v-if="title != null && title != ''">
+			<text class="bl-radiopopup__title">{{ title }}</text>
+			<bl-icon name="close" class="bl-radiopopup__close" @click="handleClose"></bl-icon>
+		</view>
+		<view class="bl-radiopopup__content">
+			<bl-radio-group :value="value" @change="handleChange">
+				<view 
+					v-for="(option, index) in options" 
+					:key="index"
+					class="bl-radiopopup__item"
+				>
+					<bl-radio
+						:value="option.value"
+						:label="option.label"
+						:disabled="option.disabled || false"
+					></bl-radio>
+				</view>
+			</bl-radio-group>
+		</view>
+	</bl-popup>
+</template>
+
+<script lang="uts">
+	type RadioOption = {
+		label: string
+		value: string | number
+		disabled?: boolean
+	}
+	
+	export default {
+		name: 'BlRadioPopup',
+		props: {
+			/**
+			 * 是否显示
+			 */
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 标题
+			 */
+			title: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 选项列表
+			 */
+			options: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前选中的值
+			 */
+			value: {
+				type: [String, Number],
+				default: null
+			},
+			/**
+			 * 是否显示圆角
+			 */
+			round: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 点击遮罩层是否可关闭
+			 */
+			overlayClosable: {
+				type: Boolean,
+				default: true
+			}
+		},
+		emits: ['close', 'change', 'update:visible'],
+		methods: {
+			handleClose(): void {
+				this.$emit('update:visible', false)
+				this.$emit('close')
+			},
+			handleChange(value: string | number): void {
+				this.$emit('change', value)
+				this.handleClose()
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	/* 引入组件样式 */
+	@import './index.scss';
+</style>

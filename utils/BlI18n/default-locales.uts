@@ -1,0 +1,33 @@
+/**
+ * 默认语言资源初始化
+ * 参考 Ant Design 的语言包加载方式
+ */
+
+import { BlI18n } from './index.uts'
+import { zhCN, enUS } from '../../locales/index.uts'
+
+/**
+ * 初始化默认语言资源（从代码中加载）
+ * 自动注册中文和英文语言包
+ */
+export function initDefaultLocales(): void {
+	// 注册中文语言包
+	BlI18n.registerLocale('zh-CN', zhCN)
+	
+	// 注册英文语言包
+	BlI18n.registerLocale('en-US', enUS)
+}
+
+/**
+ * 加载默认语言资源（从本地文件加载）
+ * 优先从 UTS 文件加载配置，失败则使用代码中的默认值
+ * 
+ * 注意：现在语言包已统一使用 .uts 文件，不再使用 JSON 文件
+ */
+export async function loadDefaultLocales(): Promise<void> {
+	// 直接使用代码中的默认值（UTS 文件）
+	initDefaultLocales()
+	
+	// 如果需要从外部文件加载，可以使用 loadLocaleFromFile
+	// 但现在语言包已统一为 .uts 文件，所以直接使用代码中的值即可
+}

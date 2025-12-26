@@ -1,0 +1,102 @@
+/**
+ * BlCheckbox 组件样式
+ * 参考 Ant Design Checkbox 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-checkbox__wrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-xs, $spacing-xs) 0;
+	cursor: pointer;
+	user-select: none;
+	
+	&--disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+	
+	&--reverse {
+		flex-direction: row-reverse;
+	}
+}
+
+.bl-checkbox {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36rpx;
+	height: 36rpx;
+	border: 4rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius-small, $border-radius-small);
+	background-color: var(--bl-background-color, $background-color);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	position: relative;
+	
+	&--active {
+		border-color: var(--bl-primary-color, $primary-color);
+		background-color: var(--bl-primary-color, $primary-color);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&--disabled {
+		cursor: not-allowed;
+		border-color: var(--bl-border-color-light, $border-color-light);
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+		opacity: 0.6;
+	}
+	
+	&--round {
+		border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	}
+}
+
+.bl-checkbox__content {
+	flex: 1;
+	color: var(--bl-text-color, $text-color);
+	padding-left: 16rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+	
+	&--reverse {
+		padding-right: 16rpx;
+		padding-left: 0;
+	}
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-checkbox--large {
+	width: 44rpx;
+	height: 44rpx;
+	
+	.bl-checkbox__content {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 小尺寸 */
+.bl-checkbox--small {
+	width: 28rpx;
+	height: 28rpx;
+	
+	.bl-checkbox__content {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-checkbox {
+		width: 32rpx;
+		height: 32rpx;
+	}
+}
+

@@ -1,0 +1,75 @@
+/**
+ * BlChecker 组件样式
+ * 参考 Ant Design Checkbox/Radio 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-checker {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: var(--bl-spacing-sm, $spacing-sm) var(--bl-spacing-md, $spacing-md);
+	background-color: var(--bl-background-color, $background-color);
+	border-bottom: 2rpx solid var(--bl-border-color-lighter, $border-color-lighter);
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	box-sizing: border-box;
+	
+	&:not(.bl-checker--disabled):active {
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	}
+}
+
+.bl-checker__content {
+	flex: 1;
+	margin-left: var(--bl-spacing-xs, $spacing-xs);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: 1.5715;
+}
+
+/* ==================== 选择器类型 ==================== */
+
+/* 复选框类型 */
+.bl-checker--checkbox {
+	/* checkbox 类型使用基础样式 */
+}
+
+/* 单选框类型 */
+.bl-checker--radio {
+	/* radio 类型使用基础样式 */
+}
+
+/* ==================== 选择器状态 ==================== */
+
+/* 选中状态 */
+.bl-checker--checked {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	
+	.bl-checker__content {
+		color: var(--bl-primary-color, $primary-color);
+	}
+}
+
+/* 禁用状态 */
+.bl-checker--disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	
+	&:active {
+		background-color: var(--bl-background-color, $background-color);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-checker {
+		padding: var(--bl-spacing-xs, $spacing-xs) var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

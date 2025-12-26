@@ -1,0 +1,68 @@
+/**
+ * 从本地文件加载语言资源
+ * 
+ * 注意：现在语言包已统一使用 .uts 文件，此函数主要用于兼容性
+ * 如果需要从外部 JSON 文件加载，可以使用此函数
+ */
+
+import { BlI18n, type Locale } from './index.uts'
+
+/**
+ * 加载语言资源文件（从 JSON 文件）
+ * @param localeCode 语言代码
+ * @param localePath 语言文件路径（可以使用 @/ 别名或相对路径）
+ * 
+ * 注意：推荐使用 .uts 文件，此函数主要用于从外部 JSON 文件加载
+ */
+export async function loadLocaleFromFile(localeCode: string, localePath: string): Promise<boolean> {
+	try {
+		// 在 uni-app x 中，使用 uni.request 来加载 JSON 文件
+		// 路径可以是相对路径（相对于项目根目录）或使用 @/ 别名
+		const res = await new Promise<any>((resolve, reject) => {
+			uni.request({
+				url: localePath,
+				method: 'GET',
+				success: resolve,
+				fail: reject
+			})
+		}) as any
+		
+		if (res.statusCode == 200 && res.data != null) {
+			const localeData = res.data as any
+			
+			// 确保包含 locale 和 localeName 字段
+			const locale: Locale = {
+				locale: localeCode,
+				localeName: localeCode,
+				...localeData
+			}
+			
+			// 将 JSON 中的 {min} 格式转换为 {{min}} 格式
+			convertPlaceholders(locale)
+			
+			// 注册语言包
+			BlI18n.registerLocale(localeCode, locale)
+			return true
+		}
+		return false
+	} catch (e) {
+		console.error(`[BlI18n] 加载语言文件失败: ${localePath}`, e)
+		return false
+	}
+}
+
+/**
+ * 转换占位符格式：将 {key} 转换为 {{key}}
+ */
+function convertPlaceholders(obj: any): void {
+	for (const key in obj) {
+		const value = obj[key]
+		if (typeof value == 'string') {
+			// 将 {min} 格式转换为 {{min}} 格式
+			obj[key] = value.replace(/\{([^}]+)\}/g, '{{$1}}')
+		} else if (value != null && typeof value == 'object') {
+			// 递归处理嵌套对象
+			convertPlaceholders(value)
+	}
+}
+}

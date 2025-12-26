@@ -1,0 +1,220 @@
+/**
+ * BlTag 组件样式
+ * 参考 Ant Design Tag 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-tag {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	line-height: 1.5715;
+	white-space: nowrap;
+	border-radius: var(--bl-border-radius, $border-radius);
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	
+	/* 文本样式 */
+	.bl-tag__text {
+		display: inline-block;
+		font-size: inherit;
+		line-height: inherit;
+	}
+	
+	/* 图标样式 */
+	.bl-tag__icon {
+		margin-right: 8rpx;
+		display: inline-flex;
+		align-items: center;
+	}
+	
+	/* 关闭按钮样式 */
+	.bl-tag__close {
+		margin-left: 8rpx;
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		transition: all 0.3s;
+		
+		&:active {
+			opacity: 0.6;
+		}
+	}
+}
+
+/* ==================== 标签类型 ==================== */
+
+/* 默认标签 */
+.bl-tag--default {
+	background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	border: 2rpx solid var(--bl-border-color-light, $border-color-light);
+	color: var(--bl-text-color, $text-color);
+}
+
+/* 主色标签 (primary) */
+.bl-tag--primary {
+	background-color: var(--bl-primary-color-4, $primary-color-4);
+	border: 2rpx solid var(--bl-primary-color-3, $primary-color-3);
+	color: var(--bl-primary-color, $primary-color);
+}
+
+/* 成功标签 (success) */
+.bl-tag--success {
+	background-color: var(--bl-success-color-4, $success-color-4);
+	border: 2rpx solid var(--bl-success-color-3, $success-color-3);
+	color: var(--bl-success-color, $success-color);
+}
+
+/* 警告标签 (warning) */
+.bl-tag--warning {
+	background-color: var(--bl-warning-color-4, $warning-color-4);
+	border: 2rpx solid var(--bl-warning-color-3, $warning-color-3);
+	color: var(--bl-warning-color, $warning-color);
+}
+
+/* 危险标签 (danger) */
+.bl-tag--danger {
+	background-color: var(--bl-error-color-4, $error-color-4);
+	border: 2rpx solid var(--bl-error-color-3, $error-color-3);
+	color: var(--bl-error-color, $error-color);
+}
+
+/* 信息标签 (info) */
+.bl-tag--info {
+	background-color: var(--bl-info-color-4, $info-color-4);
+	border: 2rpx solid var(--bl-info-color-3, $info-color-3);
+	color: var(--bl-info-color, $info-color);
+}
+
+/* ==================== 标签效果 ==================== */
+
+/* 深色效果 (dark) */
+.bl-tag--dark {
+	&.bl-tag--default {
+		background-color: var(--bl-gray-2, $gray-2);
+		border-color: var(--bl-gray-2, $gray-2);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&.bl-tag--primary {
+		background-color: var(--bl-primary-color, $primary-color);
+		border-color: var(--bl-primary-color, $primary-color);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&.bl-tag--success {
+		background-color: var(--bl-success-color, $success-color);
+		border-color: var(--bl-success-color, $success-color);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&.bl-tag--warning {
+		background-color: var(--bl-warning-color, $warning-color);
+		border-color: var(--bl-warning-color, $warning-color);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&.bl-tag--danger {
+		background-color: var(--bl-error-color, $error-color);
+		border-color: var(--bl-error-color, $error-color);
+		color: var(--bl-white-color, $white-color);
+	}
+	
+	&.bl-tag--info {
+		background-color: var(--bl-info-color, $info-color);
+		border-color: var(--bl-info-color, $info-color);
+		color: var(--bl-white-color, $white-color);
+	}
+}
+
+/* 浅色效果 (light) - 默认 */
+.bl-tag--light {
+	/* 已在类型中定义 */
+}
+
+/* 镂空效果 (plain) */
+.bl-tag--plain {
+	background-color: transparent;
+	
+	&.bl-tag--default {
+		border-color: var(--bl-border-color, $border-color);
+		color: var(--bl-text-color, $text-color);
+	}
+	
+	&.bl-tag--primary {
+		border-color: var(--bl-primary-color, $primary-color);
+		color: var(--bl-primary-color, $primary-color);
+	}
+	
+	&.bl-tag--success {
+		border-color: var(--bl-success-color, $success-color);
+		color: var(--bl-success-color, $success-color);
+	}
+	
+	&.bl-tag--warning {
+		border-color: var(--bl-warning-color, $warning-color);
+		color: var(--bl-warning-color, $warning-color);
+	}
+	
+	&.bl-tag--danger {
+		border-color: var(--bl-error-color, $error-color);
+		color: var(--bl-error-color, $error-color);
+	}
+	
+	&.bl-tag--info {
+		border-color: var(--bl-info-color, $info-color);
+		color: var(--bl-info-color, $info-color);
+	}
+}
+
+/* ==================== 标签尺寸 ==================== */
+
+/* 大尺寸 (large) */
+.bl-tag--large {
+	padding: 12rpx 32rpx;
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	height: 56rpx;
+}
+
+/* 中等尺寸 (medium) - 默认 */
+.bl-tag--medium {
+	padding: 8rpx 24rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	height: 48rpx;
+}
+
+/* 小尺寸 (small) */
+.bl-tag--small {
+	padding: 4rpx 16rpx;
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	height: 40rpx;
+	
+	.bl-tag__icon {
+		margin-right: 4rpx;
+	}
+	
+	.bl-tag__close {
+		margin-left: 4rpx;
+	}
+}
+
+/* ==================== 标签形状 ==================== */
+
+/* 圆角标签 */
+.bl-tag--round {
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-tag {
+		padding: 6rpx 20rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

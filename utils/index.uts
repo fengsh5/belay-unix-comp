@@ -1,0 +1,35 @@
+/**
+ * bl-components 工具库统一导出
+ * 
+ * 所有工具模块统一从这里导出，方便使用
+ */
+
+// ==================== BlI18n 国际化工具 ====================
+/**
+ * 国际化系统
+ * 支持多语言注册和切换
+ */
+export * from './BlI18n/index.uts'
+
+// ==================== BlEventBus 事件总线 ====================
+/**
+ * 事件总线工具类
+ * 用于组件间通信
+ */
+export * from './BlEventBus/index.uts'
+
+// ==================== BlPageContext 页面上下文 ====================
+/**
+ * 页面上下文工具
+ * 提供页面生命周期 hooks 和路由信息
+ */
+export * from './BlPageContext/hooks.uts'
+export type { PageState, PageContextValue } from './BlPageContext/index.uvue'
+
+// ==================== BlTheme 主题切换工具 ====================
+/**
+ * 主题切换系统
+ * 支持切换 SCSS 变量定义的主题（浅色/深色）
+ */
+export * from './BlTheme/index.uts'
+

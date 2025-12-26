@@ -1,0 +1,275 @@
+/**
+ * BlButton 组件样式
+ * 参考 Ant Design Button 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-button {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1.5715;
+	white-space: nowrap;
+	cursor: pointer;
+	user-select: none;
+	border: 2rpx solid var(--bl-border-color, $border-color);
+	border-radius: var(--bl-border-radius, $border-radius);
+	background-color: var(--bl-background-color, $background-color);
+	color: var(--bl-text-color, $text-color);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	padding: 8rpx 24rpx;
+	transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	text-align: center;
+	outline: none;
+	
+	/* 移除默认样式 */
+	&::after {
+		border: none;
+	}
+	
+	/* 文本样式 */
+	.bl-button__text {
+		display: inline-block;
+	}
+}
+
+/* ==================== 按钮类型 ==================== */
+
+/* 主按钮 (primary) */
+.bl-button--primary {
+	background-color: var(--bl-primary-color, $primary-color);
+	border-color: var(--bl-primary-color, $primary-color);
+	color: var(--bl-white-color, $white-color);
+	
+	&:not(.bl-button--disabled):active {
+		background-color: var(--bl-primary-color-1, $primary-color-1);
+		border-color: var(--bl-primary-color-1, $primary-color-1);
+	}
+}
+
+/* 成功按钮 (success) */
+.bl-button--success {
+	background-color: var(--bl-success-color, $success-color);
+	border-color: var(--bl-success-color, $success-color);
+	color: var(--bl-white-color, $white-color);
+	
+	&:not(.bl-button--disabled):active {
+		background-color: var(--bl-success-color-1, $success-color-1);
+		border-color: var(--bl-success-color-1, $success-color-1);
+	}
+}
+
+/* 警告按钮 (warning) */
+.bl-button--warning {
+	background-color: var(--bl-warning-color, $warning-color);
+	border-color: var(--bl-warning-color, $warning-color);
+	color: var(--bl-white-color, $white-color);
+	
+	&:not(.bl-button--disabled):active {
+		background-color: var(--bl-warning-color-1, $warning-color-1);
+		border-color: var(--bl-warning-color-1, $warning-color-1);
+	}
+}
+
+/* 危险按钮 (danger) */
+.bl-button--danger {
+	background-color: var(--bl-error-color, $error-color);
+	border-color: var(--bl-error-color, $error-color);
+	color: var(--bl-white-color, $white-color);
+	
+	&:not(.bl-button--disabled):active {
+		background-color: var(--bl-error-color-1, $error-color-1);
+		border-color: var(--bl-error-color-1, $error-color-1);
+	}
+}
+
+/* 虚线按钮 (dashed) */
+.bl-button--dashed {
+	border-style: dashed;
+}
+
+/* 文本按钮 (text) */
+.bl-button--text {
+	border-color: transparent;
+	background-color: transparent;
+	box-shadow: none;
+	
+	&:not(.bl-button--disabled):active {
+		background-color: var(--bl-background-color-secondary, $background-color-secondary);
+	}
+}
+
+/* 链接按钮 (link) */
+.bl-button--link {
+	border-color: transparent;
+	background-color: transparent;
+	box-shadow: none;
+	color: var(--bl-primary-color, $primary-color);
+	
+	&:not(.bl-button--disabled):active {
+		opacity: 0.8;
+	}
+}
+
+/* ==================== 镂空按钮 (plain) ==================== */
+.bl-button--plain {
+	background-color: transparent;
+	
+	&.bl-button--primary {
+		color: var(--bl-primary-color, $primary-color);
+		border-color: var(--bl-primary-color, $primary-color);
+		
+		&:not(.bl-button--disabled):active {
+			background-color: var(--bl-primary-color-4, $primary-color-4);
+		}
+	}
+	
+	&.bl-button--success {
+		color: var(--bl-success-color, $success-color);
+		border-color: var(--bl-success-color, $success-color);
+		
+		&:not(.bl-button--disabled):active {
+			background-color: var(--bl-success-color-4, $success-color-4);
+		}
+	}
+	
+	&.bl-button--warning {
+		color: var(--bl-warning-color, $warning-color);
+		border-color: var(--bl-warning-color, $warning-color);
+		
+		&:not(.bl-button--disabled):active {
+			background-color: var(--bl-warning-color-4, $warning-color-4);
+		}
+	}
+	
+	&.bl-button--danger {
+		color: var(--bl-error-color, $error-color);
+		border-color: var(--bl-error-color, $error-color);
+		
+		&:not(.bl-button--disabled):active {
+			background-color: var(--bl-error-color-4, $error-color-4);
+		}
+	}
+}
+
+/* ==================== 按钮尺寸 ==================== */
+
+/* 大尺寸 (large) */
+.bl-button--large {
+	padding: 12rpx 32rpx;
+	font-size: var(--bl-font-size-lg, $font-size-lg);
+	height: 88rpx;
+}
+
+/* 中等尺寸 (medium) */
+.bl-button--medium {
+	padding: 10rpx 28rpx;
+	font-size: 30rpx;
+	height: 76rpx;
+}
+
+/* 默认尺寸 (default) */
+.bl-button--default {
+	padding: 8rpx 24rpx;
+	font-size: var(--bl-font-size-base, $font-size-base);
+	height: 64rpx;
+}
+
+/* 小尺寸 (small) */
+.bl-button--small {
+	padding: 4rpx 16rpx;
+	font-size: var(--bl-font-size-sm, $font-size-sm);
+	height: 48rpx;
+}
+
+/* 迷你尺寸 (mini) */
+.bl-button--mini {
+	padding: 2rpx 12rpx;
+	font-size: var(--bl-font-size-xs, $font-size-xs);
+	height: 40rpx;
+}
+
+/* ==================== 按钮形状 ==================== */
+
+/* 圆形按钮 (circle) */
+.bl-button--circle {
+	border-radius: var(--bl-border-radius-circle, $border-radius-circle);
+	padding: 0;
+	width: 64rpx;
+	height: 64rpx;
+	
+	&.bl-button--large {
+		width: 88rpx;
+		height: 88rpx;
+	}
+	
+	&.bl-button--medium {
+		width: 76rpx;
+		height: 76rpx;
+	}
+	
+	&.bl-button--small {
+		width: 48rpx;
+		height: 48rpx;
+	}
+	
+	&.bl-button--mini {
+		width: 40rpx;
+		height: 40rpx;
+	}
+}
+
+/* 圆角按钮 (round) */
+.bl-button--round {
+	border-radius: var(--bl-border-radius-round, $border-radius-round);
+}
+
+/* ==================== 按钮状态 ==================== */
+
+/* 禁用状态 */
+.bl-button--disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	
+	&:active {
+		transform: none;
+	}
+}
+
+/* 加载状态 */
+.bl-button--loading {
+	position: relative;
+	cursor: default;
+	pointer-events: none;
+	
+	.bl-button__text {
+		opacity: 0.6;
+	}
+}
+
+/* 块级按钮 (block) */
+.bl-button--block {
+	width: 100%;
+	display: flex;
+}
+
+/* ==================== 图标按钮 ==================== */
+.bl-button__icon {
+	margin-right: 8rpx;
+	display: inline-flex;
+	align-items: center;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-button {
+		padding: 6rpx 20rpx;
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+

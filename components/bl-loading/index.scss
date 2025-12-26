@@ -1,0 +1,109 @@
+/**
+ * BlLoading 组件样式
+ * 参考 Ant Design Spin 组件设计
+ * 
+ * 使用 CSS 变量支持运行时主题切换，SCSS 变量作为后备值
+ */
+
+@import '@/uni_modules/belay-unix/styles/variables.scss';
+
+/* ==================== 基础样式 ==================== */
+.bl-loading {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: var(--bl-spacing-lg, $spacing-lg) var(--bl-spacing-md, $spacing-md);
+	box-sizing: border-box;
+}
+
+.bl-loading__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--bl-primary-color, $primary-color);
+}
+
+.bl-loading__message {
+	margin-top: var(--bl-spacing-md, $spacing-md);
+	color: var(--bl-text-color-secondary, $text-color-secondary);
+	font-size: var(--bl-font-size-base, $font-size-base);
+	line-height: var(--bl-line-height-base, $line-height-base);
+	text-align: center;
+}
+
+/* ==================== 加载状态类型 ==================== */
+
+/* 内联加载 */
+.bl-loading--inline {
+	display: inline-flex;
+	flex-direction: row;
+	padding: 0;
+	
+	.bl-loading__message {
+		margin-top: 0;
+		margin-left: var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+
+/* 块级加载 */
+.bl-loading--block {
+	width: 100%;
+	min-height: 200rpx;
+}
+
+/* 全屏加载 */
+.bl-loading--fullscreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.9);
+	z-index: var(--bl-z-index-modal, $z-index-modal);
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 大尺寸 */
+.bl-loading--large {
+	.bl-loading__icon {
+		font-size: 48rpx;
+	}
+	
+	.bl-loading__message {
+		font-size: var(--bl-font-size-lg, $font-size-lg);
+	}
+}
+
+/* 默认尺寸 */
+.bl-loading--default {
+	.bl-loading__icon {
+		font-size: 40rpx;
+	}
+	
+	.bl-loading__message {
+		font-size: var(--bl-font-size-base, $font-size-base);
+	}
+}
+
+/* 小尺寸 */
+.bl-loading--small {
+	.bl-loading__icon {
+		font-size: 32rpx;
+	}
+	
+	.bl-loading__message {
+		font-size: var(--bl-font-size-sm, $font-size-sm);
+	}
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1536rpx) {
+	.bl-loading {
+		padding: var(--bl-spacing-md, $spacing-md) var(--bl-spacing-sm, $spacing-sm);
+	}
+}
+

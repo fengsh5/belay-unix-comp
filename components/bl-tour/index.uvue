@@ -1,0 +1,262 @@
+<template>
+	<view v-if="visible" class="bl-tour" :style="tourStyle">
+		<view 
+			v-if="showMask"
+			class="bl-tour__mask"
+			:style="maskStyle"
+			@click="handleMaskClick"
+		></view>
+		<view 
+			v-if="currentStep"
+			:class="['bl-tour__popup', `bl-tour__popup--${currentStep.placement || 'bottom'}`]"
+			:style="popupStyle"
+		>
+			<view class="bl-tour__header">
+				<text v-if="currentStep.title" class="bl-tour__title">{{ currentStep.title }}</text>
+				<view v-if="closable" class="bl-tour__close" @click="handleClose">
+					<bl-icon 
+						name="close" 
+						:size="20"
+						color="var(--bl-text-color-secondary, #8c8c8c)"
+					></bl-icon>
+				</view>
+			</view>
+			<view class="bl-tour__content">
+				<slot name="step" :step="currentStep" :current="currentIndex">
+					<slot :step="currentStep" :current="currentIndex">
+						<text v-if="currentStep.description">{{ currentStep.description }}</text>
+						<text v-else-if="currentStep.content">{{ currentStep.content }}</text>
+					</slot>
+				</slot>
+			</view>
+			<view class="bl-tour__footer">
+				<view class="bl-tour__indicators">
+					<view 
+						v-for="(step, index) in steps" 
+						:key="index"
+						:class="['bl-tour__indicator', index == currentIndex ? 'bl-tour__indicator--active' : '']"
+					></view>
+				</view>
+				<view class="bl-tour__actions">
+					<bl-button 
+						v-if="currentIndex > 0"
+						size="small"
+						@click="handlePrev"
+					>
+						{{ prevTextValue }}
+					</bl-button>
+					<bl-button 
+						v-if="currentIndex < steps.length - 1"
+						type="primary"
+						size="small"
+						@click="handleNext"
+					>
+						{{ nextTextValue }}
+					</bl-button>
+					<bl-button 
+						v-else
+						type="primary"
+						size="small"
+						@click="handleFinish"
+					>
+						{{ finishTextValue }}
+					</bl-button>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { t } from '../../utils/BlI18n/index.uts'
+	
+	export default {
+		name: 'BlTour',
+		props: {
+			/**
+			 * 是否显示引导
+			 */
+			open: {
+				type: Boolean,
+				default: false
+			},
+			/**
+			 * 引导步骤
+			 */
+			steps: {
+				type: Array,
+				default: () => []
+			},
+			/**
+			 * 当前步骤索引
+			 */
+			current: {
+				type: Number,
+				default: null
+			},
+			/**
+			 * 默认当前步骤索引
+			 */
+			defaultCurrent: {
+				type: Number,
+				default: 0
+			},
+			/**
+			 * 是否显示遮罩层
+			 */
+			mask: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 遮罩层样式
+			 */
+			maskStyle: {
+				type: Object,
+				default: () => ({})
+			},
+			/**
+			 * 是否显示关闭按钮
+			 */
+			closable: {
+				type: Boolean,
+				default: true
+			},
+			/**
+			 * 自定义样式
+			 */
+			customStyle: {
+				type: String,
+				default: ''
+			},
+			/**
+			 * 自定义类名
+			 */
+			customClass: {
+				type: String,
+				default: ''
+			}
+		},
+		emits: ['close', 'change', 'finish', 'update:open', 'update:current'],
+		data() {
+			return {
+				visible: false as boolean,
+				internalCurrent: 0 as number
+			}
+		},
+		computed: {
+			tourStyle(): string {
+				return this.customStyle || ''
+			},
+			showMask(): boolean {
+				if (typeof this.mask == 'boolean') {
+					return this.mask
+				}
+				return true
+			},
+			maskStyleComputed(): string {
+				const style: string[] = []
+				if (this.maskStyle && typeof this.mask == 'object') {
+					// 处理遮罩层样式
+				}
+				return style.join('; ')
+			},
+			currentIndex(): number {
+				return this.current != null ? this.current : this.internalCurrent
+			},
+			currentStep(): any | null {
+				if (this.steps.length == 0 || this.currentIndex < 0 || this.currentIndex >= this.steps.length) {
+					return null
+				}
+				return this.steps[this.currentIndex] as any
+			},
+			popupStyle(): string {
+				if (this.currentStep && this.currentStep.style) {
+					const style: string[] = []
+					for (const key in this.currentStep.style) {
+						style.push(`${key}: ${this.currentStep.style[key]}`)
+					}
+					return style.join('; ')
+				}
+				return ''
+			},
+			prevTextValue(): string {
+				return t('comp.prev')
+			},
+			nextTextValue(): string {
+				return t('comp.next')
+			},
+			finishTextValue(): string {
+				return t('comp.finish')
+			}
+		},
+		watch: {
+			open(newVal: boolean): void {
+				this.visible = newVal
+			},
+			current(newVal: number | null): void {
+				if (newVal != null) {
+					this.internalCurrent = newVal
+				}
+			}
+		},
+		created() {
+			this.visible = this.open
+			if (this.current == null) {
+				this.internalCurrent = this.defaultCurrent
+			}
+		},
+		methods: {
+			handleClose(): void {
+				this.visible = false
+				if (this.open == null) {
+					// 非受控模式
+				}
+				this.$emit('update:open', false)
+				this.$emit('close')
+			},
+			handleMaskClick(): void {
+				// 点击遮罩层不关闭，需要点击关闭按钮
+			},
+			handleNext(): void {
+				if (this.currentIndex < this.steps.length - 1) {
+					const nextIndex = this.currentIndex + 1
+					this.updateCurrent(nextIndex)
+				}
+			},
+			handlePrev(): void {
+				if (this.currentIndex > 0) {
+					const prevIndex = this.currentIndex - 1
+					this.updateCurrent(prevIndex)
+				}
+			},
+			handleFinish(): void {
+				this.handleClose()
+				this.$emit('finish')
+			},
+			updateCurrent(index: number): void {
+				if (this.current == null) {
+					this.internalCurrent = index
+				}
+				this.$emit('update:current', index)
+				this.$emit('change', index)
+			},
+			next(): void {
+				this.handleNext()
+			},
+			prev(): void {
+				this.handlePrev()
+			},
+			goTo(step: number): void {
+				if (step >= 0 && step < this.steps.length) {
+					this.updateCurrent(step)
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import './index.scss';
+</style>
+
