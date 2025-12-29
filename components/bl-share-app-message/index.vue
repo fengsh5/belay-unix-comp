@@ -123,7 +123,7 @@ export default {
 		},
 		shareData() {
 			if (this.payload) {
-				if (typeof this.payload === 'function') {
+				if (typeof this.payload == 'function') {
 					return this.payload() || {}
 				}
 				return this.payload

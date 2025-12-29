@@ -113,7 +113,12 @@ export { default as BlPage } from './bl-page/index.uvue'
 export { default as BlPageStyle } from './bl-page-style/index.uvue'
 export { default as BlRow } from './bl-row/index.uvue'
 export { default as BlScrollView } from './bl-scroll-view/index.uvue'
+// #ifdef APP
 export { default as BlListView } from './bl-list-view/index.uvue'
+// #endif
+// #ifdef H5 || MP
+export { default as BlListView } from './bl-list-view/index.vue'
+// #endif
 export { default as BlSpace } from './bl-space/index.uvue'
 export { default as BlComponentNotFound } from './bl-component-not-found/index.uvue'
 export { default as BlPickerCascaderSelector } from './bl-picker-cascader-selector/index.uvue'

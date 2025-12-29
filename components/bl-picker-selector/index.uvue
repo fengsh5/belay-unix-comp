@@ -181,7 +181,7 @@
 					}
 				} else if (selectedItem != null) {
 					if (typeof selectedItem == 'string' || typeof selectedItem == 'number') {
-						value = selectedItem
+					value = selectedItem
 					}
 				}
 				

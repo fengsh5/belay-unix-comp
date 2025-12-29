@@ -147,10 +147,10 @@ export default {
 		 * 获取像素值
 		 */
 		getPixelValue(value) {
-			if (typeof value === 'number') {
+			if (typeof value == 'number') {
 				return value
 			}
-			if (typeof value === 'string') {
+			if (typeof value == 'string') {
 				if (value.endsWith('px')) {
 					const num = Number(value.replace('px', ''))
 					if (!isNaN(num)) {
@@ -541,10 +541,5 @@ export default {
 <style lang="scss">
 	/* 引入组件样式 */
 	@import './index.scss';
-</style>
-
-.bl-posterpainter canvas {
-	display: block;
-}
 </style>
 

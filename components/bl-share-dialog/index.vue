@@ -20,11 +20,11 @@
 				<view class="bl-share-dialog__container" @click.stop="handlePrevent">
 					<!-- 海报区域 -->
 					<view v-if="posterShareable" class="bl-share-dialog__poster" @click.stop="handlePrevent">
-						<bl-poster-painter 
+						<bl-share-poster 
 							v-if="visible && memoizedPoster"
-							:palette="memoizedPoster"
-							@complete="handleImageReady"
-						></bl-poster-painter>
+							:value="memoizedPoster"
+							@image-ready="handleImageReady"
+						></bl-share-poster>
 						<bl-spinner v-if="posterShareable && !posterImg"></bl-spinner>
 					</view>
 					
@@ -146,14 +146,14 @@ export default {
 				return null
 			}
 		if (typeof this.poster == 'function') {
-			// 如果是函数，需要异步处理
-			try {
-				return this.poster()
-			} catch (e) {
-				console.error('[BlShareDialog] poster function error:', e)
-				return null
+				// 如果是函数，需要异步处理
+				try {
+					return this.poster()
+				} catch (e) {
+					console.error('[BlShareDialog] poster function error:', e)
+					return null
+				}
 			}
-		}
 			return this.poster
 		},
 		containerStyle() {
@@ -197,13 +197,13 @@ export default {
 				return
 			}
 			
-		// 调用 onBeforeOpen 钩子
+			// 调用 onBeforeOpen 钩子
 		if (this.onBeforeOpen && typeof this.onBeforeOpen == 'function') {
-			const result = this.onBeforeOpen()
+				const result = this.onBeforeOpen()
 			if (result == false) {
-				return
+					return
+				}
 			}
-		}
 			
 			this.$emit('update:visible', true)
 			this.$emit('open')

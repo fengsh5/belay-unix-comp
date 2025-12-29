@@ -116,7 +116,7 @@
 			handleClick(e: TabButtonEvent): void {
 				this.$emit('click', e)
 			}
-		}
+	}
 }
 </script>
 

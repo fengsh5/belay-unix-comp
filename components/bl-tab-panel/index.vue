@@ -102,13 +102,13 @@ export default {
 	watch: {
 		'tabs.activeKey'(newVal) {
 			const key = this.name || String(this.idx)
-			this.active = newVal === key
+			this.active = newVal == key
 		}
 	},
 	mounted() {
 		if (this.tabs) {
 			const key = this.name || String(this.idx)
-			this.active = this.tabs.activeKey === key
+			this.active = this.tabs.activeKey == key
 		}
 	}
 }

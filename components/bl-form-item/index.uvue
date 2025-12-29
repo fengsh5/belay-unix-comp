@@ -19,13 +19,32 @@
 </template>
 
 <script lang="uts">
+	// 表单验证规则类型
+	type FormRule = {
+		required?: boolean
+		message?: string
+		validator?: (value: any) => boolean | string
+		trigger?: string | string[]
+		[key: string]: string | number | boolean | ((value: any) => boolean | string) | string[] | null | undefined
+	}
+
+	// 表单模型类型
+	type FormModel = {
+		[key: string]: string | number | boolean | null | undefined
+	}
+
+	// 表单规则集合类型
+	type FormRules = {
+		[key: string]: FormRule | FormRule[]
+	}
+
 	// 表单上下文类型
 	type FormContext = {
-		model?: Record<string, any>
-		rules?: Record<string, any>
+		model?: FormModel
+		rules?: FormRules
 		labelWidth?: number | string
 		showRequired?: boolean
-		[key: string]: any
+		[key: string]: FormModel | FormRules | number | string | boolean | null | undefined
 	}
 
 	export default {
@@ -125,10 +144,20 @@
 				if (formContext != null && formContext.showRequired && this.prop != '') {
 					const rules = formContext.rules || {}
 					const rule = rules[this.prop]
-					if (rule != null && typeof rule == 'object') {
-						const ruleObj = rule as Record<string, any>
-						if (ruleObj.required == true) {
-							return true
+					if (rule != null) {
+						// 处理规则可能是数组的情况
+						if (Array.isArray(rule)) {
+							const ruleArray = rule as FormRule[]
+							for (let i = 0; i < ruleArray.length; i++) {
+								if (ruleArray[i].required == true) {
+									return true
+								}
+							}
+						} else if (typeof rule == 'object') {
+							const ruleObj = rule as FormRule
+							if (ruleObj.required == true) {
+								return true
+							}
 						}
 					}
 				}

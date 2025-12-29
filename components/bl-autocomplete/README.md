@@ -25,14 +25,17 @@ app.use(BelayUnix)
 | placeholder | 输入框占位符  | `string` | - | 否 |
 | disabled | 是否禁用  | `boolean` | `false` | 否 |
 | readonly | 是否只读  | `boolean` | `false` | 否 |
-| options | 数据源  | `Array\<string \| \{ value: string` | `[]` | 否 |
+| options | 数据源  | `Array\<string \| \{ value: string, label?: string \}\>` | `[]` | 否 |
 
 ## 📡 Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
 | change | 值改变事件  | `\(value: string\) =\> void` |
-| select | 选择选项事件  | `\(value: string` |
+| select | 选择选项事件  | `\(value: string\) =\> void` |
+| search | 搜索事件  | `\(value: string\) =\> void` |
+| focus | 获得焦点事件  | `\(\) =\> void` |
+| blur | 失去焦点事件  | `\(\) =\> void` |
 
 ## 🎨 Slots
 

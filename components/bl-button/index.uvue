@@ -45,13 +45,13 @@
 	export default {
 		name: 'BlButton',
 		props: {
-		/**
-		 * 按钮的样式类型
-		 */
-		type: {
-			type: String,
+			/**
+			 * 按钮的样式类型
+			 */
+			type: {
+				type: String,
 			default: 'primary' // primary | default | success | warning | danger
-		},
+			},
 		/**
 		 * 按钮的大小
 		 */

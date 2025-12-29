@@ -30,7 +30,7 @@ app.use(BelayUnix)
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
 | retry | 重试事件  | `\(\) =\> void` |
-| error | 错误事件  | `\(error: any\) =\> void` |
+| error | 错误事件  | `\(error: string \| \{ message?: string \}\) =\> void` |
 
 ## 🎨 Slots
 

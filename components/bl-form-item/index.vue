@@ -103,7 +103,7 @@ export default {
 			const styles = []
 			const width = this.labelWidth || (this.form ? this.form.labelWidth : 0)
 			if (width) {
-				styles.push(`width: ${typeof width === 'number' ? width + 'px' : width}`)
+				styles.push(`width: ${typeof width == 'number' ? width + 'px' : width}`)
 			}
 			return styles.join('; ')
 		},

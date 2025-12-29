@@ -58,14 +58,17 @@
 	
 	type BlPosterDescription = {
 		background?: string
-		[key: string]: any
+		[key: string]: string | number | boolean | null | undefined
 	}
 
 	type ShareAppMessageReturn = {
 		title?: string
 		path?: string
 		imageUrl?: string
-		[key: string]: any
+		content?: string
+		summary?: string
+		href?: string
+		[key: string]: string | number | boolean | null | undefined
 	}
 	
 	export default {
@@ -193,11 +196,11 @@
 				
 				// 调用 onBeforeOpen
 				try {
-					if (this.onBeforeOpen != null) {
-						const shouldOpen = await this.onBeforeOpen()
-						if (shouldOpen == false) {
-							return
-						}
+				if (this.onBeforeOpen != null) {
+					const shouldOpen = await this.onBeforeOpen()
+					if (shouldOpen == false) {
+						return
+					}
 					}
 				} catch (e) {
 					const error = e as Error | { message?: string }
@@ -239,24 +242,24 @@
 				// #ifndef H5
 				// 保存图片到相册
 				try {
-					uni.saveImageToPhotosAlbum({
-						filePath: this.posterImg,
-						success: () => {
-							uni.showToast({
-								title: t('comp.shareDialog.saveSuccess'),
-								icon: 'success'
-							})
-							this.handleClose()
-						},
+				uni.saveImageToPhotosAlbum({
+					filePath: this.posterImg,
+					success: () => {
+						uni.showToast({
+							title: t('comp.shareDialog.saveSuccess'),
+							icon: 'success'
+						})
+						this.handleClose()
+					},
 						fail: (err: { errMsg?: string }) => {
 							const errorMsg = err.errMsg || t('comp.shareDialog.saveFailed')
-							uni.showToast({
+						uni.showToast({
 								title: errorMsg,
-								icon: 'none'
-							})
+							icon: 'none'
+						})
 							console.error('[BlShareDialog] saveImageToPhotosAlbum fail:', errorMsg)
-						}
-					})
+					}
+				})
 				} catch (e) {
 					const error = e as Error | { message?: string }
 					const errorMsg = error instanceof Error ? error.message : (error.message || t('comp.shareDialog.saveFailed'))

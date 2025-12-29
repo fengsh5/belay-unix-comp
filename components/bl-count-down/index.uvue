@@ -3,8 +3,8 @@
 		<slot v-if="renderContent != null" :data="countDownData"></slot>
 		<template v-else>
 		<view v-if="countDownData.day != '00'" :class="itemClass" :style="itemStyleValue">
-			<text>{{ countDownData.day }}</text>
-		</view>
+				<text>{{ countDownData.day }}</text>
+			</view>
 		<text v-if="countDownData.day != '00' && separateData.dayUnit != ''" :class="delimiterClass" :style="delimiterStyleValue">{{ separateData.dayUnit }}</text>
 			<view :class="itemClass" :style="itemStyleValue">
 				<text>{{ countDownData.hour }}</text>

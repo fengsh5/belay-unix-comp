@@ -119,9 +119,9 @@ export default {
 			}
 			const index = this.range.findIndex((item, idx) => {
 				if (this.rangeKey) {
-					return item[this.rangeKey] === this.value
+					return item[this.rangeKey] == this.value
 				}
-				return item === this.value || idx === this.value
+				return item == this.value || idx == this.value
 			})
 			return index >= 0 ? index : 0
 		},
@@ -134,7 +134,7 @@ export default {
 				return this.placeholder
 			}
 			const text = this.rangeKey ? selectedItem[this.rangeKey] : selectedItem
-			if (this.formatter && typeof this.formatter === 'function') {
+			if (this.formatter && typeof this.formatter == 'function') {
 				return this.formatter(text, this.value)
 			}
 			return String(text)

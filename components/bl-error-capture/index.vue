@@ -86,6 +86,10 @@ export default {
 			this.errorInfo = ''
 			this.$emit('retry')
 		},
+		/**
+		 * 捕获错误
+		 * @param {string|Object} error - 错误信息，可以是字符串或包含 message 属性的对象
+		 */
 		captureError(error) {
 			this.hasError = true
 			if (typeof error == 'string') {

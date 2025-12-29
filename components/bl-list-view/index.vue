@@ -1,4 +1,5 @@
 <template>
+	<!-- #ifdef APP -->
 	<list-view 
 		class="bl-listview"
 		:style="listViewStyle"
@@ -29,6 +30,40 @@
 			</slot>
 		</template>
 	</list-view>
+	<!-- #endif -->
+	
+	<!-- #ifdef H5 || MP -->
+	<scroll-view 
+		class="bl-listview"
+		:style="listViewStyle"
+		:refresher-enabled="refresherEnabled"
+		:refresher-threshold="refresherThreshold"
+		:refresher-default-style="refresherDefaultStyle"
+		:refresher-background="refresherBackground"
+		:refresher-triggered="refresherTriggered"
+		:lower-threshold="lowerThreshold"
+		:upper-threshold="upperThreshold"
+		:enable-back-to-top="enableBackToTop"
+		:scroll-into-view="scrollIntoView"
+		:scroll-top="scrollTop"
+		scroll-y
+		@scroll="handleScroll"
+		@scrolltolower="handleScrollToLower"
+		@scrolltoupper="handleScrollToUpper"
+		@refresherrefresh="handleRefresherRefresh"
+		@refresherrestore="handleRefresherRestore"
+		@refresherabort="handleRefresherAbort"
+	>
+		<view 
+			v-for="(item, index) in data" 
+			:key="itemKey ? item[itemKey] : index"
+		>
+			<slot name="item" :item="item" :index="index">
+				<slot></slot>
+			</slot>
+		</view>
+	</scroll-view>
+	<!-- #endif -->
 </template>
 
 <script>

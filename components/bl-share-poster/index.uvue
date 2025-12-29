@@ -72,16 +72,16 @@
 					this.loading = true
 					this.error = null
 					
-					let poster: BlPosterDescription
+				let poster: BlPosterDescription
 					if (typeof this.value == 'function') {
 						const posterFunc = this.value as BlPosterDescriptionFunction
 						poster = await posterFunc()
-					} else {
-						poster = this.value as BlPosterDescription
-					}
-					
-					// 转换为海报绘制配置
-					this.result = this.posterDescriptionToPalette(poster)
+				} else {
+					poster = this.value as BlPosterDescription
+				}
+				
+				// 转换为海报绘制配置
+				this.result = this.posterDescriptionToPalette(poster)
 				} catch (e) {
 					const error = e as PosterError
 					this.error = error instanceof Error ? error : new Error(error.message || '未知错误')

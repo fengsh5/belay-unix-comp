@@ -32,13 +32,13 @@
 	export default {
 		name: 'BlTag',
 		props: {
-		/**
-		 * 标签类型
-		 */
-		type: {
-			type: String,
+			/**
+			 * 标签类型
+			 */
+			type: {
+				type: String,
 			default: 'primary' // primary | default | success | warning | danger
-		},
+			},
 			/**
 			 * 标签大小
 			 */

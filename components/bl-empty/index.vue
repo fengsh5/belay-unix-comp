@@ -104,12 +104,12 @@ export default {
 			}
 			return styles.join('; ')
 		},
-	imageUrl() {
+		imageUrl() {
 		if (this.type == 'custom') {
-			return this.url || DEFAULT_IMAGE
-		}
-		return iconMap[this.type] || DEFAULT_IMAGE
-	},
+				return this.url || DEFAULT_IMAGE
+			}
+			return iconMap[this.type] || DEFAULT_IMAGE
+		},
 		retryTextValue() {
 			return this.retryText || '重试'
 		}
