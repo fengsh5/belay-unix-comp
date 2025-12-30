@@ -60,8 +60,10 @@ import BlTour from './components/bl-tour/index.uvue'
 import BlCalendar from './components/bl-calendar/index.uvue'
 import BlCardLayout from './components/bl-card-layout/index.uvue'
 import BlCollapse from './components/bl-collapse/index.uvue'
+import BlCollapseItem from './components/bl-collapse-item/index.uvue'
 import BlCountDown from './components/bl-count-down/index.uvue'
 import BlDescriptions from './components/bl-descriptions/index.uvue'
+import BlDescriptionsItem from './components/bl-descriptions-item/index.uvue'
 import BlFloatButton from './components/bl-float-button/index.uvue'
 import BlTag from './components/bl-tag/index.uvue'
 import BlCheckTag from './components/bl-check-tag/index.uvue'
@@ -87,13 +89,19 @@ import BlPagination from './components/bl-pagination/index.uvue'
 import BlBottomBar from './components/bl-bottom-bar/index.uvue'
 import BlCol from './components/bl-col/index.uvue'
 import BlFilter from './components/bl-filter/index.uvue'
+import BlFilterItem from './components/bl-filter-item/index.uvue'
 import BlGrid from './components/bl-grid/index.uvue'
 import BlGridItem from './components/bl-grid-item/index.uvue'
 import BlPage from './components/bl-page/index.uvue'
 import BlPageStyle from './components/bl-page-style/index.uvue'
 import BlRow from './components/bl-row/index.uvue'
 import BlScrollView from './components/bl-scroll-view/index.uvue'
+// #ifdef APP
 import BlListView from './components/bl-list-view/index.uvue'
+// #endif
+// #ifdef H5 || MP
+import BlListView from './components/bl-list-view/index.vue'
+// #endif
 import BlSpace from './components/bl-space/index.uvue'
 import BlPopover from './components/bl-popover/index.uvue'
 import BlTooltip from './components/bl-tooltip/index.uvue'
@@ -170,8 +178,10 @@ import BlTour from './components/bl-tour/index.vue'
 import BlCalendar from './components/bl-calendar/index.vue'
 import BlCardLayout from './components/bl-card-layout/index.vue'
 import BlCollapse from './components/bl-collapse/index.vue'
+import BlCollapseItem from './components/bl-collapse-item/index.vue'
 import BlCountDown from './components/bl-count-down/index.vue'
 import BlDescriptions from './components/bl-descriptions/index.vue'
+import BlDescriptionsItem from './components/bl-descriptions-item/index.vue'
 import BlFloatButton from './components/bl-float-button/index.vue'
 import BlTag from './components/bl-tag/index.vue'
 import BlCheckTag from './components/bl-check-tag/index.vue'
@@ -197,6 +207,7 @@ import BlPagination from './components/bl-pagination/index.vue'
 import BlBottomBar from './components/bl-bottom-bar/index.vue'
 import BlCol from './components/bl-col/index.vue'
 import BlFilter from './components/bl-filter/index.vue'
+import BlFilterItem from './components/bl-filter-item/index.vue'
 import BlGrid from './components/bl-grid/index.vue'
 import BlGridItem from './components/bl-grid-item/index.vue'
 import BlPage from './components/bl-page/index.vue'
@@ -304,8 +315,10 @@ const components = [
 	{ name: 'bl-calendar', component: BlCalendar },
 	{ name: 'bl-card-layout', component: BlCardLayout },
 	{ name: 'bl-collapse', component: BlCollapse },
+	{ name: 'bl-collapse-item', component: BlCollapseItem },
 	{ name: 'bl-count-down', component: BlCountDown },
 	{ name: 'bl-descriptions', component: BlDescriptions },
+	{ name: 'bl-descriptions-item', component: BlDescriptionsItem },
 	{ name: 'bl-float-button', component: BlFloatButton },
 	{ name: 'bl-tag', component: BlTag },
 	{ name: 'bl-check-tag', component: BlCheckTag },
@@ -331,6 +344,7 @@ const components = [
 	{ name: 'bl-bottom-bar', component: BlBottomBar },
 	{ name: 'bl-col', component: BlCol },
 	{ name: 'bl-filter', component: BlFilter },
+	{ name: 'bl-filter-item', component: BlFilterItem },
 	{ name: 'bl-grid', component: BlGrid },
 	{ name: 'bl-grid-item', component: BlGridItem },
 	{ name: 'bl-page', component: BlPage },
@@ -481,8 +495,10 @@ export {
 	BlCalendar,
 	BlCardLayout,
 	BlCollapse,
+	BlCollapseItem,
 	BlCountDown,
 	BlDescriptions,
+	BlDescriptionsItem,
 	BlFloatButton,
 	BlTag,
 	BlCheckTag,
@@ -508,6 +524,7 @@ export {
 	BlBottomBar,
 	BlCol,
 	BlFilter,
+	BlFilterItem,
 	BlGrid,
 	BlGridItem,
 	BlPage,

@@ -75,12 +75,11 @@
 </template>
 
 <script>
+	import BlTreeNode from './node.vue';
 	export default {
 		name: 'BlTreeNode',
-		// 递归组件：注册自己以便在模板中使用
-		components: {
-			BlTreeNode: () => import('./node.vue')
-		},
+		// 递归组件：通过 name 属性实现自引用，无需额外注册
+		// Vue 会自动识别 name 并允许模板中使用该组件名
 		props: {
 			/**
 			 * 节点数据
@@ -145,6 +144,9 @@
 				type: Boolean,
 				default: false
 			}
+		},
+		components: {
+			BlTreeNode
 		},
 		computed: {
 			hasChildren() {

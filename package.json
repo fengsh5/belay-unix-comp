@@ -1,6 +1,6 @@
 {
   "name": "belay-unix",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "支持 uni-app 和 uni-app x 的跨平台组件库，提供 107 个高质量组件，覆盖基础、表单、反馈、展示、导航等场景。",
   "main": "index.js",
   "module": "index.js",
@@ -16,7 +16,6 @@
   "files": [
     "components",
     "utils",
-    "icons",
     "styles",
     "locales",
     "index.js",

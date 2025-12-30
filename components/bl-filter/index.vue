@@ -16,6 +16,13 @@ export default {
 	name: 'BlFilter',
 	props: {
 		/**
+		 * 当前选中的值（v-model）
+		 */
+		modelValue: {
+			type: [String, Number],
+			default: null
+		},
+		/**
 		 * 是否固定在顶部
 		 */
 		fixed: {
@@ -51,6 +58,12 @@ export default {
 			default: ''
 		}
 	},
+	emits: ['update:modelValue', 'change'],
+	provide() {
+		return {
+			filter: this
+		}
+	},
 	computed: {
 		filterClass() {
 			const classes = ['bl-filter']
@@ -71,6 +84,15 @@ export default {
 				styles.push(this.customStyle)
 			}
 			return styles.join('; ')
+		}
+	},
+	methods: {
+		handleItemClick(value) {
+			this.$emit('update:modelValue', value)
+			this.$emit('change', value)
+		},
+		isSelected(value) {
+			return this.modelValue === value
 		}
 	}
 }

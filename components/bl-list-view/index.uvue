@@ -1,9 +1,8 @@
 <template>
-	<list-view 
+	<scroll-view 
 		class="bl-listview"
 		:style="listViewStyle"
-		:data="data"
-		:item-key="itemKey"
+		scroll-y
 		:refresher-enabled="refresherEnabled"
 		:refresher-threshold="refresherThreshold"
 		:refresher-default-style="refresherDefaultStyle"
@@ -12,10 +11,8 @@
 		:lower-threshold="lowerThreshold"
 		:upper-threshold="upperThreshold"
 		:enable-back-to-top="enableBackToTop"
-		:offset-accuracy="offsetAccuracy"
 		:scroll-into-view="scrollIntoView"
 		:scroll-top="scrollTop"
-		:scroll-anchoring="scrollAnchoring"
 		@scroll="handleScroll"
 		@scrolltolower="handleScrollToLower"
 		@scrolltoupper="handleScrollToUpper"
@@ -23,15 +20,18 @@
 		@refresherrestore="handleRefresherRestore"
 		@refresherabort="handleRefresherAbort"
 	>
-		<template #default="{ item, index }">
+		<view 
+			v-for="(item, index) in data" 
+			:key="itemKey ? item[itemKey] : index"
+		>
 			<slot name="item" :item="item" :index="index">
-		<slot></slot>
+				<slot></slot>
 			</slot>
-		</template>
-	</list-view>
+		</view>
+	</scroll-view>
 </template>
 
-<script lang="uts">
+<script>
 	export default {
 		name: 'BlListView',
 		props: {
@@ -143,33 +143,33 @@
 		},
 		emits: ['scroll', 'scrollToLower', 'scrollToUpper', 'refresherRefresh', 'refresherRestore', 'refresherAbort'],
 		computed: {
-			listViewStyle(): string {
-				const styles: string[] = []
+			listViewStyle() {
+				const styles = []
 				styles.push('width: 100%')
 				styles.push('height: 100%')
-				if (this.customStyle != '') {
+				if (this.customStyle) {
 					styles.push(this.customStyle)
 				}
 				return styles.join('; ')
 			}
 		},
 		methods: {
-			handleScroll(e: any): void {
+			handleScroll(e) {
 				this.$emit('scroll', e)
 			},
-			handleScrollToLower(e: any): void {
+			handleScrollToLower(e) {
 				this.$emit('scrollToLower', e)
 			},
-			handleScrollToUpper(e: any): void {
+			handleScrollToUpper(e) {
 				this.$emit('scrollToUpper', e)
 			},
-			handleRefresherRefresh(e: any): void {
+			handleRefresherRefresh(e) {
 				this.$emit('refresherRefresh', e)
 			},
-			handleRefresherRestore(e: any): void {
+			handleRefresherRestore(e) {
 				this.$emit('refresherRestore', e)
 			},
-			handleRefresherAbort(e: any): void {
+			handleRefresherAbort(e) {
 				this.$emit('refresherAbort', e)
 			}
 		}

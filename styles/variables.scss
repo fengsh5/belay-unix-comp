@@ -38,8 +38,9 @@
  * 尝试引用 uni.scss 中的变量（如果可用）
  * 如果 uni.scss 不可用，则使用下方定义的标准变量作为后备
  */
-// @import '@/uni.scss' !optional; // 尝试引用 uni.scss（如果项目中有）
-// 注意：在文档网站环境中，此导入已被注释，因为 uni.scss 可能不存在
+/* @import '@/uni.scss' !optional; */
+/* 尝试引用 uni.scss（如果项目中有） */
+/* 注意：在文档网站环境中，此导入已被注释，因为 uni.scss 可能不存在 */
 
 /* 颜色变量 */
 
@@ -51,17 +52,17 @@ $uni-color-warning: #f0ad4e !default;
 $uni-color-error: #dd524d !default;
 
 /* 文字基本颜色 */
-$uni-text-color: #333 !default; // 基本色
-$uni-text-color-inverse: #fff !default; // 反色
-$uni-text-color-grey: #999 !default; // 辅助灰色，如加载更多的提示信息
+$uni-text-color: #333 !default; /* 基本色 */
+$uni-text-color-inverse: #fff !default; /* 反色 */
+$uni-text-color-grey: #999 !default; /* 辅助灰色，如加载更多的提示信息 */
 $uni-text-color-placeholder: #808080 !default;
 $uni-text-color-disable: #c0c0c0 !default;
 
 /* 背景颜色 */
 $uni-bg-color: #ffffff !default;
 $uni-bg-color-grey: #f8f8f8 !default;
-$uni-bg-color-hover: #f1f1f1 !default; // 点击状态颜色
-$uni-bg-color-mask: rgba(0, 0, 0, 0.4) !default; // 遮罩颜色
+$uni-bg-color-hover: #f1f1f1 !default; /* 点击状态颜色 */
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4) !default; /* 遮罩颜色 */
 
 /* 边框颜色 */
 $uni-border-color: #c8c7cc !default;
@@ -95,14 +96,14 @@ $uni-spacing-col-base: 16rpx !default;
 $uni-spacing-col-lg: 24rpx !default;
 
 /* 透明度 */
-$uni-opacity-disabled: 0.3 !default; // 组件禁用态的透明度
+$uni-opacity-disabled: 0.3 !default; /* 组件禁用态的透明度 */
 
 /* 文章场景相关 */
-$uni-color-title: #2C405A !default; // 文章标题颜色
+$uni-color-title: #2C405A !default; /* 文章标题颜色 */
 $uni-font-size-title: 40rpx !default;
-$uni-color-subtitle: #555555 !default; // 二级标题颜色
+$uni-color-subtitle: #555555 !default; /* 二级标题颜色 */
 $uni-font-size-subtitle: 36rpx !default;
-$uni-color-paragraph: #3F536E !default; // 文章段落颜色
+$uni-color-paragraph: #3F536E !default; /* 文章段落颜色 */
 $uni-font-size-paragraph: 30rpx !default;
 
 /* ==================== 组件库扩展变量 ==================== */
@@ -111,7 +112,7 @@ $uni-font-size-paragraph: 30rpx !default;
 /* ==================== 主题定义 ==================== */
 /* 浅色主题（默认） */
 $theme-light: (
-	// 主色调
+	/* 主色调 */
 	primary-color: #409eff,
 	primary-color-1: #66b1ff,
 	primary-color-2: #85c1ff,
@@ -119,7 +120,7 @@ $theme-light: (
 	primary-color-4: #c6e2ff,
 	secondary-color: #909399,
 	
-	// 功能色
+	/* 功能色 */
 	success-color: #67c23a,
 	success-color-1: #85ce61,
 	success-color-2: #a4da89,
@@ -144,11 +145,11 @@ $theme-light: (
 	info-color-3: #d3d4d6,
 	info-color-4: #e9e9eb,
 	
-	// 基础色
+	/* 基础色 */
 	black-color: #000000,
 	white-color: #ffffff,
 	
-	// 灰度颜色
+	/* 灰度颜色 */
 	gray-1: #303133,
 	gray-2: #606266,
 	gray-3: #909399,
@@ -156,40 +157,42 @@ $theme-light: (
 	gray-5: #dcdfe6,
 	gray-6: #e4e7ed,
 	
-	// 背景色
+	/* 背景色 */
 	background-color: #ffffff,
 	background-color-secondary: #f5f7fa,
 	
-	// 文字颜色
+	/* 文字颜色 */
 	text-color: #303133,
 	text-color-secondary: #606266,
 	text-color-tertiary: #909399,
 	text-color-disabled: #c0c4cc,
 	text-color-placeholder: #c0c4cc,
 	
-	// 边框颜色
+	/* 边框颜色 */
 	border-color: #dcdfe6,
 	border-color-light: #e4e7ed,
 	border-color-lighter: #ebeef5,
 	border-color-extra-light: #f2f6fc,
-	border-color-split: #ebeef5, // 分割线颜色
+	border-color-split: #ebeef5,
+	/* 分割线颜色 */
 	
-	// 圆角
+	/* 圆角 */
 	border-radius: 8rpx,
 	border-radius-small: 4rpx,
 	border-radius-large: 16rpx,
 	border-radius-round: 40rpx,
 	border-radius-circle: 50%,
 	
-	// 间距
+	/* 间距 */
 	spacing-xs: 8rpx,
 	spacing-sm: 16rpx,
-	spacing-base: 32rpx, // 别名，与 spacing-md 相同
+	spacing-base: 32rpx,
+	/* 别名，与 spacing-md 相同 */
 	spacing-md: 32rpx,
 	spacing-lg: 48rpx,
 	spacing-xl: 64rpx,
 	
-	// 字体大小
+	/* 字体大小 */
 	font-size-xs: 20rpx,
 	font-size-sm: 24rpx,
 	font-size-base: 28rpx,
@@ -197,12 +200,12 @@ $theme-light: (
 	font-size-xl: 36rpx,
 	font-size-xxl: 40rpx,
 	
-	// 行高
+	/* 行高 */
 	line-height-base: 1.5,
 	line-height-sm: 1.2,
 	line-height-lg: 1.8,
 	
-	// z-index
+	/* z-index */
 	z-index-base: 1,
 	z-index-dropdown: 1000,
 	z-index-sticky: 1020,
@@ -213,7 +216,7 @@ $theme-light: (
 
 /* 深色主题 */
 $theme-dark: (
-	// 主色调
+	/* 主色调 */
 	primary-color: #66b1ff,
 	primary-color-1: #85c1ff,
 	primary-color-2: #a6d3ff,
@@ -221,7 +224,7 @@ $theme-dark: (
 	primary-color-4: #d9ecff,
 	secondary-color: #a6a9ad,
 	
-	// 功能色
+	/* 功能色 */
 	success-color: #85ce61,
 	success-color-1: #95d471,
 	success-color-2: #a4da89,
@@ -246,11 +249,11 @@ $theme-dark: (
 	info-color-3: #c4c7cb,
 	info-color-4: #ced1d5,
 	
-	// 基础色
+	/* 基础色 */
 	black-color: #ffffff,
 	white-color: #000000,
 	
-	// 灰度颜色
+	/* 灰度颜色 */
 	gray-1: #e5eaf3,
 	gray-2: #cfd3dc,
 	gray-3: #a8adb5,
@@ -258,40 +261,42 @@ $theme-dark: (
 	gray-5: #4c4d4f,
 	gray-6: #2d2d2d,
 	
-	// 背景色
+	/* 背景色 */
 	background-color: #1d1e1f,
 	background-color-secondary: #252526,
 	
-	// 文字颜色
+	/* 文字颜色 */
 	text-color: #e5eaf3,
 	text-color-secondary: #cfd3dc,
 	text-color-tertiary: #a8adb5,
 	text-color-disabled: #6c6e72,
 	text-color-placeholder: #6c6e72,
 	
-	// 边框颜色
+	/* 边框颜色 */
 	border-color: #4c4d4f,
 	border-color-light: #3d3e40,
 	border-color-lighter: #2d2d2d,
 	border-color-extra-light: #252526,
-	border-color-split: #2d2d2d, // 分割线颜色
+	border-color-split: #2d2d2d,
+	/* 分割线颜色 */
 	
-	// 圆角（深色主题与浅色主题相同）
+	/* 圆角（深色主题与浅色主题相同） */
 	border-radius: 8rpx,
 	border-radius-small: 4rpx,
 	border-radius-large: 16rpx,
 	border-radius-round: 40rpx,
 	border-radius-circle: 50%,
 	
-	// 间距（深色主题与浅色主题相同）
+	/* 间距（深色主题与浅色主题相同） */
 	spacing-xs: 8rpx,
 	spacing-sm: 16rpx,
-	spacing-base: 32rpx, // 别名，与 spacing-md 相同
+	spacing-base: 32rpx,
+	/* 别名，与 spacing-md 相同 */
 	spacing-md: 32rpx,
 	spacing-lg: 48rpx,
 	spacing-xl: 64rpx,
 	
-	// 字体大小（深色主题与浅色主题相同）
+	/* 字体大小（深色主题与浅色主题相同） */
 	font-size-xs: 20rpx,
 	font-size-sm: 24rpx,
 	font-size-base: 28rpx,
@@ -299,12 +304,12 @@ $theme-dark: (
 	font-size-xl: 36rpx,
 	font-size-xxl: 40rpx,
 	
-	// 行高（深色主题与浅色主题相同）
+	/* 行高（深色主题与浅色主题相同） */
 	line-height-base: 1.5,
 	line-height-sm: 1.2,
 	line-height-lg: 1.8,
 	
-	// z-index（深色主题与浅色主题相同）
+	/* z-index（深色主题与浅色主题相同） */
 	z-index-base: 1,
 	z-index-dropdown: 1000,
 	z-index-sticky: 1020,
